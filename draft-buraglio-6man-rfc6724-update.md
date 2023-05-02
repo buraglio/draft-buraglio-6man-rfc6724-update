@@ -15,6 +15,18 @@ author:
         country: USA
         email: buraglio@forwardingplane.net
 
+author:
+      -
+        ins: T. Chown
+        name: Tim Chown
+        org: JISC
+        abbrev: 
+        street:
+          - 
+          - 
+        country: UK
+        email: Tim.Chown@jisc.ac.uk
+
 normative:
   RFC2119:
   I-D.ietf-core-coap:
