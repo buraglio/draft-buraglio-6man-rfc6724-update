@@ -9,15 +9,11 @@ author:
         name: Nick Buraglio
         org: Energy Sciences Network
         email: buraglio@forwardingplane.net
-
-author:
       -
         ins: T. Chown
         name: Tim Chown
         org: JISC
         email: Tim.Chown@jisc.ac.uk
-
-author:
       -
         ins: B. Carpenter
         name: Brian Carpenter
@@ -37,17 +33,16 @@ informative:
         org:
     date:
 
---- note Lorem Ipsum
-
+--- note 
 
 --- abstract
 
 The behavior of ULA addressing as defined by [](RFC6724) is preferred below legacy IPv4 addressing, thus rendering ULA IPv6 deployment functionally unusable in IPv4 / IPv6 dual-stacked environments. This behavior is counter to the operational behavior of GUA IPv6 addressing on nearly all modern operating systems that leverage a preference model based on [](RFC6724).
-This document outlines buth the operational implications of section section 10.6 of [](RFC6724) as described in [](draft-ietf-v6ops-ula) and updates the process to better suit operational deployment and management of Unique Local Addressing (ULA) in production.
+This document outlines both the operational implications of section section 10.6 of [](RFC6724) as described in [](draft-ietf-v6ops-ula) and updates the process to better suit operational deployment and management of Unique Local Addressing (ULA) in production.
 
 --- middle
 
-Introduction
+# Introduction
 ============
 
 In modern IPv4 / IPv6 dual-stacked environments, ULA addressing and GUA IPv6 addressing exhibit opposite behavior, which creates difficulties in deployments
@@ -320,9 +315,9 @@ The authors would like to acknowledge the valuable input and contributions of Da
 
 # Appendix B. Changes since RFC6724
 
-*Update to default preference table moving 6to4 address block 2002::/16 to de-preference status in line with [](RFC7526) 
-*Change the default address selection to move fc00::/7 to preference 35, above legacy IPv4,  
-*Change ::ffff:0:0/96 to preference 30. \
-*Change section 5.5 Prefer addresses in a prefix advertised by the next-hop to a MUST
+* Update to default preference table moving 6to4 address block 2002::/16 to de-preference status in line with [](RFC7526) 
+* Change the default address selection to move fc00::/7 to preference 35, above legacy IPv4,  
+* Change ::ffff:0:0/96 to preference 30. \
+* Change section 5.5 Prefer addresses in a prefix advertised by the next-hop to a MUST
 
 --- back
