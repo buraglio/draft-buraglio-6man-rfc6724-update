@@ -17,6 +17,13 @@ author:
         org: JISC
         email: Tim.Chown@jisc.ac.uk
 
+author:
+      -
+        ins: B. Carpenter
+        name: Brian Carpenter
+        org: Univ. of Auckland
+        email: brian.e.carpenter@gmail.com
+
 normative:
   RFC2119:
   I-D.ietf-core-coap:
@@ -211,6 +218,49 @@ Sections 10.3 through 10.7 provide examples of the kind of changes that might be
 needed.
 ~~~~~~~~~~
 
+Rule 2.1 of [](RFC6724) further states:
+
+~~~~~~~~~~
+If an implementation is not configurable or has not been configured,
+   then it SHOULD operate according to the algorithms specified here in
+   conjunction with the following default policy table:
+
+
+      Prefix        Precedence Label
+      ::1/128               50     0
+      ::/0                  40     1
+      ::ffff:0:0/96         35     4
+      2002::/16             30     2
+      2001::/32              5     5
+      fc00::/7               3    13
+      ::/96                  1     3
+      fec0::/10              1    11
+      3ffe::/16              1    12
+~~~~~~~~~~
+
+This document updates [](RFC6724) section 2.1 to the following:
+
+## needs labels adjusted 
+~~~~~~~~~~
+If an implementation is not configurable or has not been configured,
+   then it SHOULD operate according to the algorithms specified here in
+   conjunction with the following default policy table:
+
+
+      Prefix        Precedence Label
+      ::1/128               50     0
+      ::/0                  40     1
+      fc00::/7              35    13
+      ::ffff:0:0/96         30     4
+      2001::/32              5     5
+      2002::/16              1     2
+      ::/96                  1     3
+      fec0::/10              1    11
+      3ffe::/16              1    12
+~~~~~~~~~~
+
+This preference table update moves 2002::/16 to de-preference status in line with [](RFC7526) and changes the default address selection to move fc00::/7 above legacy IPv4, changing ::ffff:0:0/96 to preference 30. 
+
 Rule 5.5 of [](RFC6724) states:
 
 ~~~~~~~~~~
@@ -245,47 +295,6 @@ have no such requirement.  Hence, Rule 5.5 is only applicable to
 implementations that track this information.
 ~~~~~~~~~~
 
-Rule 10.3 of [](RFC6724) states:
-
-~~~~~~~~~~
-The default policy table gives IPv6 addresses higher precedence than
-   IPv4 addresses.  This means that applications will use IPv6 in
-   preference to IPv4 when the two are equally suitable.  An
-   administrator can change the policy table to prefer IPv4 addresses by
-   giving the ::ffff:0.0.0.0/96 prefix a higher precedence:
-
-      Prefix        Precedence Label
-      ::1/128               50     0
-      ::/0                  40     1
-      ::ffff:0:0/96        100     4
-      2002::/16             30     2
-      2001::/32              5     5
-      fc00::/7               3    13
-      ::/96                  1     3
-      fec0::/10              1    11
-      3ffe::/16              1    12
-
-   This change to the default policy table produces the following
-   behavior:
-
-   Candidate Source Addresses: 2001:db8::2 or fe80::1 or 169.254.13.78
-   Destination Address List: 2001:db8::1 or 198.51.100.121
-   Unchanged Result: 2001:db8::1 (src 2001:db8::2) then 198.51.100.121
-   (src 169.254.13.78) (prefer matching scope)
-
-   Candidate Source Addresses: fe80::1 or 198.51.100.117
-   Destination Address List: 2001:db8::1 or 198.51.100.121
-   Unchanged Result: 198.51.100.121 (src 198.51.100.117) then
-   2001:db8::1 (src fe80::1) (prefer matching scope)
-
-   Candidate Source Addresses: 2001:db8::2 or fe80::1 or 10.1.2.4
-   Destination Address List: 2001:db8::1 or 10.1.2.3
-   New Result: 10.1.2.3 (src 10.1.2.4) then 2001:db8::1 (src
-   2001:db8::2) (prefer higher precedence)
-~~~~~~~~~~
-
-This document updates [](RFC6724) section 10.3 to the following:
-
 # Smoldering ideas
 
 fixes without a global precedence for ULAs:
@@ -306,5 +315,14 @@ None.
 
 None.
 
+# Appendix A. Acknowledgements 
+The authors would like to acknowledge the valuable input and contributions of David Farmer, Bob Hinton, Ed Horley, Tom Coffeen, Scott Hogg, and Chris Cummings. 
+
+# Appendix B. Changes since RFC6724
+
+*Update to default preference table moving 6to4 address block 2002::/16 to de-preference status in line with [](RFC7526) 
+*Change the default address selection to move fc00::/7 to preference 35, above legacy IPv4,  
+*Change ::ffff:0:0/96 to preference 30. \
+*Change section 5.5 Prefer addresses in a prefix advertised by the next-hop to a MUST
 
 --- back
