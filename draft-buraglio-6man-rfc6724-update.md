@@ -301,7 +301,7 @@ None.
 None.
 
 # Appendix A. Acknowledgements 
-The authors would like to acknowledge the valuable input and contributions of David Farmer, Bob Hinton, Ed Horley, Tom Coffeen, Scott Hogg, and Chris Cummings. 
+The authors would like to acknowledge the valuable input and contributions of Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinton, Ed Horley, Tom Coffeen, Scott Hogg, and Chris Cummings. 
 
 # Appendix B. Changes since RFC6724
 
