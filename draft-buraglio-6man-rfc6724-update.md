@@ -20,6 +20,11 @@ author:
         name: Tim Chown
         org: JISC
         email: Tim.Chown@jisc.ac.uk
+      -
+        ins: J. Duncan
+        name: Jeremy Duncan
+        org: Tachyon Dynamics
+        email: jduncan@tachyondynamics.com
 
 normative:
   RFC2119:
@@ -36,7 +41,7 @@ informative:
 
 --- abstract
 
-The default preference of ULA addressing as defined by [](RFC6724) is below legacy IPv4 addressing, thus rendering ULA IPv6 deployment functionally unusable in IPv4 / IPv6 dual-stacked environments. This behavior is counter to the operational behavior of GUA IPv6 addressing on nearly all modern operating systems that leverage a preference model based on [](RFC6724).
+The default preference of Unique Local Addressing (ULA) as defined by [](RFC6724) is in a lower precendence than legacy IPv4 addressing, thus rendering ULA IPv6 deployment functionally unusable in IPv4 / IPv6 dual-stacked environments. This behavior is counter to the operational behavior of IPv6 Global Unicast Addressing (GUA) on nearly all modern operating systems that leverage a preference model based on [](RFC6724).
 This document outlines both the operational implications of section section 10.6 of [](RFC6724) as described in [](draft-ietf-v6ops-ula) and updates the process to better suit operational deployment and management of Unique Local Addressing (ULA) in production.
 
 --- middle
@@ -61,7 +66,7 @@ administrator can change the policy table to prefer IPv4 addresses by
 giving the ::ffff:0.0.0.0/96 prefix a higher precedence".
 ~~~~~~~~~~
 
-Expected behavior would be that ULA address space would be preferred over legacy IPv4, however this is not the case. This presents an acute issue with any environment that will use ULA addressing long side legacy IPv4 that is counter to the standard expectations for legacy IPv4 / IPv6 dual-stack behavior of preferring IPv6, as is performed with GUA addressing.
+Expected behavior would be that ULA address space would be preferred over legacy IPv4, however this is not the case. This presents an acute issue with any environment that will use ULA addressing along side legacy IPv4. This is counter to the standard expectations for legacy IPv4 / IPv6 dual-stack behavior in preferring IPv6, as is performed with GUA addressing.
 Further, [](RFC6724) Section 10.6 states that this is resolvable by adding a site-specific policy to cause ULAs
 within a site to be preferred over global addresses. While theoretically possible, this presents significant issues on devices with inaccessable configuration files as detailed below.
 
@@ -69,13 +74,13 @@ within a site to be preferred over global addresses. While theoretically possibl
 
 There are demonstrated and easily repeatable uses cases of ULA not being preferred in some OS and network equipment over legacy IPv4 that necessitate an update to [](RFC6724)
 to better reflect the original intent of the RFC. As with most adjustments to standards, and using [](RFC6724)
-itself as a measurement, this update will likely take between 8-20 years to become common enough for relatively consistent behavior within operating systems. As a reference, as of the time of this writing, it has been 10 years since [](RFC6724)
+itself as a measurement, this update will likely take between 8-20 years to become common enough for consistent behavior within most operating systems. At the time of this writing, it has been 10 years since [](RFC6724)
 has been published but we continue to see existing commercial and open source operating systems exhibiting [](RFC3484)
 behavior. While it should be noted that [](RFC6724) defines a solution that is functional theoretically, operationally the solution of adjusting the address preference selection table
-is both operating system dependent and unable to be signaled by any network mechanism such as within a router advertisement, DHCPv6 option, or the like. This lack of an
+is both operating system dependent and unable to be signaled by any network mechanism such as within a router advertisement or DHCPv6 option. This lack of an
 intra-protocol or network-based ability to adjust address selection preference, along with the inability to adjust a notable number of operating systems either programmatically or manually
 renders operational scalability of such a mechanism functionally untenable.  
-It is especially important to note this behavior in the long lifecycle equipment that exists in industrial control and operational technology environments due to their very long mean time to replacement.
+It is especially important to note this behavior in the long lifecycle equipment that exists in industrial control and operational technology environments due to their very long mean time to replacement/lifecycle.
 
 The core issue is the stated interpretation from gai.conf that has the following default:
 
@@ -93,13 +98,13 @@ The core issue is the stated interpretation from gai.conf that has the following
 
 {: #scope4 title="gai.conf example" alt="gai.conf" }
 
-Notice that the authors are interpreting the legacy IPv4 address range as "scopev4" and the prefix ::ffff:0.0.0.0/96 which has a higher precedence (35) in [](RFC6724) then the ULA prefix of fc00::/7 (3). This results in legacy IPv4 being preferred over IPv6 ULA. While not inherently undesirable, the operational outcome when utilizing dual-stack with ULA is inconsistent and imparts unnecessary difficulty for both troubleshooting and creating the requisite baseline of the expected behavior which are both requirements for supportable production deployments. This results in operational and engineering teams not gaining IPv6 experience as limited traffic is actually using IPv6, and security baseline expectations can, depending on the host implementation, be inconsistent at best and haphazard at worst.
+Notice that the authors are interpreting the legacy IPv4 address range as "scopev4" and the prefix ::ffff:0.0.0.0/96 which has a higher precedence (35) in [](RFC6724) then the ULA prefix of fc00::/7 (3). This results in legacy IPv4 being preferred over IPv6 ULA. While not inherently undesirable, the operational outcome when utilizing dual-stack with ULA is inconsistent and imparts unnecessary difficulty for both troubleshooting and creating the requisite baseline of the expected behavior which are both requirements for supportable production deployments. This results in operational and engineering teams not gaining IPv6 experience as limited traffic is actually using IPv6. Depending on the host implementation, security baseline expectations can be inconsistent at best and haphazard at worst.
 
 In practice, [](RFC6724) imposes several operational shortcomings preventing both consistent and desired behavior. If we define "desired behavior" as IPv6 preference over legacy IPv4 for address and protocol selection, then the resulting implemented behavior, based on [](RFC6724), will fall short of that intent. Based on the current verbiage, dual-stacked hosts configured with both a legacy IPv4 address and an IPv6 ULA address, the resulting behavior will manifest as a host choosing IPv4 over ULA IPv6. This behavior deviates from the current goal of a host with legacy IPv4 address and also with an IPv6 GUA address preferring IPv6 over IPv4. Operationally and strategically, this manifests as an impediment to deployment of IPv6 for many non service provider and mobile networks phasing in dual-stacked (both legacy IPv4 and IPv6) networking with the expectation of consistent behavior (i.e. always use IPv6 before legacy IPv4).
 
-Other operational considerations are the use of the policy table detailed in section 2.1 of [](RFC6724). While conceptually the intent was for a configurable, longest-match table to be adjusted as-needed. In practice, modifying the prefix policy table remains difficult across platforms, and in some cases impossible. Embedded, proprietary, closed source, and IoT devices are especially difficult to adjust, and are in many cases incapable of any adjustment whatsoever. Large scale manipulation of the policy table also remains out of the realm of realistic support for small and medium scale operators due to lack of ability to manipulate all the hosts and systems, or a lack of tooling and access.
+Other operational considerations are the use of the policy table detailed in section 2.1 of [](RFC6724). While conceptually the intent was for a configurable, longest-match table to be adjusted as-needed. In practice, modifying the prefix policy table remains difficult across platforms, and in some cases impossible. Embedded, proprietary, closed source, and IoT devices are especially difficult to adjust, and are in many cases incapable of any adjustment. Large scale manipulation of the policy table also remains out of the realm of realistic support for small and medium scale operators due to lack of ability to manipulate all the hosts and systems, or a lack of tooling and access.
 
-Below is an example of a gai.conf file from a modern Linux installation as of 03 April 2022:
+Below is an example of a gai.conf file from a modern Linux installation as of 25 May 2023:
 
 ~~~~~~~~~~
 # Configuration for getaddrinfo(3).
@@ -176,13 +181,13 @@ the source address of the requesting host as well as the destination addresses r
 returned, the source address selection should return and use a ULA address if available. Similarly, if a GUA address is returned the source address selection should return
 a GUA source address if available.
 
-Here are some example failure modes:
+Here are some example failure scenarios:
 
-* ULA per [](RFC6724) is less preferred (the Precedence value is lower) than all legacy IPv4 (represented by ::ffff:0:0/96 in the aforementioned table).
-* Because of the lower Precedence value of fc00::/7, if a host has legacy IPv4 enabled, it will use legacy IPv4 before using ULA.
-* A dual-stacked client will source the traffic from the legacy IPv4 address, meaning it will require a corresponding legacy IPv4 destination address.
+1. ULA per [](RFC6724) is less preferred (the Precedence value is lower) than all legacy IPv4 (represented by ::ffff:0:0/96 in the aforementioned table).
+2. Because of the lower Precedence value of fc00::/7, if a host has legacy IPv4 enabled, it will use legacy IPv4 before using ULA.
+3. A dual-stacked client will source the traffic from the legacy IPv4 address, meaning it will require a corresponding legacy IPv4 destination address.
 
-Per number 3, even a host choosing a destination with A and AAAA DNS records, the host in question will choose the A record to get an legacy IPv4 address for the destination, meaning ULA IPv6 is rendered completely unused. It is also notable that Happy Eyeballs [](RFC8305) will not change the source address selection process on a host. Happy Eyeballs will only modify the destination sorting process.
+For scenario number 3, when a host resolves through DNS a destination with A and AAAA DNS records, the host will choose the A record to get an legacy IPv4 address for the destination, meaning ULA IPv6 is rendered unused. It is also notable that Happy Eyeballs [](RFC8305) will not change the source address selection process on a host. Happy Eyeballs will only modify the destination sorting process.
 
 As a direct result of the described failure modes, and in addition to the aforementioned operational implications, use of ULA is not a viable option for dual-stack networking transition planning, large scale network modeling, network lab environments or other modes of emulating a large scale networking that runs both IPv4 and IPv6 concurrently with the expectation that IPv6 will be preferred by default.
 
@@ -293,8 +298,8 @@ implementations that track this information.
 The IETF documents referred to here are [](RFC2119) and [](I-D.ietf-core-coap).  We also refer to [REST](REST).  [](a-rose) and [](exampleTable) are explicitly tagged, as is [](refstyle), but [](security-considerations) is implicit.  The web page at [ipv.sx](http://ipv.sx/) is not part of this document.
 
 # Security Considerations
-
-None.
+There are no direct security considerations in this document. However, when using the updated ULA source address selection recommendations, network operators must follow Section 4.3 of [](RFC4193) for firewall/packet filtering as "routers be configured by default to keep any packets with Local
+IPv6 addresses from leaking outside of the site and to keep any site prefixes from being advertised outside of their site." Following this security practice is critical when ULAs have more broad reachability.
 
 # IANA Considerations
 
