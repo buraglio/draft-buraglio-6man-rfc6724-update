@@ -42,7 +42,7 @@ informative:
 
 --- abstract
 
-This document updates RFC 6724 based on operational experience gained since its publication over ten years ago. In particular it updates the preference of Unique Local Addresses (ULAs) in the default address selection policy table, which as originally defined by RFC 6724 has lower precedence than legacy IPv4 addressing. The update places both IPv6 Global Unicast Addresses (GUAs) and ULAs ahead of all IPv4 addresses on the policy table to better suit operational deployment and management of ULAs in production. This document also updates requirements on configurability of the policy table and preference for using ddresses from a prefix advertised by a next-hop router, and demotes the preference for 6to4 addresses in the default policy table.
+This document updates RFC 6724 based on operational experience gained since its publication over ten years ago. In particular it updates the preference of Unique Local Addresses (ULAs) in the default address selection policy table, which as originally defined by RFC 6724 has lower precedence than legacy IPv4 addressing. The update places both IPv6 Global Unicast Addresses (GUAs) and ULAs ahead of all IPv4 addresses on the policy table to better suit operational deployment and management of ULAs in production. This document also updates requirements on configurability of the policy table and preference for using ddresses from a prefix advertised by a next-hop router, and demotes the preference for 6to4 addresses in the default policy table. These changes to default behavior improve supportability of common use cases such as, but not limited to, automatic / unmanaged scenarios. It is recognized that some less common deployment situations may require explicit confioguration or custom changes to acheive desired operational parameters.  
 
 --- middle
 
@@ -244,7 +244,6 @@ If an implementation is not configurable or has not been configured,
 
 This document updates RFC 6724 section 2.1 to the following:
 
-## needs labels adjusted 
 ~~~~~~~~~~
 If an implementation is not configurable or has not been configured,
    then it SHOULD operate according to the algorithms specified here in
@@ -283,8 +282,6 @@ implementations that track this information.
 
 This document updates RFC 6724 section 5.5 to the following:
 
-## needs eyes
-
 ~~~~~~~~~~
 Rule 5.5: Hosts MUST prefer addresses in a prefix advertised by the next-hop.
 If SA or SA's prefix is assigned by the selected next-hop that will
@@ -317,7 +314,7 @@ In practice this means that network operators and those who design networks need
 
 # Acknowledgements 
 
-The authors would like to acknowledge the valuable input and contributions of Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinton, Ed Horley, Tom Coffeen, Scott Hogg, and Chris Cummings. 
+The authors would like to acknowledge the valuable input and contributions of Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinden, Ed Horley, Tom Coffeen, Scott Hogg, and Chris Cummings. 
 
 # Security Considerations
 
