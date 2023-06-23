@@ -47,7 +47,6 @@ This document updates RFC 6724 based on operational experience gained since its 
 --- middle
 
 # Introduction
-============
 
 When {{RFC6724}} was published in 2012 it was expected that the default policy table may need to be updated from operartional experience; section 2.1 says "It is important that implementations provide a way to change the default policies as more experience is gained" and points to the examples in Section 10, including Section 10.6 which considers a ULA example.
 
