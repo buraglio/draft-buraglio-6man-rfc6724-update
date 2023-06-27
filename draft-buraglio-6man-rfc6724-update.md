@@ -171,7 +171,7 @@ behavior of the getaddrinfo() or analogous process. More specifically, where get
 the source address of the requesting host as well as the destination addresses returned and sort according to both source and destination addresses, i.e, when a ULA address is
 returned, the source address selection should return and use a ULA address if available. Similarly, if a GUA address is returned the source address selection should return a GUA source address if available.
 
-However, there are clearly evidenced example of failure scenarios:
+However, there are clearly evidenced example of three failure scenarios:
 
 1. ULA per RFC 6724 is less preferred (the Precedence value is lower) than all legacy IPv4 (represented by ::ffff:0:0/96 in the aforementioned table).
 2. Because of the lower Precedence value of fc00::/7, if a host has legacy IPv4 enabled, it will use legacy IPv4 before using ULA.
@@ -313,15 +313,15 @@ It is especially important to note this behavior in the long lifecycle equipment
 
 In practice this means that network operators and those who design networks need to keep these considerations in mind.  One workaround should the ULA and IPv4 preference issue be of concern is to use IPv6-only networking, and to simply not deploy dual-stack. Another is to use GUA IPv6 addresses, which are preferred by defaul over all IPv4 addresses.
 
-# Notes on WG list discussion
+# Notes on the 6Man Working Group list discussion
 
 Authors' note for the -00 version: this section captures some interesting suggestions from the 300 or so emails in the past few months in the 6man WG on this topic. These are noted, and captured here to inform discussion of the draft should it move forward in the WG.
 
-The suggestion to automatically insert an observed ULA /48 into the policy table to elevate a locally used ULA above IPv4 and GUA addresses was quite popular, though kernel implementation may be challenging for all platforms. This would be supported by changing the the “MAY" in Section 2.1 and the “might” in Section 10.6 of RFC 6724 to “SHOULD” (or even a MUST). 
+* The suggestion to automatically insert an observed ULA /48 into the policy table to elevate a locally used ULA above IPv4 and GUA addresses was quite popular, though kernel implementation may be challenging for all platforms. This would be supported by changing the “MAY" in Section 2.1 and the “might” in Section 10.6 of RFC 6724 to “SHOULD” (or even a MUST). The case for a MUST is greater in order to allow for maximum network operator flexibility if the source selection table is not modified by the operating system. This could be an acceptable compromise, but requires two additional additions to an IPv6 ULA network: router manufacturers must now implement this new feature that is not a standard option in IPv6 Router Advertisements (RAs) and operators must know that the capability to add a tag for ULA prefixes in the source selection table is an operational possibility and now part of an architectural consideration. Network operators using managed addressing may have not considered using a tagged ULA prefix in RA as an option.
 
-The list discussed handling of corner cases, though what constitutes a corner case is in itself not wholly clear. The above suggestion for example would not cover the case where two sites using ULAs merged, and multiple ULA prefixes needed to be considered local. The open question is how deeply we consider corner cases; is some requirement for explicit configuration of certain cases inevitable? Is improving the current situation sufficient?
+* The list discussed handling of corner cases, though what constitutes a corner case is in itself not wholly clear. The above suggestion for example would not cover the case where two sites using ULAs merged, and multiple ULA prefixes needed to be considered local. The open question is how deeply we consider corner cases; is some requirement for explicit configuration of certain cases inevitable? Is improving the current situation sufficient?
 
-A suggestion to use an RA PIO with A=0 and L=0, based on an interpretation of Section 2.1 of RFC 8028, was proposed but considered something of a stretch, though it could be an RA-based starting point to give some configurability for non-DHCPv6 networks.
+* A suggestion to use an RA PIO with A=0 and L=0, based on an interpretation of Section 2.1 of RFC 8028, was proposed but considered something of a stretch. That said, it could be an RA-based starting point to give some configurability for non-DHCPv6 networks.
 
 # Acknowledgements 
 
