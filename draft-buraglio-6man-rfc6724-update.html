@@ -10,7 +10,8 @@
 <hr>
 
 <p>title: Preference for ULAs over RFC1918 addresses in RFC6724
-docname: draft-buraglio-6man-rfc6724-update
+abbrev: Prefer ULAs over RFC1918 addresses
+docname: draft-buraglio-6man-rfc6724-update-00
 cat: std
 ipr: trust200902
 area: Int
@@ -39,9 +40,7 @@ updates: 6724</p>
   RFC2119:
   RFC4193:
   RFC7078:
-  RFC7526:
-  RFC4191:
-  RFC4861:</p>
+  RFC7526:</p>
 
 <p>informative:
   RFC6724:
@@ -81,8 +80,6 @@ updates: 6724</p>
 <h1 id="terminology">Terminology</h1>
 
 <p>{::boilerplate bcp14-tagged}</p>
-
-<hr>
 
 <h1 id="unintended-operational-issues-regarding-ipv6-preference-and-ulas">Unintended Operational Issues Regarding IPv6 Preference and ULAs</h1>
 
@@ -279,7 +276,7 @@ assigned by the next-hop that will be used to send to D and SA or
 SA's prefix is assigned by a different next-hop, then prefer SB.
 Discussion: An IPv6 implementation is not required to remember
 which next-hops advertised which prefixes.  The conceptual models
-of IPv6 hosts in Section 5 of {{RFC4861}} and Section 3 of {{RFC4191}}
+of IPv6 hosts in Section 5 of [RFC4861] and Section 3 of [RFC4191]
 have no such requirement.  Hence, Rule 5.5 is only applicable to
 implementations that track this information.
 </code></pre>
@@ -294,7 +291,7 @@ assigned by the next-hop that will be used to send to D and SA or
 SA's prefix is assigned by a different next-hop, then prefer SB.
 Discussion: An IPv6 implementation is not required to remember
 which next-hops advertised which prefixes.  The conceptual models
-of IPv6 hosts in Section 5 of {{RFC4861}} and Section 3 of {{RFC4191}}
+of IPv6 hosts in Section 5 of [RFC4861] and Section 3 of [RFC4191]
 have no such requirement.  Hence, Rule 5.5 is only applicable to
 implementations that track this information.
 </code></pre>
@@ -347,7 +344,7 @@ IPv6 addresses from leaking outside of the site and to keep any site prefixes fr
 <h1 id="appendix-a-changes-since-rfc6724">Appendix A. Changes since RFC6724</h1>
 
 <ul>
-<li>Update to default preference table moving 6to4 address block 2002::/16 to de-preference status in line with <a href="RFC7526"></a></li>
+<li>Update to default preference table moving 6to4 address block 2002::/16 to de-preference status in line with {{RFC7526}}</li>
 <li>Change the default address selection to move fc00::/7 to preference 35, above legacy IPv4,<br>
 </li>
 <li>Change ::ffff:0:0/96 to preference 30.</li>
