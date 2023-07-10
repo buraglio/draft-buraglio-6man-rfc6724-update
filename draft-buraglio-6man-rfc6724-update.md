@@ -1,8 +1,9 @@
 ---
 title: Preference for ULAs over RFC1918 addresses in RFC6724
 abbrev: Prefer ULAs over RFC1918 addresses
-docname: draft-buraglio-6man-rfc6724-update-00
+docname: draft-buraglio-6man-rfc6724-update-01
 cat: std
+submissiontype: IETF
 ipr: trust200902
 area: Int
 wg: 6MAN
