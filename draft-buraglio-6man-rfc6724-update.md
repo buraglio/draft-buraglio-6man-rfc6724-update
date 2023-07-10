@@ -253,8 +253,8 @@ If an implementation is not configurable or has not been configured,
       Prefix        Precedence Label
       ::1/128               50     0
       ::/0                  40     1
-      fc00::/7              35    13
-      ::ffff:0:0/96         30     4
+      fc00::/7              30    13
+      ::ffff:0:0/96         20     4
       2001::/32              5     5
       2002::/16              1     2
       ::/96                  1     3
@@ -262,7 +262,7 @@ If an implementation is not configurable or has not been configured,
       3ffe::/16              1    12
 ~~~~~~~~~~
 
-This preference table update moves 2002::/16 to de-preference status in line with RFC 7526 and changes the default address selection to move fc00::/7 above legacy IPv4, changing ::ffff:0:0/96 to preference 30. 
+This preference table update moves 2002::/16 to de-preference its status in line with RFC 7526 and changes the default address selection to move fc00::/7 above legacy IPv4, with ::ffff:0:0/96 now set to precedence 20. 
 
 Rule 5.5 of RFC 6724 states:
 
