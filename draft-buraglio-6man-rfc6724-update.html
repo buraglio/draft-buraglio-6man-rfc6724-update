@@ -11,7 +11,7 @@
 
 <p>title: Preference for ULAs over RFC1918 addresses in RFC6724
 abbrev: Prefer ULAs over RFC1918 addresses
-docname: draft-buraglio-6man-rfc6724-update-01
+docname: draft-buraglio-6man-rfc6724-update-02
 cat: std
 submissiontype: IETF
 ipr: trust200902
@@ -50,7 +50,7 @@ updates: 6724</p>
 
 <p>&mdash; abstract</p>
 
-<p>This document updates RFC 6724 based on operational experience gained since its publication over ten years ago. In particular it updates the preference of Unique Local Addresses (ULAs) in the default address selection policy table, which as originally defined by RFC 6724 has lower precedence than legacy IPv4 addressing. The update places both IPv6 Global Unicast Addresses (GUAs) and ULAs ahead of all IPv4 addresses on the policy table to better suit operational deployment and management of ULAs in production. This document also updates requirements on configurability of the policy table and preference for using ddresses from a prefix advertised by a next-hop router, and demotes the preference for 6to4 addresses in the default policy table. These changes to default behavior improve supportability of common use cases such as, but not limited to, automatic / unmanaged scenarios. It is recognized that some less common deployment situations may require explicit confioguration or custom changes to acheive desired operational parameters.</p>
+<p>This document updates RFC 6724 based on operational experience gained since its publication over ten years ago. In particular it updates the preference of Unique Local Addresses (ULAs) in the default address selection policy table, which as originally defined by RFC 6724 has lower precedence than legacy IPv4 addressing. The update places both IPv6 Global Unicast Addresses (GUAs) and ULAs ahead of all IPv4 addresses on the policy table to better suit operational deployment and management of ULAs in production. This document also updates requirements on configurability of the policy table and preference for using addresses from a prefix advertised by a next-hop router, and demotes the preference for 6to4 addresses in the default policy table. These changes to default behavior improve supportability of common use cases such as, but not limited to, automatic / unmanaged scenarios. It is recognized that some less common deployment situations may require explicit configuration or custom changes to achieve desired operational parameters.</p>
 
 <p>&mdash; middle</p>
 
@@ -58,25 +58,23 @@ updates: 6724</p>
 
 <p>When {{RFC6724}} was published in 2012 it was expected that the default policy table may need to be updated from operational experience; section 2.1 says &ldquo;It is important that implementations provide a way to change the default policies as more experience is gained&rdquo; and points to the examples in Section 10, including Section 10.6 which considers a ULA example.</p>
 
-<p>This document is written on the basis of operational experience, in particular for scenarios where ULAs are used within a site. The current default policy table in RFC 6724 leads to preference for IPv6 GUAs over IPv4 globals, which is widely considered to be preferential behaviour to support greater use of IPv6 in dual-stack environments, and to allow sites to phase out IPv4 as its use becomes ever lower.</p>
+<p>This document is written on the basis of operational experience, in particular for scenarios where ULAs are used within a site. The current default policy table in RFC 6724 leads to preference for IPv6 GUAs over IPv4 globals, which is widely considered to be preferential behavior to support greater use of IPv6 in dual-stack environments, and to allow sites to phase out IPv4 as its use becomes ever lower.</p>
 
 <p>However, the  default policy table also puts IPv6 ULAs below all IPv4 addresses, including {{RFC1918}} addresses. For many site operators this behavior will be counter-intuitive, and may create difficulties with respect to planning, operational, and security implications for environments where ULA addressing is used in certain IPv4/IPv6 dual-stack network scenarios. The expected prioritization of IPv6 traffic over IPv4 by default, as happens with IPv6 GUA addressing, will not happen for ULAs.</p>
 
 <p>An IPv6 deployment, whether enterprise, residential or other, may use combinations of IPv6 GUAs, IPv6 ULAs, IPv4 globals, IPv4 RFC 1918 addressing, and may or may not use some form of NAT. This document makes no comment or recommendation on how ULAs are used, or on NAT, but notes that operationally where GUAs and ULAs are used alongside RFC 1918 addressing, an IPv6 GUA would be selected to reach an IPv6 GUA destination, but where only ULAs and RFC1918 addressing are used, RFC 1918 addresses will be preferred.</p>
 
-<p>This document updates the default policy table to elevate the preference for ULAs such that ULAs will be preferred over all IPv4 addresses, providing more consistent and less confusing behaviour for operators.</p>
+<p>This document updates the default policy table to elevate the preference for ULAs such that ULAs will be preferred over all IPv4 addresses, providing more consistent and less confusing behavior for operators.</p>
 
 <p>Note that ULAs must never be used across site boundaries as if they were under unregistered global prefixes. Nothing in this document pertains to such misuse.</p>
 
-<p>The emergence of this issue also reinforces the need for the original RFC 6724 address slection policy table to be configurable. RFC 6724 Section 2.1 states that the table SHOULD be configurable; this document proposes elevating that requirement to MUST, to ensure that any device can have its policy table tuned for the scenario in which it is deployed. Section 10 of RFC 6724 gives other examples of why configurability is important.</p>
+<p>The emergence of this issue also reinforces the need for the original RFC 6724 address selection policy table to be configurable. RFC 6724 Section 2.1 states that the table SHOULD be configurable; this document proposes elevating that requirement to MUST, to ensure that any device can have its policy table tuned for the scenario in which it is deployed. Section 10 of RFC 6724 gives other examples of why configurability is important.</p>
 
 <p>This document aims to improve the default handling of address selection for common cases, and unmanaged / automatic scenarios rather than those where DHCPv6 is deployed. Sites using DHCPv6 for host configuration management can make use of implementations of {{RFC7078}} to apply changes to the RFC 6724 policy table.</p>
 
-<p>It has also become clearer from operational experience that the heuristic to prefer addresses drawn from a prefix advertised by a next-hop router is a valuable one to use.  This text therefore also proposes elevating that requirement in Section 5.5 from SHOULD to MUST.</p>
-
 <p>These updates are discussed in more detail in the following sections, with a further section providing a summary of the proposed updates.</p>
 
-<p>Authors&rsquo; note for the -00 version: this draft also captures some of the meta discussion around not only the proposed changes but other suggestions drawn from 6man WG list discussions.  These elements will be removed if there is consensus to move the document forward on the proposed path.</p>
+<p>Authors&rsquo; note for the -02 version: this draft also captures and refined based on discussions during and after presentation at IETF 117. One specific element discussed was the addition of setting RFC1918 space to a lower preference is currently omitted and should be discussed within the 6man list. This section will be removed prior to publication.</p>
 
 <h1 id="terminology">Terminology</h1>
 
@@ -97,7 +95,7 @@ giving the ::ffff:0.0.0.0/96 prefix a higher precedence&quot;.
 
 <h2 id="operational-implications">Operational Implications</h2>
 
-<p>There are demonstrated and easily repeatable uses cases of ULA not being preferred in some OS and network equipment over legacy IPv4 that necessitate an update to RFC 6724 to better reflect the original intent of the RFC.</p>
+<p>There are demonstrated and easily repeatable uses cases of ULA not being preferred in some OS and network equipment over legacy IPv4 that necessitate an update to RFC 6724 to better reflect the original intent of the RFC in order to facilitate the depreciation and eventual removal of IPv4 in network environments where such a configuration is desired or required.</p>
 
 <p>Below is an example of a gai.conf file from a modern Linux installation as of 25 May 2023:</p>
 
@@ -187,20 +185,6 @@ returned, the source address selection should return and use a ULA address if av
 
 <p>As a result, the use of ULAs is not a viable option for dual-stack networking transition planning, large scale network modeling, network lab environments or other modes of large scale networking that run both IPv4 and IPv6 concurrently with the expectation that IPv6 will be preferred by default.</p>
 
-<h1 id="configurability-of-the-default-policy-table">Configurability of the Default Policy Table</h1>
-
-<p>In principle the above problem would not be an issue were the RFC 6724 default policy table readily configurable in all systems. Section 10.6 states that ULAs can be preferred by adding a site-specific entry to the default policy table. In practice, this is currently not always possible.</p>
-
-<p>While conceptually the intent was for a configurable, longest-match table to be adjusted as needed. In practice, modifying the prefix policy table remains difficult across platforms, and in some cases impossible. Embedded, proprietary, closed source, and IoT devices are especially difficult to adjust, and are in many cases incapable of any adjustment. Large scale manipulation of the policy table also remains out of the realm of realistic support for small and medium scale operators due to lack of ability to manipulate all the hosts and systems, or a lack of tooling and access.</p>
-
-<p>Operational experience suggests that the default policy table needs to be as configurable as possible in as many systems as possible. This update therefore proposes that the requirement that IPv6 implementations support configurable address selection via a mechanism at least as powerful as the policy table be elevated from a SHOULD to a MUST.</p>
-
-<p>Authors&rsquo; note for the -00 version: of course we state above that for some platforms, the ability to implement such a method is challenging.  The question for the 6man WG is how to ensure configurability is as widespread as possible.</p>
-
-<h1 id="next-hop-router-heuristic">Next-hop router heuristic</h1>
-
-<p>The heuristic for address selection defined in Section 5.5 of RFC 6724 to prefer addresses in a prefix advertised by a next-hop router has proven to be very useful.  RFC 6724 does not state any requirement for SHOULD or MUST for this heuristic to be used; this update therefore proposes stating that the application of the heuristic be a MUST.</p>
-
 <h1 id="preference-of-6to4-addresses">Preference of 6to4 addresses</h1>
 
 <p>The anycast prefix for 6to4 relays was deprecated by {{RFC7526}} in 2015, and since that time the use of 6to4 addressing has further declined to the point where it is generally not seen and can be considered to all intents and purposes deprecated in use.  This document therefore demotes the preference of the 6to4 prefix in the policy table to the same minimum preference as carried by the deprecated site local and 6bone address prefixes.</p>
@@ -208,26 +192,6 @@ returned, the source address selection should return and use a ULA address if av
 <h1 id="adjustments-to-rfc-6724">Adjustments to RFC 6724</h1>
 
 <p>Rule 2.1 of RFC 6724 states:</p>
-
-<pre><code>IPv6 implementations SHOULD support configurable address selection
-via a mechanism at least as powerful as the policy tables defined
-here.  It is important that implementations provide a way to change
-the default policies as more experience is gained.  Sections 10.3
-through 10.7 provide examples of the kind of changes that might be
-needed.
-</code></pre>
-
-<p>This document updates RFC 6724 section 2.1 to the following:</p>
-
-<pre><code>IPv6 implementations MUST support configurable address selection
-via a mechanism at least as powerful as the policy tables defined
-here.  It is important that implementations provide a way to change
-the default policies to ensure operational supportability and flexibility in deployment.
-Sections 10.3 through 10.7 provide examples of the kind of changes that might be
-needed.
-</code></pre>
-
-<p>Rule 2.1 of RFC 6724 further states:</p>
 
 <pre><code>If an implementation is not configurable or has not been configured,
    then it SHOULD operate according to the algorithms specified here in
@@ -267,36 +231,6 @@ needed.
 
 <p>This preference table update moves 2002::/16 to de-preference its status in line with RFC 7526 and changes the default address selection to move fc00::/7 above legacy IPv4, with ::ffff:0:0/96 now set to precedence 20.</p>
 
-<p>Rule 5.5 of RFC 6724 states:</p>
-
-<pre><code>Rule 5.5: Prefer addresses in a prefix advertised by the next-hop.
-If SA or SA's prefix is assigned by the selected next-hop that will
-be used to send to D and SB or SB's prefix is assigned by a different
-next-hop, then prefer SA.  Similarly, if SB or SB's prefix is
-assigned by the next-hop that will be used to send to D and SA or
-SA's prefix is assigned by a different next-hop, then prefer SB.
-Discussion: An IPv6 implementation is not required to remember
-which next-hops advertised which prefixes.  The conceptual models
-of IPv6 hosts in Section 5 of [RFC4861] and Section 3 of [RFC4191]
-have no such requirement.  Hence, Rule 5.5 is only applicable to
-implementations that track this information.
-</code></pre>
-
-<p>This document updates RFC 6724 section 5.5 to the following:</p>
-
-<pre><code>Rule 5.5: Hosts MUST prefer addresses in a prefix advertised by the next-hop.
-If SA or SA's prefix is assigned by the selected next-hop that will
-be used to send to D and SB or SB's prefix is assigned by a different
-next-hop, then prefer SA.  Similarly, if SB or SB's prefix is
-assigned by the next-hop that will be used to send to D and SA or
-SA's prefix is assigned by a different next-hop, then prefer SB.
-Discussion: An IPv6 implementation is not required to remember
-which next-hops advertised which prefixes.  The conceptual models
-of IPv6 hosts in Section 5 of [RFC4861] and Section 3 of [RFC4191]
-have no such requirement.  Hence, Rule 5.5 is only applicable to
-implementations that track this information.
-</code></pre>
-
 <h1 id="the-practicalities-of-implementing-address-selection-support">The practicalities of implementing address selection support</h1>
 
 <p>As with most adjustments to standards, and using RFC 6724
@@ -327,7 +261,7 @@ renders operational scalability of such a mechanism challenging.</p>
 
 <h1 id="acknowledgements">Acknowledgements</h1>
 
-<p>The authors would like to acknowledge the valuable input and contributions of the 6man WG including Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinden, Ed Horley, Tom Coffeen, Scott Hogg, and Chris Cummings.</p>
+<p>The authors would like to acknowledge the valuable input and contributions of the 6man WG including Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinden, Ed Horley, Tom Coffeen, Scott Hogg, Chris Cummings, and Dale Carder.</p>
 
 <h1 id="security-considerations">Security Considerations</h1>
 
@@ -346,10 +280,9 @@ IPv6 addresses from leaking outside of the site and to keep any site prefixes fr
 
 <ul>
 <li>Update to default preference table moving 6to4 address block 2002::/16 to de-preference status in line with {{RFC7526}}</li>
-<li>Change the default address selection to move fc00::/7 to preference 35, above legacy IPv4,<br>
+<li>Change the default address selection to move fc00::/7 to preference 30, above legacy IPv4,<br>
 </li>
-<li>Change ::ffff:0:0/96 to preference 30.</li>
-<li>Change section 5.5 Prefer addresses in a prefix advertised by the next-hop to a MUST</li>
+<li>Change ::ffff:0:0/96 to preference 20.</li>
 </ul>
 
 <p>&mdash; back</p>
