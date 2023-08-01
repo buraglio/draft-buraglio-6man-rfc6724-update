@@ -92,7 +92,7 @@ The expected behavior would be that ULA address space would be preferred over le
 
 ## Operational Implications
 
-There are demonstrated and easily repeatable uses cases of ULA not being preferred in some OS and network equipment over legacy IPv4 that necessitate an update to RFC 6724 to better reflect the original intent of the RFC. 
+There are demonstrated and easily repeatable uses cases of ULA not being preferred in some OS and network equipment over legacy IPv4 that necessitate an update to RFC 6724 to better reflect the original intent of the RFC in order to facilitate the depreciation and eventual removal of IPv4 in network environments where such a configuration is desired or required. 
 
 Below is an example of a gai.conf file from a modern Linux installation as of 25 May 2023:
 
@@ -181,20 +181,6 @@ For scenario number 3, when a host resolves through DNS a destination with A and
 
 As a result, the use of ULAs is not a viable option for dual-stack networking transition planning, large scale network modeling, network lab environments or other modes of large scale networking that run both IPv4 and IPv6 concurrently with the expectation that IPv6 will be preferred by default.
 
-# Configurability of the Default Policy Table
-
-In principle the above problem would not be an issue were the RFC 6724 default policy table readily configurable in all systems. Section 10.6 states that ULAs can be preferred by adding a site-specific entry to the default policy table. In practice, this is currently not always possible.
-
-While conceptually the intent was for a configurable, longest-match table to be adjusted as needed. In practice, modifying the prefix policy table remains difficult across platforms, and in some cases impossible. Embedded, proprietary, closed source, and IoT devices are especially difficult to adjust, and are in many cases incapable of any adjustment. Large scale manipulation of the policy table also remains out of the realm of realistic support for small and medium scale operators due to lack of ability to manipulate all the hosts and systems, or a lack of tooling and access.
-
-Operational experience suggests that the default policy table needs to be as configurable as possible in as many systems as possible. This update therefore proposes that the requirement that IPv6 implementations support configurable address selection via a mechanism at least as powerful as the policy table be elevated from a SHOULD to a MUST.
-
-Authors' note for the -00 version: of course we state above that for some platforms, the ability to implement such a method is challenging.  The question for the 6man WG is how to ensure configurability is as widespread as possible.
-
-# Next-hop router heuristic
-
-The heuristic for address selection defined in Section 5.5 of RFC 6724 to prefer addresses in a prefix advertised by a next-hop router has proven to be very useful.  RFC 6724 does not state any requirement for SHOULD or MUST for this heuristic to be used; this update therefore proposes stating that the application of the heuristic be a MUST.
-
 # Preference of 6to4 addresses
 
 The anycast prefix for 6to4 relays was deprecated by {{RFC7526}} in 2015, and since that time the use of 6to4 addressing has further declined to the point where it is generally not seen and can be considered to all intents and purposes deprecated in use.  This document therefore demotes the preference of the 6to4 prefix in the policy table to the same minimum preference as carried by the deprecated site local and 6bone address prefixes.
@@ -202,28 +188,6 @@ The anycast prefix for 6to4 relays was deprecated by {{RFC7526}} in 2015, and si
 # Adjustments to RFC 6724
 
 Rule 2.1 of RFC 6724 states:
-
-~~~~~~~~~~
-IPv6 implementations SHOULD support configurable address selection
-via a mechanism at least as powerful as the policy tables defined
-here.  It is important that implementations provide a way to change
-the default policies as more experience is gained.  Sections 10.3
-through 10.7 provide examples of the kind of changes that might be
-needed.
-~~~~~~~~~~
-
-This document updates RFC 6724 section 2.1 to the following:
-
-~~~~~~~~~~
-IPv6 implementations MUST support configurable address selection
-via a mechanism at least as powerful as the policy tables defined
-here.  It is important that implementations provide a way to change
-the default policies to ensure operational supportability and flexibility in deployment.
-Sections 10.3 through 10.7 provide examples of the kind of changes that might be
-needed.
-~~~~~~~~~~
-
-Rule 2.1 of RFC 6724 further states:
 
 ~~~~~~~~~~
 If an implementation is not configurable or has not been configured,
@@ -265,37 +229,6 @@ If an implementation is not configurable or has not been configured,
 
 This preference table update moves 2002::/16 to de-preference its status in line with RFC 7526 and changes the default address selection to move fc00::/7 above legacy IPv4, with ::ffff:0:0/96 now set to precedence 20. 
 
-Rule 5.5 of RFC 6724 states:
-
-~~~~~~~~~~
-Rule 5.5: Prefer addresses in a prefix advertised by the next-hop.
-If SA or SA's prefix is assigned by the selected next-hop that will
-be used to send to D and SB or SB's prefix is assigned by a different
-next-hop, then prefer SA.  Similarly, if SB or SB's prefix is
-assigned by the next-hop that will be used to send to D and SA or
-SA's prefix is assigned by a different next-hop, then prefer SB.
-Discussion: An IPv6 implementation is not required to remember
-which next-hops advertised which prefixes.  The conceptual models
-of IPv6 hosts in Section 5 of [RFC4861] and Section 3 of [RFC4191]
-have no such requirement.  Hence, Rule 5.5 is only applicable to
-implementations that track this information.
-~~~~~~~~~~
-
-This document updates RFC 6724 section 5.5 to the following:
-
-~~~~~~~~~~
-Rule 5.5: Hosts MUST prefer addresses in a prefix advertised by the next-hop.
-If SA or SA's prefix is assigned by the selected next-hop that will
-be used to send to D and SB or SB's prefix is assigned by a different
-next-hop, then prefer SA.  Similarly, if SB or SB's prefix is
-assigned by the next-hop that will be used to send to D and SA or
-SA's prefix is assigned by a different next-hop, then prefer SB.
-Discussion: An IPv6 implementation is not required to remember
-which next-hops advertised which prefixes.  The conceptual models
-of IPv6 hosts in Section 5 of [RFC4861] and Section 3 of [RFC4191]
-have no such requirement.  Hence, Rule 5.5 is only applicable to
-implementations that track this information.
-~~~~~~~~~~
 
 # The practicalities of implementing address selection support
 
@@ -325,7 +258,7 @@ Authors' note for the -00 version: this section captures some interesting sugges
 
 # Acknowledgements 
 
-The authors would like to acknowledge the valuable input and contributions of the 6man WG including Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinden, Ed Horley, Tom Coffeen, Scott Hogg, and Chris Cummings. 
+The authors would like to acknowledge the valuable input and contributions of the 6man WG including Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinden, Ed Horley, Tom Coffeen, Scott Hogg, Chris Cummings, and Dale Carder. 
 
 # Security Considerations
 
