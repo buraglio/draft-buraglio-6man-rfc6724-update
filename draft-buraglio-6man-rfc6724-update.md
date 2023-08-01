@@ -275,6 +275,6 @@ None.
 
 * Update to default preference table moving 6to4 address block 2002::/16 to de-preference status in line with {{RFC7526}} 
 * Change the default address selection to move fc00::/7 to preference 30, above legacy IPv4,  
-* Change ::ffff:0:0/96 to preference 30.
+* Change ::ffff:0:0/96 to preference 20.
 
 --- back
