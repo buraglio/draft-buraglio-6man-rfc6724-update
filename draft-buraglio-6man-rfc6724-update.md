@@ -1,6 +1,6 @@
 ---
-title: Preference for ULAs over RFC1918 addresses in RFC6724
-abbrev: Prefer ULAs over RFC1918 addresses
+title: Preference for IPv6 ULAs over IPv4 addresses in RFC6724
+abbrev: Prefer ULAs over IPv4 addresses
 docname: draft-buraglio-6man-rfc6724-update-02
 cat: std
 submissiontype: IETF
