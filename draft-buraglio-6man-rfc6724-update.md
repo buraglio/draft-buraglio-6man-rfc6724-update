@@ -43,7 +43,7 @@ informative:
 
 --- abstract
 
-This document updates RFC 6724 based on operational experience gained since its publication over ten years ago. In particular it updates the preference of Unique Local Addresses (ULAs) in the default address selection policy table, which as originally defined by RFC 6724 has lower precedence than legacy IPv4 addressing. The update places both IPv6 Global Unicast Addresses (GUAs) and ULAs ahead of all IPv4 addresses on the policy table to better suit operational deployment and management of ULAs in production. This document also updates requirements on configurability of the policy table and preference for using addresses from a prefix advertised by a next-hop router, and demotes the preference for 6to4 addresses in the default policy table. These changes to default behavior improve supportability of common use cases such as, but not limited to, automatic / unmanaged scenarios. It is recognized that some less common deployment situations may require explicit configuration or custom changes to achieve desired operational parameters.  
+This document updates RFC 6724 based on operational experience gained since its publication over ten years ago. In particular it updates the preference of Unique Local Addresses (ULAs) in the default address selection policy table, which as originally defined by RFC 6724 has lower precedence than legacy IPv4 addressing. The update places both IPv6 Global Unicast Addresses (GUAs) and ULAs ahead of all IPv4 addresses on the policy table to better suit operational deployment and management of ULAs in production. In updating the RFC 6724 default policy table, this document also demotes the preference for 6to4 addresses. These changes to default behavior improve supportability of common use cases such as, but not limited to, automatic / unmanaged scenarios. It is recognized that some less common deployment scenarios may require explicit configuration or custom changes to achieve desired operational parameters.  
 
 --- middle
 
@@ -51,23 +51,25 @@ This document updates RFC 6724 based on operational experience gained since its 
 
 When {{RFC6724}} was published in 2012 it was expected that the default policy table may need to be updated from operational experience; section 2.1 says "It is important that implementations provide a way to change the default policies as more experience is gained" and points to the examples in Section 10, including Section 10.6 which considers a ULA example.
 
-This document is written on the basis of operational experience, in particular for scenarios where ULAs are used within a site. The current default policy table in RFC 6724 leads to preference for IPv6 GUAs over IPv4 globals, which is widely considered to be preferential behavior to support greater use of IPv6 in dual-stack environments, and to allow sites to phase out IPv4 as its use becomes ever lower.
+This document is written on the basis of such operational experience, in particular for scenarios where ULAs are used within a site. 
 
-However, the  default policy table also puts IPv6 ULAs below all IPv4 addresses, including {{RFC1918}} addresses. For many site operators this behavior will be counter-intuitive, and may create difficulties with respect to planning, operational, and security implications for environments where ULA addressing is used in certain IPv4/IPv6 dual-stack network scenarios. The expected prioritization of IPv6 traffic over IPv4 by default, as happens with IPv6 GUA addressing, will not happen for ULAs.
+The current default policy table in RFC 6724 leads to preference for IPv6 GUAs over IPv4 globals, which is widely considered to be preferential behavior to support greater use of IPv6 in dual-stack environments, and to allow sites to phase out IPv4 as its use becomes ever lower.
 
-An IPv6 deployment, whether enterprise, residential or other, may use combinations of IPv6 GUAs, IPv6 ULAs, IPv4 globals, IPv4 RFC 1918 addressing, and may or may not use some form of NAT. This document makes no comment or recommendation on how ULAs are used, or on NAT, but notes that operationally where GUAs and ULAs are used alongside RFC 1918 addressing, an IPv6 GUA would be selected to reach an IPv6 GUA destination, but where only ULAs and RFC1918 addressing are used, RFC 1918 addresses will be preferred.
+However, the default policy table also puts IPv6 ULAs below all IPv4 addresses, including {{RFC1918}} addresses. For many site operators this behavior will be counter-intuitive, and may create difficulties with respect to planning, operational, and security implications for environments where ULA addressing is used in certain IPv4/IPv6 dual-stack network scenarios. The expected prioritization of IPv6 traffic over IPv4 by default, as happens with IPv6 GUA addressing, will not happen for ULAs.
 
-This document updates the default policy table to elevate the preference for ULAs such that ULAs will be preferred over all IPv4 addresses, providing more consistent and less confusing behavior for operators.
+An IPv6 deployment, whether enterprise, residential or other, may use combinations of IPv6 GUAs, IPv6 ULAs, IPv4 globals, IPv4 RFC 1918 addressing, and may or may not use some form of NAT. 
 
-Note that ULAs must never be used across site boundaries as if they were under unregistered global prefixes. Nothing in this document pertains to such misuse. 
+This document makes no comment or recommendation on how ULAs are used, or on NAT, but notes that, as the default policy table stands, operationally where GUAs and ULAs are used alongside RFC 1918 addressing, an IPv6 GUA would be selected to reach an IPv6 GUA destination, but where only ULAs and RFC1918 addressing are used, RFC 1918 addresses will be preferred.
 
-The emergence of this issue also reinforces the need for the original RFC 6724 address selection policy table to be configurable. RFC 6724 Section 2.1 states that the table SHOULD be configurable; this document proposes elevating that requirement to MUST, to ensure that any device can have its policy table tuned for the scenario in which it is deployed. Section 10 of RFC 6724 gives other examples of why configurability is important. 
+This document updates the default policy table to elevate the preference for ULAs such that ULAs will be preferred over all IPv4 addresses, providing more consistent and less confusing behavior for operators. 
 
-This document aims to improve the default handling of address selection for common cases, and unmanaged / automatic scenarios rather than those where DHCPv6 is deployed. Sites using DHCPv6 for host configuration management can make use of implementations of {{RFC7078}} to apply changes to the RFC 6724 policy table.
+This change aims to improve the default handling of address selection for common cases, and unmanaged / automatic scenarios rather than those where DHCPv6 is deployed. Sites using DHCPv6 for host configuration management can make use of implementations of {{RFC7078}} to apply changes to the RFC 6724 policy table.
 
-These updates are discussed in more detail in the following sections, with a further section providing a summary of the proposed updates.
+The changes should also assist operators in phasing out IPv4 from dual-stack environments, since IPv6 GUAs and ULAs will be preferred over any IPv4 addresses, and is thus an important enabler towards IPv6-only networking.
 
-Authors' note for the -02 version: this draft also captures and refined based on discussions during and after presentation at IETF 117. One specific element discussed was the addition of setting RFC1918 space to a lower preference is currently omitted and should be discussed within the 6man list. This section will be removed prior to publication.  
+The changes are discussed in more detail in the following sections, with a further section providing a summary of the proposed updates.
+
+Authors' note for the -02 version: this draft also captures and refined based on discussions during and after presentation at IETF 117. One specific element discussed was the addition of setting RFC1918 space (three IPv4 prefixes) to a lower preference is currently omitted and should be discussed within the 6man list. This section will be removed prior to publication.  
 
 # Terminology
 
@@ -90,7 +92,7 @@ The expected behavior would be that ULA address space would be preferred over le
 
 ## Operational Implications
 
-There are demonstrated and easily repeatable uses cases of ULA not being preferred in some OS and network equipment over legacy IPv4 that necessitate an update to RFC 6724 to better reflect the original intent of the RFC in order to facilitate the depreciation and eventual removal of IPv4 in network environments where such a configuration is desired or required. 
+There are demonstrated and easily repeatable uses cases of ULAs not being preferred in some OS and network equipment over legacy IPv4 addresses that necessitate an update to RFC 6724 to better reflect the original intent of the RFC in order to facilitate the depreciation and eventual removal of IPv4 in network environments where such a configuration is desired or required. 
 
 Below is an example of a gai.conf file from a modern Linux installation as of 25 May 2023:
 
@@ -181,7 +183,9 @@ As a result, the use of ULAs is not a viable option for dual-stack networking tr
 
 # Preference of 6to4 addresses
 
-The anycast prefix for 6to4 relays was deprecated by {{RFC7526}} in 2015, and since that time the use of 6to4 addressing has further declined to the point where it is generally not seen and can be considered to all intents and purposes deprecated in use.  This document therefore demotes the preference of the 6to4 prefix in the policy table to the same minimum preference as carried by the deprecated site local and 6bone address prefixes.
+The anycast prefix for 6to4 relays was deprecated by {{RFC7526}} in 2015, and since that time the use of 6to4 addressing has further declined to the point where it is generally not seen and can be considered to all intents and purposes deprecated in use.  
+
+This document therefore demotes the preference of the 6to4 prefix in the policy table to the same minimum preference as carried by the deprecated site local and 6bone address prefixes.
 
 # Adjustments to RFC 6724
 
@@ -242,11 +246,11 @@ renders operational scalability of such a mechanism challenging.
 
 It is especially important to note this behavior in the long lifecycle equipment that exists in industrial control and operational technology environments due to their very long mean time to replacement/lifecycle.
 
-In practice this means that network operators and those who design networks need to keep these considerations in mind.  One workaround should the ULA and IPv4 preference issue be of concern is to use IPv6-only networking, and to simply not deploy dual-stack. Another is to use GUA IPv6 addresses, which are preferred by defaul over all IPv4 addresses.
+In practice this means that network operators and those who design networks need to keep these considerations in mind.  One workaround should the ULA and IPv4 preference issue be of concern is to use IPv6-only networking, and to simply not deploy dual-stack. Another is to only use GUA IPv6 addresses, which are preferred by default over all IPv4 addresses.
 
 # Notes on the 6Man Working Group list discussion
 
-Authors' note for the -00 version: this section captures some interesting suggestions from the 300 or so emails in the past few months in the 6man WG on this topic. These are noted, and captured here to inform discussion of the draft should it move forward in the WG.
+Authors' note for the -00 version: this section captures some interesting suggestions from the 300 or so emails in the past few months in the 6man WG on this topic. These are noted, and captured here to inform discussion of the draft should it move forward in the WG. These notes will be deleted in the final version of the draft.
 
 * The suggestion to automatically insert an observed ULA /48 into the policy table to elevate a locally used ULA above IPv4 and GUA addresses was quite popular, though kernel implementation may be challenging for all platforms. This would be supported by changing the “MAY" in Section 2.1 and the “might” in Section 10.6 of RFC 6724 to “SHOULD” (or even a MUST). The case for a MUST is greater in order to allow for maximum network operator flexibility if the source selection table is not modified by the operating system. This could be an acceptable compromise, but requires two additional additions to an IPv6 ULA network: router manufacturers must now implement this new feature that is not a standard option in IPv6 Router Advertisements (RAs) and operators must know that the capability to add a tag for ULA prefixes in the source selection table is an operational possibility and now part of an architectural consideration. Network operators using managed addressing may have not considered using a tagged ULA prefix in RA as an option.
 
@@ -266,6 +270,8 @@ The mixed preference for IPv6 over IPv4 from the default policy table in RFC 672
 
 When using the updated ULA source address selection defined in this document, network operators MUST follow Section 4.3 of {{RFC4193}} for firewall/packet filtering as "routers be configured by default to keep any packets with Local
 IPv6 addresses from leaking outside of the site and to keep any site prefixes from being advertised outside of their site." Following this security practice is critical when ULAs have more broad reachability.
+
+In cases where one node is compliant with RFC 6724 as originally published, and another node is compliant with the update presented in this document, there may be inconsistent behaviour for communications initaited in each direction. Operators should be mindful of this, though it is no different in general principle to differences between RFC 6724 and nodes that are (still) only RFC 3484 compliant.
 
 # IANA Considerations
 
