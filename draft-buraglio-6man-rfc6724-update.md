@@ -223,7 +223,7 @@ If an implementation is not configurable or has not been configured,
       fc00::/7              30    13
       ::ffff:0:0/96         20     4
       2001::/32              5     5
-      2002::/16              1     2
+      2002::/16              5     2
       ::/96                  1     3
       fec0::/10              1    11
       3ffe::/16              1    12
