@@ -38,6 +38,7 @@ informative:
   RFC6724:
   RFC1918:
   RFC3484:
+  RFC5220:
  
   
 
@@ -248,6 +249,28 @@ It is especially important to note this behavior in the long lifecycle equipment
 
 In practice this means that network operators and those who design networks need to keep these considerations in mind.  One workaround should the ULA and IPv4 preference issue be of concern is to use IPv6-only networking, and to simply not deploy dual-stack. Another is to only use GUA IPv6 addresses, which are preferred by default over all IPv4 addresses.
 
+# Notable changes in practice today
+
+## Relation to {{RFC5220}}
+
+With a separate label for ULA now present in the policy table, Rule 5 of Section 6 of {{RFC6724}} which states 
+~~~~~
+Rule 5: Prefer matching label.
+   If Label(Source(DA)) = Label(DA) and Label(Source(DB)) <> Label(DB),
+   then prefer DA.  Similarly, if Label(Source(DA)) <> Label(DA) and
+   Label(Source(DB)) = Label(DB), then prefer DB.
+~~~~~
+ The presence of the label and the rule defining the behavior based on said rule should prevent the situation described in 2.2.2 of {{RFC5220}} from occurring.
+
+## Relation to Happy Eyeballs
+
+In the edge case that ULA a Source Address is selected to communicate with a GUA destination, Happy Eyeballs version 1 or 2 would result in IPv4 being selected for use since the ULA source address will likely fail. Corner cases may exist where the ULA address will not fail, however, these cases are more likely misconfigurations than intentional and should be considered edge cases.
+
+## Relation to {{RFC4193}}
+
+If the operational guidelines in sections 4.1 and 4.3 of {{RFC4193}} are followed, a Destination Unreachable ICMPv6 Error should be received by the source device which should either trigger Happy Eyeballs. If Happy Eyeballs is not implemented, the next option should follow the guidelines outlined in {{RFC4193}}.
+
+
 # Notes on the 6Man Working Group list discussion
 
 Authors' note for the -00 version: this section captures some interesting suggestions from the 300 or so emails in the past few months in the 6man WG on this topic. These are noted, and captured here to inform discussion of the draft should it move forward in the WG. These notes will be deleted in the final version of the draft.
@@ -271,7 +294,7 @@ The mixed preference for IPv6 over IPv4 from the default policy table in RFC 672
 When using the updated ULA source address selection defined in this document, network operators MUST follow Section 4.3 of {{RFC4193}} for firewall/packet filtering as "routers be configured by default to keep any packets with Local
 IPv6 addresses from leaking outside of the site and to keep any site prefixes from being advertised outside of their site." Following this security practice is critical when ULAs have more broad reachability.
 
-In cases where one node is compliant with RFC 6724 as originally published, and another node is compliant with the update presented in this document, there may be inconsistent behaviour for communications initaited in each direction. Operators should be mindful of this, though it is no different in general principle to differences between RFC 6724 and nodes that are (still) only RFC 3484 compliant.
+In cases where one node is compliant with RFC 6724 as originally published, and another node is compliant with the update presented in this document, there may be inconsistent behaviour for communications initiated in each direction. Operators should be mindful of this, though it is no different in general principle to differences between RFC 6724 and nodes that are (still) only RFC 3484 compliant.
 
 # IANA Considerations
 
