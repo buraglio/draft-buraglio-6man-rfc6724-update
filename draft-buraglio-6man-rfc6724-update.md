@@ -262,20 +262,9 @@ In the edge case that ULA a Source Address is selected to communicate with a GUA
 
 If the operational guidelines in sections 4.1 and 4.3 of {{RFC4193}} are followed, a Destination Unreachable ICMPv6 Error should be received by the source device which should either trigger Happy Eyeballs. If Happy Eyeballs is not implemented, the next option should follow the guidelines outlined in {{RFC4193}}.
 
-
-# Notes on the 6Man Working Group list discussion
-
-Authors' note for the -00 version: this section captures some interesting suggestions from the 300 or so emails in the past few months in the 6man WG on this topic. These are noted, and captured here to inform discussion of the draft should it move forward in the WG. These notes will be deleted in the final version of the draft.
-
-* The suggestion to automatically insert an observed ULA /48 into the policy table to elevate a locally used ULA above IPv4 and GUA addresses was quite popular, though kernel implementation may be challenging for all platforms. This would be supported by changing the “MAY" in Section 2.1 and the “might” in Section 10.6 of RFC 6724 to “SHOULD” (or even a MUST). The case for a MUST is greater in order to allow for maximum network operator flexibility if the source selection table is not modified by the operating system. This could be an acceptable compromise, but requires two additional additions to an IPv6 ULA network: router manufacturers must now implement this new feature that is not a standard option in IPv6 Router Advertisements (RAs) and operators must know that the capability to add a tag for ULA prefixes in the source selection table is an operational possibility and now part of an architectural consideration. Network operators using managed addressing may have not considered using a tagged ULA prefix in RA as an option.
-
-* The list discussed handling of corner cases, though what constitutes a corner case is in itself not wholly clear. The above suggestion for example would not cover the case where two sites using ULAs merged, and multiple ULA prefixes needed to be considered local. The open question is how deeply we consider corner cases; is some requirement for explicit configuration of certain cases inevitable? Is improving the current situation sufficient?
-
-* A suggestion to use an RA PIO with A=0 and L=0, based on an interpretation of Section 2.1 of RFC 8028, was proposed but considered something of a stretch. That said, it could be an RA-based starting point to give some configurability for non-DHCPv6 networks.
-
 # Acknowledgements 
 
-The authors would like to acknowledge the valuable input and contributions of the 6man WG including Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinden, Ed Horley, Tom Coffeen, Scott Hogg, Chris Cummings, and Dale Carder. 
+The authors would like to acknowledge the valuable input and contributions of the 6man WG including Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinden, Ed Horley, Tom Coffeen, Scott Hogg, Chris Cummings, Paul Wefel, and Dale Carder. 
 
 # Security Considerations
 
