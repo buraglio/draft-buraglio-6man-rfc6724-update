@@ -91,7 +91,7 @@ The expected behavior would be that ULA address space would be preferred over le
 
 ## Operational Implications
 
-There are demonstrated and easily repeatable uses cases of ULAs not being preferred in some OS and network equipment over legacy IPv4 addresses that necessitate an update to RFC 6724 to better reflect the original intent of the RFC in order to facilitate the depreciation and eventual removal of IPv4 in network environments where such a configuration is desired or required. 
+There are demonstrated and easily repeatable operational examples of the impact of the current RFC 6724 behaviour, i.e., ULAs not being preferred in OS and network equipment over legacy IPv4 addresses. These reinforce the need to update RFC 6724 to both better reflect the original intent of the RFC and to facilitate the depreciation and eventual removal of IPv4 in network environments. 
 
 Below is an example of a gai.conf file from a modern Linux installation as of 25 May 2023:
 
@@ -163,7 +163,7 @@ Below is an example of a gai.conf file from a modern Linux installation as of 25
 #scopev4 ::ffff:0.0.0.0/96       14
 ~~~~~~~~~~
 
-The legacy IPv4 address range in the gai.conf file is "scopev4" and the prefix ::ffff:0.0.0.0/96 which has a higher precedence (35) in RFC 6724 than the ULA prefix of fc00::/7 (3). This results in legacy IPv4 being preferred over IPv6 ULA. While not inherently undesirable, the operational outcome when utilizing dual-stack with ULA is inconsistent and imparts unnecessary difficulty for both troubleshooting and creating the requisite baseline of the expected behavior which are both requirements for supportable production deployments. Depending on the host implementation, security baseline expectations can be inconsistent at best and haphazard at worst.
+The legacy IPv4 address range in the gai.conf file is "scopev4" and the prefix ::ffff:0.0.0.0/96 which has a higher precedence (35) in RFC 6724 than the ULA prefix of fc00::/7 (3). This results in legacy IPv4 being preferred over IPv6 ULA. The result is that the operational outcome when utilizing dual-stack with ULA is inconsistent and imparts unnecessary difficulty for both troubleshooting and creating the requisite baseline of the expected behavior, which are both requirements for supportable production deployments. Depending on the host implementation, security baseline expectations can be inconsistent at best and haphazard at worst.
 
 As the gai.conf file, or an equivalent within a given operating system, is referenced it dictates the
 behavior of the getaddrinfo() or analogous process. More specifically, where getaddrinfo() or a comparable API is used, the sorting behavior should take into account both
@@ -235,32 +235,32 @@ This preference table update moves 2002::/16 to de-preference its status in line
 
 As with most adjustments to standards, and using RFC 6724 itself as a measuring stick, the updates defined in this document will likely take between 8-20 years to become common enough for consistent behavior within most operating systems. At the time of writing, it has been over 10 years since RFC 6724 has been published but we continue to see existing commercial and open source operating systems exhibiting {{RFC3484}} behavior. 
 
-While it should be noted that RFC 6724 defines a solution that is functional theoretically, operationally the solution of adjusting the address preference selection table is both operating system dependent and unable to be signaled by any network mechanism. For example, this can be done within a router advertisement or DHCPv6 option. Given {{RFC7078}} defines such a DHCPv6 option, it is not by any means widely implemented. This lack of an intra-protocol or network-based ability to adjust address selection preference, along with the inability to adjust a notable number of operating systems either programmatically or manually renders operational scalability of such a mechanism challenging.  
+While it should be noted that RFC 6724 defines a solution to adjust the address preference selection table that is functional theoretically, operationally the solution is operating system dependent and cannot be signaled by any currently deployed network mechanism. While {{RFC7078}} defines such a DHCPv6 option, it is not by any means widely implemented. This lack of an intra-protocol or network-based ability to adjust address selection preference, along with the inability to adjust a notable number of operating systems either programmatically or manually renders operational scalability of such a mechanism challenging.  
 
 It is especially important to note this behavior in the long lifecycle equipment that exists in industrial control and operational technology environments due to their very long mean time to replacement/lifecycle.
 
-In practice this means that network operators and those who design networks need to keep these considerations in mind.  Should the ULA and IPv4 preference issue be of concern one should use IPv6-only networking, or simply not deploy dual-stack. Another is to only use only GUA IPv6 addresses, which are preferred by default over all IPv4 addresses.
+In practice this means that network operators and those who design networks need to keep these considerations in mind.  Should the current ULA and IPv4 preference issue be of concern then 'workarounds' do exist. One is to use IPv6-only networking, i.e., not deploy dual-stack, and another is to only use GUA IPv6 addresses which are preferred by default over all IPv4 addresses. 
 
 # Notable changes in practice today
 
 ## Relation to {{RFC5220}}
 
-With a separate label for ULA now present in the policy table, Rule 5 of Section 6 of {{RFC6724}} which states 
+The concerns expressed in section 2.2.2 of {{RFC 5220}} need to be considered. But with a separate label for ULA now present in the policy table, Rule 5 of Section 6 of RFC 6724 which states 
 ~~~~~
 Rule 5: Prefer matching label.
    If Label(Source(DA)) = Label(DA) and Label(Source(DB)) <> Label(DB),
    then prefer DA.  Similarly, if Label(Source(DA)) <> Label(DA) and
    Label(Source(DB)) = Label(DB), then prefer DB.
 ~~~~~
- The presence of the label and the rule defining the behavior based on said rule should prevent the situation described in 2.2.2 of {{RFC5220}} from occurring.
+means that the presence of the label and the rule defining the behavior based on said rule should prevent the situation described in that section from occurring.
 
 ## Relation to Happy Eyeballs
 
-In the edge case that ULA a Source Address is selected to communicate with a GUA destination, Happy Eyeballs version 1 or 2 would result in IPv4 being selected for use since the ULA source address will likely fail. Corner cases may exist where the ULA address will not fail, however, these cases are more likely misconfigurations than intentional and should be considered edge cases.
+In cases where a ULA Source Address is selected to communicate with a GUA destination, Happy Eyeballs version 1 or 2 would result in practice in IPv4 being used since the ULA source address will likely fail (due to egress filtering at the border, as discussed in the Security Considerations below). Corner cases may exist where the ULA address will not fail, however, in normal operation these cases are more likely misconfigurations than intentional.
 
 ## Relation to {{RFC4193}}
 
-If the operational guidelines in sections 4.1 and 4.3 of {{RFC4193}} are followed, a Destination Unreachable ICMPv6 Error should be received by the source device which should either trigger Happy Eyeballs. If Happy Eyeballs is not implemented, the next option should follow the guidelines outlined in {{RFC4193}}.
+If the operational guidelines in sections 4.1 and 4.3 of {{RFC4193}} are followed, a Destination Unreachable ICMPv6 Error should be received by the source device which should trigger Happy Eyeballs. If Happy Eyeballs is not implemented, the next option should follow the guidelines outlined in {{RFC4193}}.
 
 # Acknowledgements 
 
@@ -275,7 +275,7 @@ The mixed preference for IPv6 over IPv4 from the default policy table in RFC 672
 When using the updated ULA source address selection defined in this document, network operators MUST follow Section 4.3 of {{RFC4193}} for firewall/packet filtering as "routers be configured by default to keep any packets with Local
 IPv6 addresses from leaking outside of the site and to keep any site prefixes from being advertised outside of their site." Following this security practice is critical when ULAs have more broad reachability.
 
-Operators should be mindful of cases where one node is compliant with RFC 6724 as originally published and another node is compliant with the update presented in this document, as there may be inconsistent behaviour for communications initiated in each direction.  Having said this, it is similar to differences between RFC 6724 and nodes that are still RFC 3484 compliant.
+Operators should be mindful of cases where one node is compliant with RFC 6724 as originally published and another node is compliant with the update presented in this document, as there may be inconsistent behaviour for communications initiated in each direction. Similarly, differences between current RFC 6724-compliant and RFC 3484-compliant nodes may also be observed. Ultimately all nodes should be made compliant to the updated specification described in this document.
 
 # IANA Considerations
 
