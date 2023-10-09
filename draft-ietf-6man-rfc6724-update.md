@@ -245,7 +245,7 @@ In practice this means that network operators and those who design networks need
 
 ## Relation to {{RFC5220}}
 
-The concerns expressed in section 2.2.2 of {{RFC 5220}} need to be considered. But with a separate label for ULA now present in the policy table, Rule 5 of Section 6 of RFC 6724 which states 
+The concerns expressed in section 2.2.2 of {{RFC5220}} need to be considered. But with a separate label for ULA now present in the policy table, Rule 5 of Section 6 of RFC 6724 which states 
 ~~~~~
 Rule 5: Prefer matching label.
    If Label(Source(DA)) = Label(DA) and Label(Source(DB)) <> Label(DB),
