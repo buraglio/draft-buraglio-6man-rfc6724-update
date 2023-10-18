@@ -93,24 +93,7 @@ The expected behavior would be that ULA address space would be preferred over le
 
 There are demonstrated and easily repeatable operational examples of the impact of the current RFC 6724 behaviour, i.e., ULAs not being preferred in OS and network equipment over legacy IPv4 addresses. These reinforce the need to update RFC 6724 to both better reflect the original intent of the RFC and to facilitate the depreciation and eventual removal of IPv4 in network environments. 
 
-Below is a table that reflects the current RFC 6724 state on the left, and the updated state per this RFC on the right:
-~~~~~~~~~~
-                    RFC 6724                                            Updated                  
-      Prefix        Precedence Label                      Prefix        Precedence Label              
-      ::1/128               50     0                      ::1/128               50     0
-      ::/0                  40     1                      ::/0                  40     1
-      ::ffff:0:0/96         35     4                      ::ffff:0:0/96         20     4 (*)
-      2002::/16             30     2                      2002::/16              5     2 (*)
-      2001::/32              5     5                      2001::/32              5     5
-      fc00::/7               3    13                      fc00::/7              30    13 (*)
-      ::/96                  1     3                      ::/96                  1     3
-      fec0::/10              1    11                      fec0::/10              1     1
-      3ffe::/16              1    12                      3ffe::/16              1     12
-
- (*) value(s) changed in update
-~~~~~~~~~~
-
-As in a given operating system, is referenced it dictates the behavior of the getaddrinfo() or analogous process. More specifically, where getaddrinfo() or a comparable API is used, the sorting behavior should take into account both
+When the default policy table in a given operating system is referenced it dictates the behavior of getaddrinfo() or analogous process. More specifically, where getaddrinfo() or a comparable API is used, the sorting behavior should take into account both
 the source address of the requesting host as well as the destination addresses returned and sort according to both source and destination addresses, i.e, when a ULA address is
 returned, the source address selection should return and use a ULA address if available. Similarly, if a GUA address is returned the source address selection should return a GUA source address if available.
 
@@ -132,44 +115,23 @@ This document therefore demotes the precedence of the 6to4 prefix in the policy 
 
 # Adjustments to RFC 6724
 
-Rule 2.1 of RFC 6724 states:
+This update alters the default policy table listed in Rule 2.1 of RFC 6724.
 
+The table below reflects the current RFC 6724 state on the left, and the updated state defined by this RFC on the right:
 ~~~~~~~~~~
-If an implementation is not configurable or has not been configured,
-   then it SHOULD operate according to the algorithms specified here in
-   conjunction with the following default policy table:
+                    RFC 6724                                            Updated                  
+      Prefix        Precedence Label                      Prefix        Precedence Label              
+      ::1/128               50     0                      ::1/128               50     0
+      ::/0                  40     1                      ::/0                  40     1
+      ::ffff:0:0/96         35     4                      ::ffff:0:0/96         20     4 (*)
+      2002::/16             30     2                      2002::/16              5     2 (*)
+      2001::/32              5     5                      2001::/32              5     5
+      fc00::/7               3    13                      fc00::/7              30    13 (*)
+      ::/96                  1     3                      ::/96                  1     3
+      fec0::/10              1    11                      fec0::/10              1     1
+      3ffe::/16              1    12                      3ffe::/16              1     12
 
-
-      Prefix        Precedence Label
-      ::1/128               50     0
-      ::/0                  40     1
-      ::ffff:0:0/96         35     4
-      2002::/16             30     2
-      2001::/32              5     5
-      fc00::/7               3    13
-      ::/96                  1     3
-      fec0::/10              1    11
-      3ffe::/16              1    12
-~~~~~~~~~~
-
-This document updates RFC 6724 section 2.1 to the following:
-
-~~~~~~~~~~
-If an implementation is not configurable or has not been configured,
-   then it SHOULD operate according to the algorithms specified here in
-   conjunction with the following default policy table:
-
-
-      Prefix        Precedence Label
-      ::1/128               50     0
-      ::/0                  40     1
-      fc00::/7              30    13
-      ::ffff:0:0/96         20     4
-      2001::/32              5     5
-      2002::/16              5     2
-      ::/96                  1     3
-      fec0::/10              1    11
-      3ffe::/16              1    12
+ (*) value(s) changed in update
 ~~~~~~~~~~
 
 This preference table update moves 2002::/16 to de-preference its status in line with RFC 7526 and changes the default address selection to move fc00::/7 above legacy IPv4, with ::ffff:0:0/96 now set to precedence 20. 
@@ -179,15 +141,15 @@ This preference table update moves 2002::/16 to de-preference its status in line
 
 As with most adjustments to standards, and using RFC 6724 itself as a measuring stick, the updates defined in this document will likely take between 8-20 years to become common enough for consistent behavior within most operating systems. At the time of writing, it has been over 10 years since RFC 6724 has been published but we continue to see existing commercial and open source operating systems exhibiting {{RFC3484}} behavior. 
 
-While it should be noted that RFC 6724 defines a solution to adjust the address preference selection table that is functional theoretically, operationally the solution is operating system dependent and cannot be signaled by any currently deployed network mechanism. While {{RFC7078}} defines such a DHCPv6 option, it is not by any means widely implemented. This lack of an intra-protocol or network-based ability to adjust address selection preference, along with the inability to adjust a notable number of operating systems either programmatically or manually renders operational scalability of such a mechanism challenging.  
+While it should be noted that RFC 6724 defines a solution to adjust the address preference selection table that is functional theoretically, operationally the solution is operating system dependent and in practice policy table changes cannot be signaled by any currently deployed network mechanism. While {{RFC7078}} defines such a DHCPv6 option, it is not by any means widely implemented. This lack of an intra-protocol or network-based ability to adjust address selection preference, along with the inability to adjust a notable number of operating systems either programmatically or manually, renders operational scalability of such a mechanism challenging.  
 
 It is especially important to note this behavior in the long lifecycle equipment that exists in industrial control and operational technology environments due to their very long mean time to replacement/lifecycle.
 
 In practice this means that network operators and those who design networks need to keep these considerations in mind.  Should the current ULA and IPv4 preference issue be of concern then 'workarounds' do exist. One is to use IPv6-only networking, i.e., not deploy dual-stack, and another is to only use GUA IPv6 addresses which are preferred by default over all IPv4 addresses. 
 
-# Notable changes in practice today
+# Related Issues and Guidance
 
-## Relation to {{RFC5220}}
+## Relation to RFC 5220
 
 The concerns expressed in section 2.2.2 of {{RFC5220}} need to be considered. But with a separate label for ULA now present in the policy table, Rule 5 of Section 6 of RFC 6724 which states 
 ~~~~~
@@ -200,15 +162,17 @@ means that the presence of the label and the rule defining the behavior based on
 
 ## Relation to Happy Eyeballs
 
-In cases where a ULA Source Address is selected to communicate with a GUA destination, Happy Eyeballs version 1 or 2 would result in practice in IPv4 being used since the ULA source address will likely fail (due to egress filtering at the border, as discussed in the Security Considerations below). Corner cases may exist where the ULA address will not fail, however, in normal operation these cases are more likely misconfigurations than intentional.
+In cases where a ULA Source Address is selected to communicate with a GUA destination, Happy Eyeballs version 1 ({{RFC6555}}) or version 2 ({{RFC8305}}) would result in IPv4 being used in practice since the ULA source address will likely fail (due to egress filtering at the border, as discussed in the Security Considerations below). Corner cases may exist where the ULA address will not fail, however, in normal operation these cases are more likely misconfigurations than intentional.
 
-## Relation to {{RFC4193}}
+## Relation to RFC 4193
 
-If the operational guidelines in sections 4.1 and 4.3 of {{RFC4193}} are followed, a Destination Unreachable ICMPv6 Error should be received by the source device which should trigger Happy Eyeballs. If Happy Eyeballs is not implemented, the next option should follow the guidelines outlined in {{RFC4193}}.
+If the operational guidelines in sections 4.1 and 4.3 of {{RFC4193}} are followed, a Destination Unreachable ICMPv6 Error should be received by the source device. 
+
+In such cases, the guidance in Section 2 of RFC 6724 implies trying the next destination address in the ordered list, where it states that "for many applications, it is appropriate to iterate through the list of addresses returned from getaddrinfo() until a working address is found.  For other applications, it might be appropriate to try multiple addresses in parallel (e.g., with some small delay in between) and use the first one to succeed".
 
 # Acknowledgements 
 
-The authors would like to acknowledge the valuable input and contributions of the 6man WG including Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinden, Ed Horley, Tom Coffeen, Scott Hogg, Chris Cummings, Paul Wefel, and Dale Carder. 
+The authors would like to acknowledge the valuable input and contributions of the 6man WG including Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinden, Ed Horley, Tom Coffeen, Scott Hogg, Chris Cummings, Paul Wefel, Dale Carder, Erik Auerswald and Mark Smith.
 
 # Security Considerations
 
