@@ -1,7 +1,7 @@
 ---
 title: Preference for IPv6 ULAs over IPv4 addresses in RFC6724
 abbrev: Prefer ULAs over IPv4 addresses
-docname: draft-ietf-6man-rfc6724-update-01
+docname: draft-ietf-6man-rfc6724-update-02
 cat: std
 submissiontype: IETF
 ipr: trust200902
@@ -32,7 +32,7 @@ normative:
   RFC2119:
   RFC4193:
   RFC7078:
-  RFC7526:    
+  RFC7526:
 
 informative:
   RFC6724:
@@ -81,13 +81,13 @@ The changes are discussed in more detail in the following sections, with a furth
 
 The preference for use of IPv6 addressing over IPv4 addressing in {{RFC6724}} is inconsistent. As written, RFC 6724 section 10.3 states:
 
-~~~~~~~~~~
+~~~~~~~~~~~
 "The default policy table gives IPv6 addresses higher precedence than
 IPv4 addresses.  This means that applications will use IPv6 in
 preference to IPv4 when the two are equally suitable.  An
 administrator can change the policy table to prefer IPv4 addresses by
 giving the ::ffff:0.0.0.0/96 prefix a higher precedence".
-~~~~~~~~~~
+~~~~~~~~~~~
 
 The expected behavior would be that ULA address space would be preferred over legacy IPv4, however this is not the case. This presents an issue with any environment that will use ULA addressing alongside legacy IPv4, whether global or RFC 1918. This is counter to the standard expectations for legacy IPv4 / IPv6 dual-stack behavior in preferring IPv6, which is the case for GUA addressing.
 
@@ -105,7 +105,7 @@ However, there are clearly evidenced example of three failure scenarios:
 2. Because of the lower precedence value of fc00::/7, if a host has legacy IPv4 enabled, it will use legacy IPv4 before using ULA.
 3. A dual-stacked client will source the traffic from the legacy IPv4 address, meaning it will require a corresponding legacy IPv4 destination address.
 
-For scenario number 3, when a host resolves through DNS a destination with A and AAAA DNS records, the host will choose the A record to get an legacy IPv4 address for the destination, meaning ULA IPv6 is rendered unused. 
+For scenario number 3, when a host resolves through DNS a destination with A and AAAA DNS records, the host will choose the A record to get an legacy IPv4 address for the destination, meaning ULA IPv6 is rendered unused.
 
 As a result, the use of ULAs is not a viable option for dual-stack networking transition planning, large scale network modeling, network lab environments or other modes of large scale networking that run both IPv4 and IPv6 concurrently with the expectation that IPv6 will be preferred by default.
 
@@ -120,6 +120,7 @@ This document therefore demotes the precedence of the 6to4 prefix in the policy 
 This update alters the default policy table listed in Rule 2.1 of RFC 6724.
 
 The table below reflects the current RFC 6724 state on the left, and the updated state defined by this RFC on the right:
+
 ~~~~~~~~~~
                     RFC 6724                                            Updated                  
       Prefix        Precedence Label                      Prefix        Precedence Label              
@@ -136,31 +137,33 @@ The table below reflects the current RFC 6724 state on the left, and the updated
  (*) value(s) changed in update
 ~~~~~~~~~~
 
-This preference table update moves 2002::/16 to de-preference its status in line with RFC 7526 and changes the default address selection to move fc00::/7 above legacy IPv4, with ::ffff:0:0/96 now set to precedence 20. 
+This preference table update moves 2002::/16 to de-preference its status in line with RFC 7526 and changes the default address selection to move fc00::/7 above legacy IPv4, with ::ffff:0:0/96 now set to precedence 20.
 
 
 # The practicalities of implementing address selection support
 
-As with most adjustments to standards, and using RFC 6724 itself as a measuring stick, the updates defined in this document will likely take between 8-20 years to become common enough for consistent behavior within most operating systems. At the time of writing, it has been over 10 years since RFC 6724 has been published but we continue to see existing commercial and open source operating systems exhibiting {{RFC3484}} behavior. 
+As with most adjustments to standards, and using RFC 6724 itself as a measuring stick, the updates defined in this document will likely take between 8-20 years to become common enough for consistent behavior within most operating systems. At the time of writing, it has been over 10 years since RFC 6724 has been published but we continue to see existing commercial and open source operating systems exhibiting {{RFC3484}} behavior.
 
 While it should be noted that RFC 6724 defines a solution to adjust the address preference selection table that is functional theoretically, operationally the solution is operating system dependent and in practice policy table changes cannot be signaled by any currently deployed network mechanism. While {{RFC7078}} defines such a DHCPv6 option, it is not by any means widely implemented. This lack of an intra-protocol or network-based ability to adjust address selection preference, along with the inability to adjust a notable number of operating systems either programmatically or manually, renders operational scalability of such a mechanism challenging.  
 
 It is especially important to note this behavior in the long lifecycle equipment that exists in industrial control and operational technology environments due to their very long mean time to replacement/lifecycle.
 
-In practice this means that network operators and those who design networks need to keep these considerations in mind.  Should the current ULA and IPv4 preference issue be of concern then 'workarounds' do exist. One is to use IPv6-only networking, i.e., not deploy dual-stack, and another is to only use GUA IPv6 addresses which are preferred by default over all IPv4 addresses. 
+In practice this means that network operators and those who design networks need to keep these considerations in mind.  Should the current ULA and IPv4 preference issue be of concern then 'workarounds' do exist. One is to use IPv6-only networking, i.e., not deploy dual-stack, and another is to only use GUA IPv6 addresses which are preferred by default over all IPv4 addresses.
 
 # Related Issues and Guidance
 
 ## Relation to RFC 5220
 
-The concerns expressed in section 2.2.2 of {{RFC5220}} need to be considered. But with a separate label for ULA now present in the policy table, Rule 5 of Section 6 of RFC 6724 which states 
-~~~~~
+The concerns expressed in section 2.2.2 of {{RFC5220}} need to be considered. But with a separate label for ULA now present in the policy table, Rule 5 of Section 6 of RFC 6724 which states:
+
+~~~~~~~~~~~
 Rule 5: Prefer matching label.
    If Label(Source(DA)) = Label(DA) and Label(Source(DB)) <> Label(DB),
    then prefer DA.  Similarly, if Label(Source(DA)) <> Label(DA) and
    Label(Source(DB)) = Label(DB), then prefer DB.
-~~~~~
-means that the presence of the label and the rule defining the behavior based on said rule should prevent the situation described in that section from occurring.
+~~~~~~~~~~~
+
+This specifies that the presence of the label and the rule defining the behavior based on said rule should prevent the situation described in that section from occurring.
 
 ## Relation to Happy Eyeballs
 
@@ -174,11 +177,11 @@ In such cases, the guidance in Section 2 of RFC 6724 implies trying the next des
 
 # Acknowledgements 
 
-The authors would like to acknowledge the valuable input and contributions of the 6man WG including Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinden, Ed Horley, Tom Coffeen, Scott Hogg, Chris Cummings, Paul Wefel, Dale Carder, Erik Auerswald and Mark Smith.
+The authors would like to acknowledge the valuable input and contributions of the 6man WG including Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinden, Ed Horley, Tom Coffeen, Scott Hogg, Chris Cummings, Paul Wefel, Dale Carder, Erik Auerswald, Ole Troan, Eric Vyncke, and Mark Smith.
 
 # Security Considerations
 
-There are no direct security considerations in this document. 
+There are no direct security considerations in this document.
 
 The mixed preference for IPv6 over IPv4 from the default policy table in RFC 6724 represents a potential security issue, given an operator may expect ULAs to be used when in practice RFC 1918 addresses are used instead.
 
