@@ -1,7 +1,7 @@
 ---
 title: Preference for IPv6 ULAs over IPv4 addresses in RFC6724
 abbrev: Prefer ULAs over IPv4 addresses
-docname: draft-ietf-6man-rfc6724-update-02
+docname: draft-ietf-6man-rfc6724-update-03
 cat: std
 submissiontype: IETF
 ipr: trust200902
@@ -154,7 +154,9 @@ In practice this means that network operators and those who design networks need
 
 ## Relation to RFC 5220
 
-The concerns expressed in section 2.2.2 of {{RFC5220}} need to be considered. But with a separate label for ULA now present in the policy table, Rule 5 of Section 6 of RFC 6724 which states:
+Section 2.2.2 of {{RFC5220}} outline a potential failure scenario involving the presence of ULA addressing and both an A and AAAA DNS record for a destination resource.
+
+Rule 5 of Section 6 of RFC 6724 states:
 
 ~~~~~~~~~~~
 Rule 5: Prefer matching label.
@@ -162,6 +164,8 @@ Rule 5: Prefer matching label.
    then prefer DA.  Similarly, if Label(Source(DA)) <> Label(DA) and
    Label(Source(DB)) = Label(DB), then prefer DB.
 ~~~~~~~~~~~
+
+The concerns expressed in section 2.2.2 of {{RFC5220}} are addressed with the inclusion of a separate label for ULA present in the policy table.
 
 This specifies that the presence of the label and the rule defining the behavior based on said rule should prevent the situation described in that section from occurring.
 
