@@ -131,7 +131,7 @@ The table below reflects the current RFC 6724 state on the left, and the updated
       2001::/32              5     5                      2001::/32              5     5
       fc00::/7               3    13                      fc00::/7              30    13 (*)
       ::/96                  1     3                      ::/96                  1     3
-      fec0::/10              1    11                      fec0::/10              1     1
+      fec0::/10              1    11                      fec0::/10              1     11
       3ffe::/16              1    12                      3ffe::/16              1     12
 
  (*) value(s) changed in update
