@@ -1,7 +1,7 @@
 ---
 title: Preference for IPv6 ULAs over IPv4 addresses in RFC6724
 abbrev: Prefer ULAs over IPv4 addresses
-docname: draft-ietf-6man-rfc6724-update-03
+docname: draft-ietf-6man-rfc6724-update-04
 cat: std
 submissiontype: IETF
 ipr: trust200902
@@ -146,7 +146,7 @@ This preference table update moves 2002::/16 to de-preference its status in line
 
 ## Rule 5.5 Adjustments
 
-The heuristic for address selection defined in Section 5.5 of RFC	6724 to prefer addresses in a prefix advertised by a next-hop router has proven to be very useful. RFC 6724 does not state any requirement for SHOULD or MUST for this heuristic to be used; this update therefore proposes stating that the application of the heuristic be a MUST.
+The heuristic for address selection defined in Section 5.5 of [RFC6724] to prefer addresses in a prefix advertised by a next-hop router has proven to be very useful. [RFC6724] does not state any requirement for SHOULD or MUST for this heuristic to be used; this update therefore amends section 5.5 to reflect that a system MUST apply the next-hop tracking heuristic.
 
 # The practicalities of implementing address selection support
 
@@ -189,7 +189,7 @@ In such cases, the guidance in Section 2 of RFC 6724 implies trying the next des
 
 # Acknowledgements 
 
-The authors would like to acknowledge the valuable input and contributions of the 6man WG including Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinden, Ed Horley, Tom Coffeen, Scott Hogg, Chris Cummings, Paul Wefel, Dale Carder, Erik Auerswald, Ole Troan, Eric Vyncke, and Mark Smith.
+The authors would like to acknowledge the valuable input and contributions of the 6man WG including Brian Carpenter, XiPeng Xiao, Eduard Vasilenko, David Farmer, Bob Hinden, Ed Horley, Tom Coffeen, Scott Hogg, Chris Cummings, Paul Wefel, Dale Carder, Erik Auerswald, Ole Troan, Eric Vyncke, Timothy Winters, Kyle Rose, and Mark Smith.
 
 # Security Considerations
 
