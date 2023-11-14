@@ -119,7 +119,7 @@ This document therefore demotes the precedence of the 6to4 prefix in the policy 
 
 This update will make two specific changes: first, to update the default policy table, and second, change the next hop advertised prefix by the next hop to a MUST.
 
-# # Policy Table Update
+## Policy Table Update
 
 This update alters the default policy table listed in Rule 2.1 of RFC 6724.
 
@@ -144,7 +144,7 @@ The table below reflects the current RFC 6724 state on the left, and the updated
 
 This preference table update moves 2002::/16 to de-preference its status in line with RFC 7526 and changes the default address selection to move fc00::/7 above legacy IPv4, with ::ffff:0:0/96 now set to precedence 20.
 
-# # Rule 5.5 Adjustments
+## Rule 5.5 Adjustments
 
 The heuristic for address selection defined in Section 5.5 of RFC	6724 to prefer addresses in a prefix advertised by a next-hop router has proven to be very useful. RFC 6724 does not state any requirement for SHOULD or MUST for this heuristic to be used; this update therefore proposes stating that the application of the heuristic be a MUST.
 
