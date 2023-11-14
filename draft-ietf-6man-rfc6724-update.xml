@@ -254,9 +254,11 @@ IPv6 addresses from leaking outside of the site and to keep any site prefixes fr
 <section anchor="appendix-a-changes-since-rfc6724"><name>Appendix A. Changes since RFC6724</name>
 
 <t><list style="symbols">
-  <t>Update to default preference table moving 6to4 address block 2002::/16 to de-preference status in line with <xref target="RFC7526"/></t>
+  <t>Update to default preference table moving 6to4 address block 2002::/16 to de-preference status in line with <xref target="RFC7526"/>,</t>
   <t>Change the default address selection to move fc00::/7 to preference 30, above legacy IPv4,</t>
-  <t>Change ::ffff:0:0/96 to preference 20.</t>
+  <t>Change ::ffff:0:0/96 to preference 20,</t>
+  <t>Add section relating to Happy Eyeballs,</t>
+  <t>Change section 5.5 to require interface prefix tracking.</t>
 </list></t>
 
 </section>
@@ -295,7 +297,7 @@ IPv6 addresses from leaking outside of the site and to keep any site prefixes fr
   </back>
 
 <!-- ##markdown-source:
-H4sIAOTuU2UAA5Vb2XbbRpq+x1PUKBdt51C0qC22Op2OLNuxM97GkjvTp09f
+H4sIAKnvU2UAA5Vb2XbbRpq+x1PUKBdt51C0qC22Op2OLNuxM97GkjvTp09f
 FIEiWREIsLFIZvfJPMs8yzzZfP9SQIGEPBPlnJgEa/3X719weHiYNL7J3YX5
 WLmFq1yROrMoK/Pm4925+fz2sjblneOvp8ZmWeXq2tXGF+bTq6vz745PEzuf
 V+4uzH9wSpKVaWHX2Cir7KI59K5ZHJ6vbXFYLVJa6LDdZLZxh0enSWqbC1M3
@@ -429,8 +431,9 @@ ha5YplfH545X1IlFiRgqkDEjmbuAR+rq5tCOzKgj4YAUrPvQEbl3JRQ6LVru
 it3PX7VV108uKEu1EsQJZU5+H0DUmN8AiBA5vRojClp3qbTdithhf3h9McBQ
 iil6XHChmw7JHd0UVs5rV91R1uMz3AbCDQIelvFL5gb0t5mLqKM1067QFjqW
 xmDs0Oh8Y95cvr/cM2XvwUnxKPSSS+a/mEt6D1rb0EOiTiqm32pxLX5rci8X
-vy45xotr2Wael+nt1xLzY0n5uIKOra/2X9D7f2Tlh2+gnRxNxvL00fLDbP1w
-Nmfp6aXIOYxB8r/r/C0K1T8AAA==
+vy45xotr2Wael+nt1xLzY0n5qII+wdZX+y/o/T+y8sM30E6OJmN5etMvP8zW
+D2cfH9E5gOK76KBiBCjNVUOIHp14L0Et/SrsghbU+anp95CLnsqbl3N8S/4X
+UB3yRjpAAAA=
 
 -->
 
