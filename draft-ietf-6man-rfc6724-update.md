@@ -56,13 +56,13 @@ This document updates {{RFC6724}} based on operational experience gained since i
 
 When {{RFC6724}} was published in 2012 it was expected that the default policy table may need to be updated from operational experience; section 2.1 says "It is important that implementations provide a way to change the default policies as more experience is gained" and points to the examples in Section 10, including Section 10.6 which considers a ULA example.
 
-This document is written on the basis of such operational experience, in particular for scenarios where ULAs are used within a site. 
+This document is written on the basis of such operational experience, in particular for scenarios where ULAs are used within a site.
 
 The current default policy table in {{RFC6724}} leads to preference for IPv6 GUAs over IPv4 globals, which is widely considered to be preferential behavior to support greater use of IPv6 in dual-stack environments, and to allow sites to phase out IPv4 as its use becomes ever lower.
 
 However, the default policy table also puts IPv6 ULAs below all IPv4 addresses, including {{RFC1918}} addresses. For many site operators this behavior will be counter-intuitive, and may create difficulties with respect to planning, operational, and security implications for environments where ULA addressing is used in certain IPv4/IPv6 dual-stack network scenarios. The expected prioritization of IPv6 traffic over IPv4 by default, as happens with IPv6 GUA addressing, will not happen for ULAs.
 
-An IPv6 deployment, whether enterprise, residential or other, may use combinations of IPv6 GUAs, IPv6 ULAs, IPv4 globals, IPv4 RFC 1918 addressing, and may or may not use some form of NAT. 
+An IPv6 deployment, whether enterprise, residential or other, may use combinations of IPv6 GUAs, IPv6 ULAs, IPv4 globals, IPv4 RFC 1918 addressing, and may or may not use some form of NAT.
 
 This document makes no comment or recommendation on how ULAs are used, or on the use of NAT in an IPv6 network. As the default policy table stands, operationally where GUAs and ULAs are used alongside RFC 1918 addressing, an IPv6 GUA would be selected to reach an IPv6 GUA destination.  However where there are only ULAs and RFC1918 addressing in use, RFC 1918 addresses will be preferred.
 
@@ -144,11 +144,11 @@ The table below reflects the current {{RFC6724}} state on the left, and the upda
 
 ~~~~~~~~~~
 
-This preference table update moves 2002::/16 to de-preference its status in line with RFC 7526 and changes the default address selection to move fc00::/7 above legacy IPv4, with ::ffff:0:0/96 now set to precedence 20. 
+This preference table update moves 2002::/16 to de-preference its status in line with RFC 7526 and changes the default address selection to move fc00::/7 above legacy IPv4, with ::ffff:0:0/96 now set to precedence 20.
 
 ## Additional considerations for policy table adjustment
 
-As designed, ULAs are defined to have a /48 site prefix. An implementation SHOULD automatically add rows for all covering ULA site prefixes received in Router Advertisements (RAs) [RFC4861] within Prefix Information Options (PIOs) or Route Information Options (RIOs) [RFC4191]. These known-local ULA /48s SHOULD have a precedence of 45. All Nodes SHOULD provide a mechanism to configure the policy table. Any Node that does not provide a mechanism for policy table configuration MUST implement the automated increased precedence for known-local /48s of ULA. Nodes implementing the automated increased precedence for known-local /48s of ULA MAY set the default precedence for the ULA label (fc00::/7) to 10. Otherwise, the default precedence for the ULA label (fc00::/7) MUST be 30.
+As designed, ULAs are defined to have a /48 site prefix. An implementation SHOULD automatically add rows for all covering ULA site prefixes received in Router Advertisements (RAs) {{RFC4861}} within Prefix Information Options (PIOs) or Route Information Options (RIOs) {{RFC4191}}. These known-local ULA /48s SHOULD have a precedence of 45. All Nodes SHOULD provide a mechanism to configure the policy table. Any Node that does not provide a mechanism for policy table configuration MUST implement the automated increased precedence for known-local /48s of ULA. Nodes implementing the automated increased precedence for known-local /48s of ULA MAY set the default precedence for the ULA label (fc00::/7) to 10. Otherwise, the default precedence for the ULA label (fc00::/7) MUST be 30.
 
 ## Rule 5.5 Adjustments
 
