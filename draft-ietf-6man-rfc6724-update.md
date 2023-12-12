@@ -126,11 +126,15 @@ The heuristic for address selection defined in Section 5.5 of {{RFC6724}} to pre
 
 ## Automatic insertion of Known-Local ULAs
 
+** Do we include this at all, or beef up the RFC 4193 section 4.4 text that says "AAAA and PTR records for locally assigned local IPv6 addresses are not recommended to be installed in the global DNS", and that this *IS* a misconfiguration, and point to Dan Wing's data that suggests most people don't do it?
+
 This update also introduces the concept of "known-local" ULAs. The new default behaviour introduced by this update elevates all ULAs above all IPv4 addresses. However, it is possible that a node in a destination network may have a host name with a ULA address in its global DNS entry. In such cases connectivity to that node is unlikely to work (in the absence of specific configured routing).
 
 ** Do we want to add support for misconfigurations?  Data suggests that less than 0.1% of published AAAAs are ULAs
 
 To avoid such potential issues, this update additionally states that an implementation SHOULD automatically add rows in the default policy table for all ULA site prefixes that can be derived from received Router Advertisements (RAs) {{RFC4861}} given their Prefix Information Options (PIOs) or Route Information Options (RIOs) {{RFC4191}}. Such derived /48 prefixes are referred to as "known-local" ULAs and SHOULD have a precedence of 45. 
+
+Note that RFC 6724 states in Section 2.1 that "An implementation MAY automatically add additional site-specific rows to the default table based on its configured addresses, such as for Unique Local Addresses (ULAs)" and in Section 10.3 that "Since ULAs are defined to have a /48 site prefix, an implementation might choose to add such a row automatically on a machine with a ULA." Here we are elevating that MAY/might to a SHOULD.
 
 Nodes implementing the automated increased precedence for known-local ULAs /48s SHOULD also set the default precedence for the ULA label (fc00::/7) to 10. 
 
@@ -142,23 +146,27 @@ As stated in Section 2.1 of RFC 6724 "IPv6 implementations SHOULD support config
 
 # Intended behaviors
 
-## ULA-ULA over GUA-GUA
+In this section we reiew the intended default behaviors after this update is applied.
+
+## ULA-ULA preferred over GUA-GUA
 
 ** Add text
 
-## ULA-ULA over IPv4-IPv4
+## ULA-ULA preferred over IPv4-IPv4
 
 ** Add text
 
-## IPv4-IPv4 over ULA-GUA
+## IPv4-IPv4 preferred over ULA-GUA
 
 ** Add text
 
 ## ULA to non-local ULA
 
-** Add text
+** Add text about this issue?
 
 # Related Issues and Guidance
+
+** This section needs editing
 
 ## Relation to RFC 5220
 
@@ -189,13 +197,23 @@ In such cases, the guidance in Section 2 of {{RFC6724}} implies trying the next 
 
 # The practicalities of implementing address selection support
 
+** This section needs editing.
+
 As with most adjustments to standards, and using {{RFC6724}} itself as a measuring stick, the updates defined in this document will likely take between 8-20 years to become common enough for consistent behavior within most operating systems. At the time of writing, it has been over 10 years since {{RFC6724}} has been published but we continue to see existing commercial and open source operating systems exhibiting {{RFC3484}} behavior.
 
 While it should be noted that {{RFC6724}} defines a solution to adjust the address preference selection table that is functional theoretically, operationally the solution is operating system dependent and in practice policy table changes cannot be signaled by any currently deployed network mechanism. While {{RFC7078}} defines such a DHCPv6 option, it is not by any means widely implemented. This lack of an intra-protocol or network-based ability to adjust address selection preference, along with the inability to adjust a notable number of operating systems either programmatically or manually, renders operational scalability of such a mechanism challenging.  
 
 It is especially important to note this behavior in the long lifecycle equipment that exists in industrial control and operational technology environments due to their very long mean time to replacement/lifecycle.
 
-In practice this means that network operators and those who design networks need to keep these considerations in mind.  Should the current ULA and IPv4 preference issue be of concern then 'workarounds' do exist. One is to use IPv6-only networking, i.e., not deploy dual-stack, and another is to only use GUA IPv6 addresses which are preferred by default over all IPv4 addresses.
+# Limitations of RFC 6724
+
+The procedures defined in RFC 6724 do not give optimal results for all scenarios. The aim of this update is to improve the behavior for the most common scenarios.
+
+** The whole 3484/6724/getaddrinfo() model is fundamentally inadequate
+
+To simplify address selection, operators may instead look to deploy IPv6-only, and may choose to only use GUA addresses and no ULA addresses.
+
+** Add more
 
 # Implementations
 
