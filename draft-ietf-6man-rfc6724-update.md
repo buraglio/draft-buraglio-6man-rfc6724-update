@@ -48,17 +48,18 @@ informative:
 
 --- abstract
 
-When {{RFC6724}} was published it defined address selection procedures along with a default policy table, and noted a number of examples where that policy table might benefit from adjustment for specific scenarios, and that is important for implementations to provide a way to change the default policies as more experience is gained. This update draws on several years of operational experience to refine RFC 6724 further, with particular emphasis on preference for ULA addresses over IPv4 addresses, mandatory support for Rule 5.5, and requirements that sites apply the ULA filtering principles described in RFC 4193. The update also demotes the preference for 6to4 addresses. The changes to default behavior improve supportability of common use cases, including automatic / unmanaged scenarios. It is recognized that some less common deployment scenarios may require explicit configuration or custom changes to achieve desired operational parameters.
+When {{RFC6724}} was published it defined an address selection algorithm along with a default policy table, and noted a number of examples where that policy table might benefit from adjustment for specific scenarios. It also noted that it is important for implementations to provide a way to change the default policies as more experience is gained. This update draws on several years of operational experience to refine RFC 6724 further, with particular emphasis on preference for the use of ULA addresses over IPv4 addresses, mandatory support for Rule 5.5, and requirements both that sites apply the ULA filtering principles described in RFC 4193 and that ULAs are not published in the global DNS. This update also demotes the preference for 6to4 addresses. The changes to default behavior improve supportability of common use cases, including automatic / unmanaged scenarios. It is recognized that some less common deployment scenarios may require explicit configuration or custom changes to achieve desired operational parameters.
   
 --- middle
 
 # Introduction
 
-Since its publication in 2012, {{RFC6724}} has become an important mechanism by which nodes can perform address selection, deriving the most appropriate source and destination address pair to use by following the procedures defined in the RFC. Part of the process involves the use of a policy table, where the precedence and labels for address prefixes are listed, and for which a default table is defined.
+Since its publication in 2012, {{RFC6724}} has become an important mechanism by which nodes can perform address selection, deriving the most appropriate source and destination address pair to use from a
+candidate set by following the procedures defined in the RFC. Part of the process involves the use of a policy table, where the precedence and labels for address prefixes are listed, and for which a default table is defined.
 
 It was always expected that the default policy table may need to be updated from operational experience; section 2.1 says "It is important that implementations provide a way to change the default policies as more experience is gained" and points to the examples in Section 10, which include Section 10.6 where a ULA example is presented.
 
-This document is written on the basis of such operational experience, in particular for scenarios where ULAs are used within a site, but also includes updated requirements on support for RFC 6724 Rule 5.5 and for filtering packets with ULA source addresses at site borders. 
+This document is written on the basis of such operational experience, in particular for scenarios where ULAs are used for their intended purpose within a site, but also includes updated requirements on support for RFC 6724 Rule 5.5, and for filtering packets with ULA source addresses at site borders. 
 
 An IPv6 deployment, whether enterprise, residential or other, may use combinations of IPv6 GUAs, IPv6 ULAs, IPv4 globals, IPv4 RFC 1918 addressing, and may or may not use some form of NAT. However, this document makes no comment or recommendation on how ULAs are used, or on the use of NAT in an IPv6 network. 
 
@@ -71,7 +72,7 @@ An IPv6 deployment, whether enterprise, residential or other, may use combinatio
 # Operational Issues Regarding Preference for IPv4 addresses over ULAs
 
 Where getaddrinfo() or a comparable API is used, the sorting behavior should take into account both
-the source address of the requesting node as well as the destination addresses returned and sort according to those source and destination addresses, following the procedures defined in {{RFC6724}}.
+the source address of the requesting node as well as the destination addresses returned, and sort these following the procedures defined in RFC 6724.
 
 The current default policy table leads to preference for IPv6 GUAs over IPv4 globals, which is widely considered preferential behavior to support greater use of IPv6 in dual-stack environments. This allows sites to phase out IPv4 as its evidenced use becomes ever lower.
 
@@ -97,9 +98,9 @@ This update makes three specific changes to RFC 6724: first, to update the defau
 
 ## Policy Table Update
 
-This update alters the default policy table listed in Rule 2.1 of {{RFC6724}}.
+This update alters the default policy table listed in Rule 2.1 of RFC 6724.
 
-The table below reflects the current {{RFC6724}} state on the left, and the updated state defined by this RFC on the right:
+The table below reflects the current RFC 6724 state on the left, and the updated state defined by this RFC on the right:
 
 ~~~~~~~~~~
                     RFC 6724                                            Updated                  
@@ -122,7 +123,7 @@ This preference table update moves 2002::/16 to de-preference its status in line
 
 ## Rule 5.5 
 
-The heuristic for address selection defined in Section 5.5 of {{RFC6724}} to prefer addresses in a prefix advertised by a next-hop router has proven to be very useful. {{RFC6724}} does not state any requirement for SHOULD or MUST for this heuristic to be used; this update therefore amends section 5.5 to reflect that a system MUST apply the next-hop tracking heuristic, comminly referred to as Rule 5.5.
+The heuristic for address selection defined in Section 5.5 of RFC 6724 to prefer addresses in a prefix advertised by a next-hop router has proven to be very useful. RFC 6724 does not state any requirement for SHOULD or MUST for this heuristic to be used; this update therefore amends section 5.5 to reflect that a system MUST apply the next-hop tracking heuristic, comminly referred to as Rule 5.5.
 
 ## Automatic insertion of Known-Local ULAs
 
@@ -148,60 +149,84 @@ As stated in Section 2.1 of RFC 6724 "IPv6 implementations SHOULD support config
 
 In this section we reiew the intended default behaviors after this update is applied.
 
+## GUA-GUA preferred over IPv4-IPv4
+
+This is the current behaviour, and remains unaltered. The rationale is to promote use of IPv6 GUAs in dual-stack environments.
+
 ## ULA-ULA preferred over GUA-GUA
 
-** Add text
+This is the current behaviour, and remains unaltered. The rationale is to support consistent, stable addressing in a site where the global prefix might change over time, or become unavailable.
 
 ## ULA-ULA preferred over IPv4-IPv4
 
-** Add text
+This is a change introduced by this update. RFC 6724 as orginally defined would lead to IPv4 being preferred over ULAs, which is contrary to the spirit of the GUA preference over IPv4, and to the goal of removing use of IPv4 in a dual-stack site before transitioning to IPv6-only.
 
 ## IPv4-IPv4 preferred over ULA-GUA
 
-** Add text
+An IPv6 ULA address will only be preferred over an IPv4 address if both IPv6 ULA source and destination addresses are available. With Rule 5 of Section 6 of RFC 6724 and the ULA-specific label added in RFC 6724 (which was not present in RFC 3484) an IPv4 source and destination will be preferred over an IPv6 ULA source and an IPv6 GUA destination address, even though generally IPv6 ULA addresses are preferred over IPv4 in the policy table as proposed in this update. The IPv4 matching label trumps ULA-GUA.
 
-## ULA to non-local ULA
+# Discussion of ULA source with GUA or remote ULA destinations
 
-** Add text about this issue?
+A potential problem exists when a ULA source attempts to communicate with GUA or remote ULA destinations. In these scenarios, the ULA source is generally intended for communication only with the local network, meaning an individual site, several sites that are part of the same organization, or multiple sites across cooperating organizations, as detailed in RFC 4193. As a result, most GUA and ULA destinations are not attached to the same local network as the ULA source and are, therefore, not reachable from the ULA source.
 
-# Related Issues and Guidance
+When only a ULA source is available for communication with GUA destinations, this generally implies no connectivity to the IPv6 Internet is available. Otherwise, a GUA source would have been made available and selected for use with GUA destinations. As a result, the ULA source will typically fail when it attempts to communicate with most GUA destinations. However, corner cases exist where the ULA source will not fail, such as when GUA destinations are attached to the same local network as the ULA source.
 
-** This section needs editing
+Receiving a DNS response for a ULA destination that is not attached to the local network, in other words, a remote ULA destination, is considered a misconfiguration in most cases, or at least this contradicts the operational guidelines provided in Section 4.4 of RFC 4193. Nevertheless, this can occur, and the ULA source will typically fail when it attempts to communicate with ULA destinations that are not attached to the same local network as the ULA source.
 
-## Relation to RFC 5220
+This section discusses several complementary mechanisms involved with these scenarios.
 
-Section 2.2.2 of {{RFC5220}} outline a potential failure scenario involving the presence of ULA addressing and both an A and AAAA DNS record for a destination resource.
+## The ULA Label and its Precedence
 
-Rule 5 of Section 6 of {{RFC6724}} states:
+RFC 6724 added (in obsoleting RFC 3484) a separate label for ULA (fc00::/7), whose default precedence is raised by this update. This separate label interacts with Rule 5 of Section 6 of RFC 6724, which says;
 
-~~~~~~~~~~~
-Rule 5: Prefer matching label.
-   If Label(Source(DA)) = Label(DA) and Label(Source(DB)) <> Label(DB),
-   then prefer DA.  Similarly, if Label(Source(DA)) <> Label(DA) and
-   Label(Source(DB)) = Label(DB), then prefer DB.
-~~~~~~~~~~~
+      Rule 5: Prefer matching label.
+      If Label(Source(DA)) = Label(DA) and Label(Source(DB)) <> Label(DB), then prefer DA.  Similarly, if       Label(Source(DA)) <> Label(DA) and Label(Source(DB)) = Label(DB), then prefer DB.
 
-The concerns expressed in section 2.2.2 of {{RFC5220}} are addressed with the inclusion of a separate label for ULA present in the policy table.
+The ULA source label will not match the GUA destination label in the first scenario. Therefore, an IPv4 destination, if available, will be preferred over a GUA destination with a ULA source, even though the GUA destination has higher precedence than the IPv4 destination in the policy table. This means the IPv4 destination will be moved up in the list of destinations over the GUA destination with the ULA source. 
 
-This specifies that the presence of the label and the rule defining the behavior based on said rule should prevent the situation described in that section from occurring.
+If the ULA (fc00::/7) label is removed from the policy table, a GUA destination with a ULA source will be preferred over an IPv4 destination, as GUA and ULA will be part of the same label (::/0).
 
-## Relation to Happy Eyeballs
+The ULA source label will match the ULA destination label in the second scenario; therefore, whether part of the local network or not, a ULA destination will be preferred over an IPv4 destination.
 
-In cases where a ULA Source Address is selected to communicate with a GUA destination, Happy Eyeballs version 1 ({{RFC6555}}) or version 2 ({{RFC8305}}) would result in IPv4 being used in practice since the ULA source address will likely fail (due to egress filtering at the border, as discussed in the Security Considerations below). Corner cases may exist where the ULA address will not fail, however, in normal operation these cases are more likely misconfigurations than intentional.
+If the ULA label (fc00::/7) has its precedence lowered below IPv4 or the IPv4 precedence is raised above ULA, as with the RFC 6724 unupdate policy table. In this case, an IPv4 destination will be preferred over all ULA destinations. 
 
-## Relation to RFC 4193
+## Happy Eyeballs
 
-If the operational guidelines in sections 4.1 and 4.3 of {{RFC4193}} are followed, a Destination Unreachable ICMPv6 Error should be received by the source device.
+Regardless of the preference resulting from the above discussion, Happy Eyeballs version 1 (RFC 6555) or version 2 (RFC 8305), if implemented, will try both the GUA or ULA destination with the ULA source and the IPv4 destination and source pairings. The ULA source will typically fail to communicate with most GUA or remote ULA destinations, and IPv4 will be preferred if IPv4 connectivity is available unless the GUA or ULA destinations are attached to the same local network as the ULA source.
 
-In such cases, the guidance in Section 2 of {{RFC6724}} implies trying the next destination address in the ordered list, where it states that "for many applications, it is appropriate to iterate through the list of addresses returned from getaddrinfo() until a working address is found.  For other applications, it might be appropriate to try multiple addresses in parallel (e.g., with some small delay in between) and use the first one to succeed".
+## Try the Next Address
+
+As stated in Section 2 of RFC 6724,
+
+      Well-behaved applications SHOULD NOT simply use the first address returned from an API such as
+      getaddrinfo() and then give up if it fails. For many applications, it is appropriate to iterate 
+      through the list of addresses returned from getaddrinfo() until a working address is found. For
+      other applications, it might be appropriate to try multiple addresses in parallel (e.g., with some
+      small delay in between) and use the first one to succeed.
+
+Therefore, when an IPv4 destination is preferred over GUA or ULA destinations, IPv4 will likely succeed if IPv4 connectivity is available, and the GUA or ULA destination may only be tried if Happy Eyeballs is implemented. 
+
+On the other hand, if the GUA or ULA destination with the ULA source is preferred, the ULA source will typically fail to communicate GUA or ULA destinations that are not connected to the same local network as the ULA source. However, suppose the operational guidelines in Section 4.3 of RFC 4193 are followed, as discussed in the Security Considerations below. In this case, recognizing this failure can be accelerated, and transport layer timeouts (e.g., TCP) can be avoided. These guidelines will cause a Destination Unreachable ICMPv6 Error to be received by the source device, signaling the next address in the list to be tried, as discussed above.
+
+# Filtering ULA-source addresses at site borders
+
+RFC 4193 Section 4.3 states "Site border routers and firewalls should be configured to not forward
+any packets with Local IPv6 source or destination addresses outside of the site, unless they have been explicitly configured with routing information about specific /48 or longer Local IPv6 prefixes".
+
+This document requires that such site border routers and firewalls MUST be configured to not forward
+by default any packets with Local IPv6 source or destination addresses outside of the site, unless specifically configured to do so.
+
+# ULA addresses in the gloabl DNS
+
+Section 4.3 of RFC 4193 states that "At the present time, AAAA and PTR records for locally assigned local IPv6 addresses are not recommended to be installed in the global DNS."
+
+This document requires that AAAA and PTR records for ULAs MUST NOT be installed in the global DNS.
 
 # The practicalities of implementing address selection support
 
-** This section needs editing.
+As with most adjustments to standards, and using the introduction of RFC 6724 as a measuring stick, the updates defined in this document will likely take several years to become common enough for consistent behavior within most operating systems. At the time of writing, it has been over 10 years since RFC 6724 has been published but we continue to see existing commercial and open source operating systems exhibiting RFC 3484 behavior.
 
-As with most adjustments to standards, and using {{RFC6724}} itself as a measuring stick, the updates defined in this document will likely take between 8-20 years to become common enough for consistent behavior within most operating systems. At the time of writing, it has been over 10 years since {{RFC6724}} has been published but we continue to see existing commercial and open source operating systems exhibiting {{RFC3484}} behavior.
-
-While it should be noted that {{RFC6724}} defines a solution to adjust the address preference selection table that is functional theoretically, operationally the solution is operating system dependent and in practice policy table changes cannot be signaled by any currently deployed network mechanism. While {{RFC7078}} defines such a DHCPv6 option, it is not by any means widely implemented. This lack of an intra-protocol or network-based ability to adjust address selection preference, along with the inability to adjust a notable number of operating systems either programmatically or manually, renders operational scalability of such a mechanism challenging.  
+While it should be noted that RFC 6724 defines a solution to adjust the address preference selection table that is functional theoretically, operationally the solution is operating system dependent and in practice policy table changes cannot be signaled by any currently deployed network mechanism. While RFC 7078 defines such a DHCPv6 option, it is not widely implemented. This lack of an intra-protocol or network-based ability to adjust address selection preference, along with the inability to adjust a notable number of operating systems either programmatically or manually, renders operational scalability of such a mechanism challenging.  
 
 It is especially important to note this behavior in the long lifecycle equipment that exists in industrial control and operational technology environments due to their very long mean time to replacement/lifecycle.
 
@@ -209,15 +234,15 @@ It is especially important to note this behavior in the long lifecycle equipment
 
 The procedures defined in RFC 6724 do not give optimal results for all scenarios. The aim of this update is to improve the behavior for the most common scenarios.
 
-** The whole 3484/6724/getaddrinfo() model is fundamentally inadequate
+It is widely recognised in the IETF 6man WG that the whole 3484/6724/getaddrinfo() model is fundamentally inadequate for optimal address selection.  A model that considered adress pairs directly, rather than sorting on destination addresses with the best source for that address, would be preferable, but beyond the scope of this document.
 
 To simplify address selection, operators may instead look to deploy IPv6-only, and may choose to only use GUA addresses and no ULA addresses.
 
-** Add more
+# Implementation note
 
-# Implementations
+To be removed on publication.
 
-** Add text
+** Add text - Jeremy's work.  Other?
 
 # Acknowledgements 
 
@@ -227,11 +252,9 @@ The authors would like to acknowledge the valuable input and contributions of th
 
 There are no direct security considerations in this document.
 
-The mixed preference for IPv6 over IPv4 from the default policy table in {{RFC6724}} represents a potential security issue, given an operator may expect ULAs to be used when in practice {{RFC1918}} addresses are used instead.
+The mixed preference for IPv6 over IPv4 from the default policy table in RFC 6724 represents a potential security issue, given an operator may expect ULAs to be used when in practice RFC 1918 addresses are used instead.
 
-When using the updated ULA source address selection defined in this document, network operators MUST follow Section 4.3 of {{RFC4193}} for firewall/packet filtering as "routers be configured by default to keep any packets with Local IPv6 addresses from leaking outside of the site and to keep any site prefixes from being advertised outside of their site." Following this security practice is critical when ULAs have more broad reachability.
-
-Operators should be mindful of cases where one node is compliant with {{RFC6724}} as originally published and another node is compliant with the update presented in this document, as there may be inconsistent behaviour for communications initiated in each direction. Similarly, differences between current RFC 6724-compliant and RFC 3484-compliant nodes may also be observed. Ultimately all nodes should be made compliant to the updated specification described in this document.
+Operators should be mindful of cases where one node is compliant with RFC 6724 as originally published and another node is compliant with the update presented in this document, as there may be inconsistent behaviour for communications initiated in each direction. Similarly, differences between current RFC 6724-compliant and RFC 3484-compliant nodes may also be observed. Ultimately all nodes should be made compliant to the updated specification described in this document.
 
 # IANA Considerations
 
@@ -244,5 +267,7 @@ None.
 * Change ::ffff:0:0/96 to preference 20,
 * Add section relating to Happy Eyeballs,
 * Change section 5.5 to require interface prefix tracking.
+* Note added for RFC 4193 ULA filtering as a MUST.
+* Note added on RFC 4193 ULAs in the Global DNS as a MUST NOT.
 
 --- back
