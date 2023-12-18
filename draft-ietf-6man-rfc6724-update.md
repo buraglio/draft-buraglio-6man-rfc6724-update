@@ -122,11 +122,11 @@ The table below reflects the current RFC 6724 state on the left, and the updated
 
 ~~~~~~~~~~
 
-The update moves 2002::/16 to de-preference its status in line with {{RFC 7526}} and moves the precedence of fc00::/7 above legacy IPv4, with ::ffff:0:0/96 now set to precedence 20.
+The update moves 2002::/16 to de-preference its status in line with {{RFC7526}} and moves the precedence of fc00::/7 above legacy IPv4, with ::ffff:0:0/96 now set to precedence 20.
 
 ## Rule 5.5 
 
-The heuristic for address selection defined in Rule 5.5 of Section 5 of RFC 6724 to prefer addresses in a prefix advertised by a next-hop router has proven to be very useful. 
+The heuristic for address selection defined in Rule 5.5 of Section 5 of RFC 6724 to prefer addresses in a prefix advertised by a next-hop router has proven to be very useful.
 
 The text in RFC 6724 says that the Rules MUST be followed in order, but also includes a discussion note under Rule 5.5 that says that an IPv6 implementation is not required to remember which next-hops advertised which prefixes and thus that Rule 5.5 is only applicable to implementations that track this information.  
 
@@ -136,11 +136,11 @@ This document elevates the requirement to prefer addresses in a prefix advertise
 
 Section 2.1 of RFC 6724 states that "an implementation MAY automatically add additional site-specific rows to the default table based on its configured addresses, such as for Unique Local Addresses (ULAs)".
 
-Given this document now elevates ULAs above all IPv4 addresses for address selection, should an implementation choose to insert specific ULA prefixes into the policy table, e.g., based on observed Router Advertisements (RAs) {{RFC4861} and their Prefix Information Options (PIOs) or Route Information Options (RIOs) {{RFC4191}}, it SHOULD give such "known local" prefixes a precedence of 45, and SHOULD also reduce the precedence of other ULA addresses, i.e., the general fc07::/7 prefix, to precedence 10, such that IPv4 would be prefered to ULA prefixes that have not been explictly added. 
+Given this document now elevates ULAs above all IPv4 addresses for address selection, should an implementation choose to insert specific ULA prefixes into the policy table, e.g., based on observed Router Advertisements (RAs) {{RFC4861}} and their Prefix Information Options (PIOs) or Route Information Options (RIOs) {{RFC4191}}, it SHOULD give such "known local" prefixes a precedence of 45, and SHOULD also reduce the precedence of other ULA addresses, i.e., the general fc07::/7 prefix, to precedence 10, such that IPv4 would be prefered to ULA prefixes that have not been explicitly added.
 
 # Configuration of the default policy table
 
-As stated in Section 2.1 of RFC 6724 "IPv6 implementations SHOULD support configurable address selection via a mechanism at least as powerful as the policy tables defined here". 
+As stated in Section 2.1 of RFC 6724 "IPv6 implementations SHOULD support configurable address selection via a mechanism at least as powerful as the policy tables defined here".
 
 While this document defines changes to RFC 6724 behavior based on operational experience to date, it is important that node policy tables can be changed once deployed to support future emerging use cases. This update thus re-states the importance of such configurability.
 
@@ -193,7 +193,7 @@ If the ULA label (fc00::/7) has its precedence lowered below IPv4 or the IPv4 pr
 
 ## Happy Eyeballs
 
-Regardless of the preference resulting from the above discussion, Happy Eyeballs version 1 {{RFC 6555}} or version 2 {{RFC 8305}}, if implemented, will try both the GUA or ULA destination with the ULA source and the IPv4 destination and source pairings. The ULA source will typically fail to communicate with most GUA or remote ULA destinations, and IPv4 will be preferred if IPv4 connectivity is available unless the GUA or ULA destinations are attached to the same local network as the ULA source.
+Regardless of the preference resulting from the above discussion, Happy Eyeballs version 1 {{RFC6555}} or version 2 {{RFC8305}}, if implemented, will try both the GUA or ULA destination with the ULA source and the IPv4 destination and source pairings. The ULA source will typically fail to communicate with most GUA or remote ULA destinations, and IPv4 will be preferred if IPv4 connectivity is available unless the GUA or ULA destinations are attached to the same local network as the ULA source.
 
 ## Try the Next Address
 
