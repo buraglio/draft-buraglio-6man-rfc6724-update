@@ -222,7 +222,7 @@ And further that "Site border routers should respond with the appropriate ICMPv6
 
 As stated in the above discussion, such ICMPv6 messages can assist in fast failover for TCP connections.
 
-## Not putting ULA addresses in the global DNS
+## Avoid using ULA addresses in the global DNS
 
 Section 4.3 of RFC 4193 states that "AAAA and PTR records for locally assigned local IPv6 addresses are not recommended to be installed in the global DNS."
 
@@ -243,12 +243,6 @@ The procedures defined in RFC 6724 do not give optimal results for all scenarios
 It is widely recognised in the IETF 6man WG that the whole 3484/6724/getaddrinfo() model is fundamentally inadequate for optimal address selection.  A model that considers address pairs directly, rather than sorting on destination addresses with the best source for that address, would be preferable, but beyond the scope of this document.
 
 To simplify address selection, operators may instead look to deploy IPv6-only, and may choose to only use GUA addresses and no ULA addresses. Other approaches to reduce the use of IPv4, e.g., through use of DHCPv4 Option 108 as defined in {{RFC8925}}, also helps simplify address selection for nodes.
-
-# Implementation note
-
-To be removed on publication.
-
-** Add text **
 
 # Acknowledgements 
 
