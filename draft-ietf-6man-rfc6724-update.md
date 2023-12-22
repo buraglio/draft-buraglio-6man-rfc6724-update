@@ -39,7 +39,6 @@ informative:
   RFC6724:
   RFC1918:
   RFC3484:
-  RFC5220:
   RFC6555:
   RFC8305:
   RFC4861:
@@ -162,7 +161,7 @@ This is a change introduced by this update. RFC 6724 as originally defined would
 
 ## IPv4-IPv4 preferred over ULA-GUA
 
-An IPv6 ULA address will only be preferred over an IPv4 address if both IPv6 ULA source and destination addresses are available. With Rule 5 of Section 6 of RFC 6724 and the ULA-specific label added in RFC 6724 (which was not present in RFC 3484) an IPv4 source and destination will be preferred over an IPv6 ULA source and an IPv6 GUA destination address, even though generally IPv6 ULA addresses are preferred over IPv4 in the policy table as proposed in this update. The IPv4 matching label trumps ULA-GUA.
+An IPv6 ULA address will only be preferred over an IPv4 address if both IPv6 ULA source and destination addresses are available. With Rule 5 of Section 6 of RFC 6724 and the ULA-specific label added in {{RFC6724}} (which was not present in {{RFC3484}}) an IPv4 source and destination will be preferred over an IPv6 ULA source and an IPv6 GUA destination address, even though generally IPv6 ULA addresses are preferred over IPv4 in the policy table as proposed in this update. The IPv4 matching label trumps ULA-GUA.
 
 # Discussion of ULA source with GUA or remote ULA destination
 
