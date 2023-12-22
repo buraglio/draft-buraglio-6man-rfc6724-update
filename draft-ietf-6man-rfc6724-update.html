@@ -228,7 +228,7 @@ any packets with Local IPv6 source or destination addresses outside of the site,
 
 <p>As stated in the above discussion, such ICMPv6 messages can assist in fast failover for TCP connections.</p>
 
-<h2 id="not-putting-ula-addresses-in-the-global-dns">Not putting ULA addresses in the global DNS</h2>
+<h2 id="avoid-using-ula-addresses-in-the-global-dns">Avoid using ULA addresses in the global DNS</h2>
 
 <p>Section 4.3 of RFC 4193 states that &ldquo;AAAA and PTR records for locally assigned local IPv6 addresses are not recommended to be installed in the global DNS.&rdquo;</p>
 
@@ -249,12 +249,6 @@ any packets with Local IPv6 source or destination addresses outside of the site,
 <p>It is widely recognised in the IETF 6man WG that the whole 3484/6724/getaddrinfo() model is fundamentally inadequate for optimal address selection.  A model that considers address pairs directly, rather than sorting on destination addresses with the best source for that address, would be preferable, but beyond the scope of this document.</p>
 
 <p>To simplify address selection, operators may instead look to deploy IPv6-only, and may choose to only use GUA addresses and no ULA addresses. Other approaches to reduce the use of IPv4, e.g., through use of DHCPv4 Option 108 as defined in {{RFC8925}}, also helps simplify address selection for nodes.</p>
-
-<h1 id="implementation-note">Implementation note</h1>
-
-<p>To be removed on publication.</p>
-
-<p>** Add text **</p>
 
 <h1 id="acknowledgements">Acknowledgements</h1>
 
