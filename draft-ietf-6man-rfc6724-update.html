@@ -132,7 +132,7 @@ the source addresses of the requesting node as well as the destination addresses
 
 <p>The heuristic for address selection defined in Rule 5.5 of Section 5 of RFC 6724 to prefer addresses in a prefix advertised by a next-hop router has proven to be very useful.</p>
 
-<p>The text in RFC 6724 says that the Rules MUST be followed in order, but also includes a discussion note under Rule 5.5 that says that an IPv6 implementation is not required to remember which next-hops advertised which prefixes and thus that Rule 5.5 is only applicable to implementations that track this information.</p>
+<p>The text in RFC 6724 states that the Rules MUST be followed in order, but also includes a discussion note under Rule 5.5 that says that an IPv6 implementation is not required to remember which next-hops advertised which prefixes and thus that Rule 5.5 is only applicable to implementations that track this information.</p>
 
 <p>This document elevates the requirement to prefer addresses in a prefix advertised by a next-hop router to a MUST for all nodes.</p>
 
@@ -140,7 +140,7 @@ the source addresses of the requesting node as well as the destination addresses
 
 <p>Section 2.1 of RFC 6724 states that &ldquo;an implementation MAY automatically add additional site-specific rows to the default table based on its configured addresses, such as for Unique Local Addresses (ULAs)&rdquo;.</p>
 
-<p>Given this document now elevates ULAs above all IPv4 addresses for address selection, should an implementation choose to insert specific ULA prefixes into the policy table, e.g., based on observed Router Advertisements (RAs) {{RFC4861}} and their Prefix Information Options (PIOs) or Route Information Options (RIOs) {{RFC4191}}, it SHOULD give such &ldquo;known local&rdquo; prefixes a precedence of 45, and SHOULD also reduce the precedence of other ULA addresses, i.e., the general fc07::/7 prefix, to precedence 10, such that IPv4 would be prefered to ULA prefixes that have not been explicitly added.</p>
+<p>Given this document now elevates ULAs above all IPv4 addresses for address selection, should an implementation choose to insert specific ULA prefixes into the policy table, e.g., based on observed Router Advertisements (RAs) {{RFC4861}} and their Prefix Information Options (PIOs) or Route Information Options (RIOs) {{RFC4191}}, it SHOULD give such &ldquo;known local&rdquo; prefixes a precedence of 45, and SHOULD also reduce the precedence of other ULA addresses, i.e., the general fc07::/7 prefix, to precedence 10, such that IPv4 would be preferred to ULA prefixes that have not been explicitly added.</p>
 
 <h1 id="configuration-of-the-default-policy-table">Configuration of the default policy table</h1>
 
@@ -162,7 +162,7 @@ the source addresses of the requesting node as well as the destination addresses
 
 <h2 id="ula-ula-preferred-over-ipv4-ipv4">ULA-ULA preferred over IPv4-IPv4</h2>
 
-<p>This is a change introduced by this update. RFC 6724 as orginally defined would lead to IPv4 being preferred over ULAs, which is contrary to the spirit of the GUA preference over IPv4, and to the goal of removing evidenced use of IPv4 in a dual-stack site before transitioning to IPv6-only.</p>
+<p>This is a change introduced by this update. RFC 6724 as originally defined would lead to IPv4 being preferred over ULAs, which is contrary to the spirit of the GUA preference over IPv4, and to the goal of removing evidenced use of IPv4 in a dual-stack site before transitioning to IPv6-only.</p>
 
 <h2 id="ipv4-ipv4-preferred-over-ula-gua">IPv4-IPv4 preferred over ULA-GUA</h2>
 
@@ -252,7 +252,7 @@ any packets with Local IPv6 source or destination addresses outside of the site,
 
 <h1 id="acknowledgements">Acknowledgements</h1>
 
-<p>The authors would like to acknowledge the valuable input and contributions of the 6man WG including (in alphabetic order) Erik Auerswald, Dale Carder, Brian Carpenter, Tom Coffeen, Lorenzo Colitti, Chris Cummings, David Farmer (in particular for the ULA to GUA/ULA dicussion text), Bob Hinden, Scott Hogg, Ed Horley, Ted Lemon, Jen Linkova, Michael Richardson, Kyle Rose, Mark Smith, Ole Troan, Eduard Vasilenko, Eric Vyncke, Paul Wefel, Timothy Winters, and XiPeng Xiao.</p>
+<p>The authors would like to acknowledge the valuable input and contributions of the 6man WG including (in alphabetic order) Erik Auerswald, Dale Carder, Brian Carpenter, Tom Coffeen, Lorenzo Colitti, Chris Cummings, David Farmer (in particular for the ULA to GUA/ULA discussion text), Bob Hinden, Scott Hogg, Ed Horley, Ted Lemon, Jen Linkova, Michael Richardson, Kyle Rose, Mark Smith, Ole Troan, Eduard Vasilenko, Eric Vyncke, Paul Wefel, Timothy Winters, and XiPeng Xiao.</p>
 
 <h1 id="security-considerations">Security Considerations</h1>
 
