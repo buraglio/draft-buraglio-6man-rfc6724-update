@@ -155,9 +155,9 @@ the source addresses of the requesting node as well as the destination addresses
 
 <p>This is the current behaviour, and remains unaltered. The rationale is to promote use of IPv6 GUAs in dual-stack environments.</p>
 
-<h2 id="ula-ula-preferred-over-gua-gua">ULA-ULA preferred over GUA-GUA</h2>
+<h2 id="gua-gua-preferred-over-ula-ula">GUA-GUA preferred over ULA-ULA</h2>
 
-<p>This is the current behaviour, and remains unaltered. One important rationale is to support consistent, stable addressing in a site where the global prefix might change over time, or become unavailable.</p>
+<p>This is the current behaviour, and remains unaltered. Both cases have matching labels, with GUAs having higher precedence.</p>
 
 <h2 id="ula-ula-preferred-over-ipv4-ipv4">ULA-ULA preferred over IPv4-IPv4</h2>
 
@@ -231,7 +231,7 @@ any packets with Local IPv6 source or destination addresses outside of the site,
 
 <p>Section 4.3 of RFC 4193 states that &ldquo;AAAA and PTR records for locally assigned local IPv6 addresses are not recommended to be installed in the global DNS.&rdquo;</p>
 
-<p>This is particularly important given this document elevates the priority for ULAs above IPv4, but is equally important in IPv6-only scenarios where just ULAs and GUAs are in use.</p>
+<p>This is particularly important given this document elevates the priority for ULAs above IPv4.</p>
 
 <h1 id="the-practicalities-of-implementing-address-selection-support">The practicalities of implementing address selection support</h1>
 
