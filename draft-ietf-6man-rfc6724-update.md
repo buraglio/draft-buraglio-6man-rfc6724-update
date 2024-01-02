@@ -151,9 +151,9 @@ In this section we reiew the intended default behaviors after this update is app
 
 This is the current behaviour, and remains unaltered. The rationale is to promote use of IPv6 GUAs in dual-stack environments.
 
-## ULA-ULA preferred over GUA-GUA
+## GUA-GUA preferred over ULA-ULA
 
-This is the current behaviour, and remains unaltered. One important rationale is to support consistent, stable addressing in a site where the global prefix might change over time, or become unavailable.
+This is the current behaviour, and remains unaltered. Both cases have matching labels, with GUAs having higher precedence.
 
 ## ULA-ULA preferred over IPv4-IPv4
 
