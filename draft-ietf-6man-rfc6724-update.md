@@ -225,7 +225,7 @@ As stated in the above discussion, such ICMPv6 messages can assist in fast failo
 
 Section 4.3 of RFC 4193 states that "AAAA and PTR records for locally assigned local IPv6 addresses are not recommended to be installed in the global DNS."
 
-This is particularly important given this document elevates the priority for ULAs above IPv4, but is equally important in IPv6-only scenarios where just ULAs and GUAs are in use.
+This is particularly important given this document elevates the priority for ULAs above IPv4.
 
 # The practicalities of implementing address selection support
 
