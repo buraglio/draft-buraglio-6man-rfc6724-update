@@ -135,7 +135,7 @@ This document elevates the requirement to prefer addresses in a prefix advertise
 
 Section 2.1 of RFC 6724 states that "an implementation MAY automatically add additional site-specific rows to the default table based on its configured addresses, such as for Unique Local Addresses (ULAs)".
 
-Given this document now elevates ULAs above all IPv4 addresses for address selection, should an implementation choose to insert specific ULA prefixes into the policy table, e.g., based on observed Router Advertisements (RAs) {{RFC4861}} and their Prefix Information Options (PIOs) or Route Information Options (RIOs) {{RFC4191}}, it SHOULD give such "known local" prefixes a precedence of 45, and SHOULD also reduce the precedence of other ULA addresses, i.e., the general fc07::/7 prefix, to precedence 10, such that IPv4 would be preferred to ULA prefixes that have not been explicitly added.
+Given this document now elevates ULAs above all IPv4 addresses for address selection, should an implementation choose to insert specific ULA prefixes into the policy table, e.g., based on observed Router Advertisements (RAs) {{RFC4861}} and their Prefix Information Options (PIOs) or Route Information Options (RIOs) {{RFC4191}}, it SHOULD give such "known local" prefixes a precedence of 45, and SHOULD also reduce the precedence of other ULA addresses, i.e., the general fc00::/7 prefix, to precedence 10, such that IPv4 would be preferred to ULA prefixes that have not been explicitly added.
 
 # Configuration of the default policy table
 
