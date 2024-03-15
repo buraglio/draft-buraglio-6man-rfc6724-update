@@ -43,6 +43,7 @@ informative:
   RFC8305:
   RFC4861:
   RFC4191:
+  RFC3587:
  
   
 
@@ -67,6 +68,10 @@ An IPv6 deployment, whether enterprise, residential or other, may use combinatio
 # Terminology
 
 {::boilerplate bcp14-tagged}
+
+ULA: Unique Local Addressing as defined in [RFC4193]
+
+GUA: Global Unicast Addressing as defined in [RFC3587]
 
 
 # Operational Issues Regarding Preference for IPv4 addresses over ULAs
@@ -206,7 +211,7 @@ As stated in Section 2 of RFC 6724,
 
 Therefore, when an IPv4 destination is preferred over GUA or ULA destinations, IPv4 will likely succeed if IPv4 connectivity is available, and the GUA or ULA destination may only be tried if Happy Eyeballs is implemented. 
 
-On the other hand, if the GUA or ULA destination with the ULA source is preferred, the ULA source will typically fail to communicate GUA or ULA destinations that are not connected to the same local network as the ULA source. However, if the operational guidelines in Section 4.3 of RFC 4193 are followed, recognizing this failure can be accelerated, and transport layer timeouts (e.g., TCP) can be avoided. The guidelines will cause a Destination Unreachable ICMPv6 Error to be received by the source device, signaling the next address in the list to be tried, as discussed above.
+On the other hand, if the GUA or ULA destination with the ULA source is preferred, the ULA source will typically fail to communicate with GUA or ULA destinations that are not connected to the same local network as the ULA source. However, if the operational guidelines in Section 4.3 of RFC 4193 are followed, recognizing this failure can be accelerated, and transport layer timeouts (e.g., TCP) can be avoided. The guidelines will cause a Destination Unreachable ICMPv6 Error to be received by the source device, signaling the next address in the list to be tried, as discussed above.
 
 # Following ULA operational guidelines in RFC 4193
 

@@ -51,7 +51,8 @@ updates: 6724</p>
   RFC6555:
   RFC8305:
   RFC4861:
-  RFC4191:</p>
+  RFC4191:
+  RFC3587:</p>
 
 <p>&mdash; abstract</p>
 
@@ -73,6 +74,10 @@ candidate set by following the procedures defined in the RFC. Part of the proces
 <h1 id="terminology">Terminology</h1>
 
 <p>{::boilerplate bcp14-tagged}</p>
+
+<p>ULA: Unique Local Addressing as defined in [RFC4193]</p>
+
+<p>GUA: Global Unicast Addressing as defined in [RFC3587]</p>
 
 <h1 id="operational-issues-regarding-preference-for-ipv4-addresses-over-ulas">Operational Issues Regarding Preference for IPv4 addresses over ULAs</h1>
 
@@ -139,7 +144,7 @@ the source addresses of the requesting node as well as the destination addresses
 
 <p>Section 2.1 of RFC 6724 states that &ldquo;an implementation MAY automatically add additional site-specific rows to the default table based on its configured addresses, such as for Unique Local Addresses (ULAs)&rdquo;.</p>
 
-<p>Given this document now elevates ULAs above all IPv4 addresses for address selection, should an implementation choose to insert specific ULA prefixes into the policy table, e.g., based on observed Router Advertisements (RAs) {{RFC4861}} and their Prefix Information Options (PIOs) or Route Information Options (RIOs) {{RFC4191}}, it SHOULD give such &ldquo;known local&rdquo; prefixes a precedence of 45, and SHOULD also reduce the precedence of other ULA addresses, i.e., the general fc07::/7 prefix, to precedence 10, such that IPv4 would be preferred to ULA prefixes that have not been explicitly added.</p>
+<p>Given this document now elevates ULAs above all IPv4 addresses for address selection, should an implementation choose to insert specific ULA prefixes into the policy table, e.g., based on observed Router Advertisements (RAs) {{RFC4861}} and their Prefix Information Options (PIOs) or Route Information Options (RIOs) {{RFC4191}}, it SHOULD give such &ldquo;known local&rdquo; prefixes a precedence of 45, and SHOULD also reduce the precedence of other ULA addresses, i.e., the general fc00::/7 prefix, to precedence 10, such that IPv4 would be preferred to ULA prefixes that have not been explicitly added.</p>
 
 <h1 id="configuration-of-the-default-policy-table">Configuration of the default policy table</h1>
 
@@ -212,7 +217,7 @@ the source addresses of the requesting node as well as the destination addresses
 
 <p>Therefore, when an IPv4 destination is preferred over GUA or ULA destinations, IPv4 will likely succeed if IPv4 connectivity is available, and the GUA or ULA destination may only be tried if Happy Eyeballs is implemented.</p>
 
-<p>On the other hand, if the GUA or ULA destination with the ULA source is preferred, the ULA source will typically fail to communicate GUA or ULA destinations that are not connected to the same local network as the ULA source. However, if the operational guidelines in Section 4.3 of RFC 4193 are followed, recognizing this failure can be accelerated, and transport layer timeouts (e.g., TCP) can be avoided. The guidelines will cause a Destination Unreachable ICMPv6 Error to be received by the source device, signaling the next address in the list to be tried, as discussed above.</p>
+<p>On the other hand, if the GUA or ULA destination with the ULA source is preferred, the ULA source will typically fail to communicate with GUA or ULA destinations that are not connected to the same local network as the ULA source. However, if the operational guidelines in Section 4.3 of RFC 4193 are followed, recognizing this failure can be accelerated, and transport layer timeouts (e.g., TCP) can be avoided. The guidelines will cause a Destination Unreachable ICMPv6 Error to be received by the source device, signaling the next address in the list to be tried, as discussed above.</p>
 
 <h1 id="following-ula-operational-guidelines-in-rfc-4193">Following ULA operational guidelines in RFC 4193</h1>
 
@@ -251,7 +256,7 @@ any packets with Local IPv6 source or destination addresses outside of the site,
 
 <h1 id="acknowledgements">Acknowledgements</h1>
 
-<p>The authors would like to acknowledge the valuable input and contributions of the 6man WG including (in alphabetic order) Erik Auerswald, Dale Carder, Brian Carpenter, Tom Coffeen, Lorenzo Colitti, Chris Cummings, David Farmer (in particular for the ULA to GUA/ULA discussion text), Bob Hinden, Scott Hogg, Ed Horley, Ted Lemon, Jen Linkova, Michael Richardson, Kyle Rose, Mark Smith, Ole Troan, Eduard Vasilenko, Eric Vyncke, Paul Wefel, Timothy Winters, and XiPeng Xiao.</p>
+<p>The authors would like to acknowledge the valuable input and contributions of the 6man WG including (in alphabetic order) Erik Auerswald, Dale Carder, Brian Carpenter, Tom Coffeen, Lorenzo Colitti, Chris Cummings, David Farmer (in particular for the ULA to GUA/ULA discussion text), Bob Hinden, Scott Hogg, Ed Horley, Ted Lemon, Jen Linkova, Michael Richardson, Kyle Rose, Ole Troan, Eduard Vasilenko, Eric Vyncke, Paul Wefel, Timothy Winters, and XiPeng Xiao.</p>
 
 <h1 id="security-considerations">Security Considerations</h1>
 
