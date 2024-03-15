@@ -1,7 +1,7 @@
 ---
 title: Preference for IPv6 ULAs over IPv4 addresses in RFC6724
 abbrev: Update on ULAs in RFC 6724
-docname: draft-ietf-6man-rfc6724-update-06
+docname: draft-ietf-6man-rfc6724-update-07
 cat: std
 submissiontype: IETF
 ipr: trust200902
@@ -97,7 +97,7 @@ The changes are discussed in more detail in the following sections, with a furth
 
 The anycast prefix for 6to4 relays was deprecated by {{RFC7526}} in 2015, and since that time the use of 6to4 addressing has further declined to the point where it is generally not seen and can be considered to all intents and purposes deprecated in use.  
 
-This document therefore demotes the precedence of the 6to4 prefix in the policy table to the same minimum preference as carried by the deprecated site local and 6bone address prefixes.
+This document therefore demotes the precedence of the 6to4 prefix in the policy table to the same preference as carried by the Teredo prefix.
 
 # Adjustments to RFC 6724
 
@@ -266,10 +266,10 @@ Operators should be mindful of cases where communicating nodes have differing be
 
 None.
 
-# Appendix A. Changes and additional text since RFC 6724
+# Summary of changes and additional text since RFC 6724
 
 * Changed default policy table to move fc00::/7 to precedence 30, above legacy IPv4.
-* Changed default policy table to move 6to4 address block 2002::/16 to the same as 6bone and deprecated site-local.
+* Changed default policy table to move the 6to4 address block 2002::/16 to the same as the Teredo prefix.
 * Changed ::ffff:0:0/96 to precedence 20.
 * Changed Rule 5.5 to a MUST support.
 * Added note on precedence for general ULAs where specific ULAs are inserted in the policy table.
