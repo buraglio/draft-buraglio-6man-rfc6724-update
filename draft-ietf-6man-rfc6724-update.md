@@ -49,7 +49,7 @@ informative:
 
 --- abstract
 
-When {{RFC6724}} was published it defined an address selection algorithm along with a default policy table, and noted a number of examples where that policy table might benefit from adjustment for specific scenarios. It also noted that it is important for implementations to provide a way to change the default policies as more experience is gained. This update draws on several years of operational experience to refine RFC 6724 further, with particular emphasis on preference for the use of ULA addresses over IPv4 addresses and the addition of mandatory support for Rule 5.5. The update also demotes the preference for 6to4 addresses. The changes to default behavior improve supportability of common use cases, including automatic / unmanaged scenarios. It is recognized that some less common deployment scenarios may require explicit configuration or custom changes to achieve desired operational parameters.
+When RFC 6724 was published it defined an address selection algorithm along with a default policy table, and noted a number of examples where that policy table might benefit from adjustment for specific scenarios. It also noted that it is important for implementations to provide a way to change the default policies as more experience is gained. This update draws on several years of operational experience to refine RFC 6724 further, with particular emphasis on preference for the use of ULA addresses over IPv4 addresses and the addition of mandatory support for Rule 5.5. The update also demotes the preference for 6to4 addresses. The changes to default behavior improve supportability of common use cases, including automatic / unmanaged scenarios. It is recognized that some less common deployment scenarios may require explicit configuration or custom changes to achieve desired operational parameters.
   
 --- middle
 
@@ -95,9 +95,9 @@ The changes are discussed in more detail in the following sections, with a furth
 
 # Preference of 6to4 addresses
 
-The anycast prefix for 6to4 relays was deprecated by {{RFC7526}} in 2015, and since that time the use of 6to4 addressing has further declined to the point where it is generally not seen and can be considered to all intents and purposes deprecated in use.  
+The anycast prefix for 6to4 relays was formally deprecated by {{RFC7526}} in 2015, and since that time the use of 6to4 addressing has further declined, with very little evidence of its use on the public internet. Note that RFC 7526 does not deprecate the 6to4 IPv6 prefix 2002::/16, it only deprecates the 6to4 Relay IPv4 prefix.
 
-This document therefore demotes the precedence of the 6to4 prefix in the policy table to the same preference as carried by the Teredo prefix.
+This document therefore demotes the precedence of the 6to4 prefix in the policy table to the same precedence as carried by the Teredo prefix. Leaving this entry in the default table will cause no problems and will help if any deployments still exist, and ensure 6to4 prefixes are differentiated from general GUAs.
 
 # Adjustments to RFC 6724
 
@@ -150,7 +150,7 @@ While this document defines changes to RFC 6724 behavior based on operational ex
 
 # Intended behaviors
 
-In this section we reiew the intended default behaviors after this update is applied.
+In this section we review the intended default behaviors after this update is applied.
 
 ## GUA-GUA preferred over IPv4-IPv4
 
@@ -178,7 +178,7 @@ When only a ULA source is available for communication with GUA destinations, thi
 
 Receiving a DNS response for a ULA destination that is not attached to the local network, in other words, a remote ULA destination, is considered a misconfiguration in most cases, or at least this contradicts the operational guidelines provided in Section 4.4 of RFC 4193. Nevertheless, this can occur, and the ULA source will typically fail when it attempts to communicate with ULA destinations that are not attached to the same local network as the ULA source.
 
-This section discusses several complementary mechanisms involved with these scenarios.
+The remainder of this section discusses several complementary mechanisms involved with these scenarios.
 
 ## The ULA Label and its Precedence
 
@@ -269,7 +269,7 @@ None.
 # Summary of changes and additional text since RFC 6724
 
 * Changed default policy table to move fc00::/7 to precedence 30, above legacy IPv4.
-* Changed default policy table to move the 6to4 address block 2002::/16 to the same as the Teredo prefix.
+* Changed default policy table to move the 6to4 address block 2002::/16 to the same precedence as the Teredo prefix.
 * Changed ::ffff:0:0/96 to precedence 20.
 * Changed Rule 5.5 to a MUST support.
 * Added note on precedence for general ULAs where specific ULAs are inserted in the policy table.
