@@ -99,6 +99,8 @@ The anycast prefix for 6to4 relays was formally deprecated by {{RFC7526}} in 201
 
 This document therefore demotes the precedence of the 6to4 prefix in the policy table to the same precedence as carried by the Teredo prefix. Leaving this entry in the default table will cause no problems and will help if any deployments still exist, and ensure 6to4 prefixes are differentiated from general GUAs.
 
+The discussion regarding the adding of 6to4 site prefixes in section 10.7 of RFC6724 remains valid.
+
 # Adjustments to RFC 6724
 
 This update makes two specific changes to RFC 6724: first to update the default policy table, and second to change Rule 5.5 on prefering addresses in a prefix advertised by the next-hop to a MUST.
