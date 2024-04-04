@@ -26,7 +26,7 @@
 ]>
 
 
-<rfc ipr="trust200902" docName="draft-ietf-6man-rfc6724-update-08" category="std" consensus="true" submissionType="IETF" updates="6724">
+<rfc ipr="trust200902" docName="draft-ietf-6man-rfc6724-update-07" category="std" consensus="true" submissionType="IETF" updates="6724">
   <front>
     <title abbrev="Update on ULAs in RFC 6724">Preference for IPv6 ULAs over IPv4 addresses in RFC6724</title>
 
@@ -402,11 +402,11 @@ any packets with Local IPv6 source or destination addresses outside of the site,
   </back>
 
 <!-- ##markdown-source:
-H4sIABjoDmYAA61d2XIbyZV9x1fk0A8mHQBEUCQl0Sslqlvs0TYi5R6Hww+F
+H4sIAID4DmYAA61d2XIbyZV9x1fk0A8mHQBEUCQl0Sslqlvs0TYi5R6Hww+F
 qgSQzVrgWoiGHZpvmW+ZL5u75VZVpOSFEW6RQK4373LukunZbDZpTZvrC/Wx
 1itd6zLValXV6vrj/bn6/PayUdW9pj9PVZJltW4a3ShTqk/fvTp/dnI6SZbL
 Wt9fqM/bLGm1qkruxS0UNcmqtEwKmCOrk1U7M7pdzc6LpJzVqxQbzDrqOzt+
-PkmT9kI1bTZpumVhmsZUZbvfQtfr17ffTcy2vlBt3TXtyfHxi+OTSVLrBL4r
+NkmT9kI1bTZpumVhmsZUZbvfQtfr17ffTcy2vlBt3TXtyfHxi+OTSVLrBL4r
 28lufaHO312+n9zt6ANdl7qdXeGEEx6+ueDVTCZJ126q+mKi6Gcm/ypYM7R5
 P1cvuzpZ56ZyX/Dq35v0bvhdVcPMr0tdr/fqJjVIwEa91+2uqu9cI10kJr9Q
 S+n8B6DwLqkzU663eVLqOax1fDW3c/VqU+3K3lJuTdH7nJbxg2nS/pzQdE5N
@@ -598,7 +598,7 @@ GokMaeTBCCA/RhKEg8mKfc6R0C3aVXd5MSQwVkD513skBunu+0uQJJH7s8HL
 qn0R+IW6vnx/ORCs91XJ6OXGv7/iXnspo/uLdB029mkmk1+B9uLLCw+9hMZv
 c9ki3/hS09Pj6fCi8fxbByV9HTzBopbgd9/Ft6NdxDZ+cAQ/jl8ZCSaNrzgP
 rzb7lv7WrruFKm4ytrqkKhJCtIza7SDII3Guk6MKwTNhLOmuKn4so+9moINJ
-wTqAEeVgWv8yR6+ttRYSFArsCApxr7G1OE61SfB0zv8/GXhdaPL/CLVFiVxm
+wTqAEeVgWv8yR6+ttRYSFArsCApxr7G1OE61SfB0zv8/GXhdaPL/7ldiNFxm
 AAA=
 
 -->
