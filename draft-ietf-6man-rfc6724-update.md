@@ -120,19 +120,19 @@ This update alters the default policy table listed in Rule 2.1 of RFC 6724.
 The table below reflects the current RFC 6724 state on the left, and the updated state defined by this RFC on the right:
 
 ~~~~~~~~~~
-                    RFC 6724                                Updated                  
-      Prefix        Precedence Label          Prefix        Precedence Label              
-      ::1/128               50     0          ::1/128               50     0
-      ::/0                  40     1          ::/0                  40     1
-      ::ffff:0:0/96         35     4          ::ffff:0:0/96         20     4 (*)
-      2002::/16             30     2          2002::/16              5     2 (*)
-      2001::/32              5     5          2001::/32              5     5
-      fc00::/7               3    13          fc00::/7              30    13 (*)
-      ::/96                  1     3          ::/96                  1     3
-      fec0::/10              1    11          fec0::/10              1     11
-      3ffe::/16              1    12          3ffe::/16              1     12
+                    RFC 6724                              Updated                  
+Prefix        Precedence Label        Prefix        Precedence Label              
+::1/128               50     0        ::1/128               50     0
+::/0                  40     1        ::/0                  40     1
+::ffff:0:0/96         35     4        ::ffff:0:0/96         20     4 (*)
+2002::/16             30     2        2002::/16              5     2 (*)
+2001::/32              5     5        2001::/32              5     5
+fc00::/7               3    13        fc00::/7              30    13 (*)
+::/96                  1     3        ::/96                  1     3
+fec0::/10              1    11        fec0::/10              1     11
+3ffe::/16              1    12        3ffe::/16              1     12
 
- (*) value(s) changed in update
+(*) value(s) changed in update
 
 ~~~~~~~~~~
 
@@ -208,10 +208,11 @@ The remainder of this section discusses several complementary mechanisms involve
 
 ## The ULA Label and its Precedence
 
-RFC 6724 added (in obsoleting RFC 3484) a separate label for ULA (fc00::/7), whose default precedence is raised by this update. This separate label interacts with Rule 5 of Section 6 of RFC 6724, which says;
+RFC 6724 added (in obsoleting RFC 3484) a separate label for ULA (fc00::/7), whose default precedence is raised by this update. This separate label interacts with Rule 5 of Section 6 of RFC 6724, which says:
 
-      Rule 5: Prefer matching label.
-      If Label(Source(DA)) = Label(DA) and Label(Source(DB)) <> Label(DB), then prefer DA.  Similarly, if       Label(Source(DA)) <> Label(DA) and Label(Source(DB)) = Label(DB), then prefer DB.
+Rule 5: Prefer matching label.\
+If Label(Source(DA)) = Label(DA) and Label(Source(DB)) <> Label(DB), then prefer DA.\
+Similarly, if Label(Source(DA)) <> Label(DA) and Label(Source(DB)) = Label(DB), then prefer DB.\
 
 The ULA source label will not match the GUA destination label in the first scenario. Therefore, an IPv4 destination, if available, will be preferred over a GUA destination with a ULA source, even though the GUA destination has higher precedence than the IPv4 destination in the policy table. This means the IPv4 destination will be moved up in the list of destinations over the GUA destination with the ULA source. 
 
@@ -229,13 +230,9 @@ Regardless of the preference resulting from the above discussion, Happy Eyeballs
 
 ## Try the Next Address
 
-As stated in Section 2 of RFC 6724,
+As stated in Section 2 of RFC 6724:
 
-      Well-behaved applications SHOULD NOT simply use the first address returned from an API such as
-      getaddrinfo() and then give up if it fails. For many applications, it is appropriate to iterate 
-      through the list of addresses returned from getaddrinfo() until a working address is found. For
-      other applications, it might be appropriate to try multiple addresses in parallel (e.g., with some
-      small delay in between) and use the first one to succeed.
+"Well-behaved applications SHOULD NOT simply use the first address returned from an API such as getaddrinfo() and then give up if it fails. For many applications, it is appropriate to iterate through the list of addresses returned from getaddrinfo() until a working address is found. For other applications, it might be appropriate to try multiple addresses in parallel (e.g., with some small delay in between) and use the first one to succeed."
 
 Therefore, when an IPv4 destination is preferred over GUA or ULA destinations, IPv4 will likely succeed if IPv4 connectivity is available, and the GUA or ULA destination may only be tried if Happy Eyeballs is implemented. 
 
