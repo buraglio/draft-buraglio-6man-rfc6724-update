@@ -1,7 +1,7 @@
 ---
 title: Preference for IPv6 ULAs over IPv4 addresses in RFC6724
 abbrev: Update on ULAs in RFC 6724
-docname: draft-ietf-6man-rfc6724-update-08
+docname: draft-ietf-6man-rfc6724-update-09
 cat: std
 submissiontype: IETF
 ipr: trust200902
@@ -210,9 +210,11 @@ The remainder of this section discusses several complementary mechanisms involve
 
 RFC 6724 added (in obsoleting RFC 3484) a separate label for ULA (fc00::/7), whose default precedence is raised by this update. This separate label interacts with Rule 5 of Section 6 of RFC 6724, which says:
 
-Rule 5: Prefer matching label.\
-If Label(Source(DA)) = Label(DA) and Label(Source(DB)) <> Label(DB), then prefer DA.\
-Similarly, if Label(Source(DA)) <> Label(DA) and Label(Source(DB)) = Label(DB), then prefer DB.\
+~~~~~~~~~~
+Rule 5: Prefer matching label.
+If Label(Source(DA)) = Label(DA) and Label(Source(DB)) <> Label(DB), then prefer DA.
+Similarly, if Label(Source(DA)) <> Label(DA) and Label(Source(DB)) = Label(DB), then prefer DB.
+~~~~~~~~~~
 
 The ULA source label will not match the GUA destination label in the first scenario. Therefore, an IPv4 destination, if available, will be preferred over a GUA destination with a ULA source, even though the GUA destination has higher precedence than the IPv4 destination in the policy table. This means the IPv4 destination will be moved up in the list of destinations over the GUA destination with the ULA source. 
 
