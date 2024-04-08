@@ -219,8 +219,8 @@ Rule 5: Prefer matching label.
 If Label(Source(DA)) = Label(DA) and Label(Source(DB)) <> Label(DB), 
 then prefer DA.
 
-Similarly, if Label(Source(DA)) <> Label(DA) and Label(Source(DB)) = Label(DB), 
-then prefer DB.
+Similarly, if Label(Source(DA)) <> Label(DA) and Label(Source(DB)) = 
+Label(DB), then prefer DB.
 ~~~~~~~~~~
 
 The ULA source label will not match the GUA destination label in the first scenario. Therefore, an IPv4 destination, if available, will be preferred over a GUA destination with a ULA source, even though the GUA destination has higher precedence than the IPv4 destination in the policy table. This means the IPv4 destination will be moved up in the list of destinations over the GUA destination with the ULA source. 
