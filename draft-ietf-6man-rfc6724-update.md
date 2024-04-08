@@ -1,7 +1,7 @@
 ---
 title: Preference for IPv6 ULAs over IPv4 addresses in RFC6724
 abbrev: Update on ULAs in RFC 6724
-docname: draft-ietf-6man-rfc6724-update-09
+docname: draft-ietf-6man-rfc6724-update-08
 cat: std
 submissiontype: IETF
 ipr: trust200902
@@ -43,7 +43,6 @@ informative:
   RFC6555:
   RFC8305:
   RFC4861:
-  RFC4191:
   RFC3587:
  
   
@@ -74,7 +73,7 @@ An IPv6 deployment, whether enterprise, residential or other, may use combinatio
 
 GUA: Global Unicast Addressing as defined in [RFC3587]
 
-ULA: Unique Local Addressing as defined in [RFC]
+ULA: Unique Local Addressing as defined in [RFC4193]
 
 Known-local ULA: A ULA prefix that is determined to be local to a given node
 
@@ -92,7 +91,7 @@ However, the same default policy table also puts IPv6 ULAs below all IPv4 addres
 
 As a result, the use of ULAs is not a viable option for dual-stack networking transition planning, large scale network modeling, network lab environments or other modes of large scale networking that run both IPv4 and IPv6 concurrently with the expectation that IPv6 will be preferred by default.
 
-This document describes two methods by which a node can implement evelated or differential preference for ULAs.
+This document describes two methods by which a node can implement elevated or differential preference for ULAs.
 
 The general method is by updating the default policy table to elevate the preference for ULAs such that ULAs will be preferred over all IPv4 addresses, providing more consistent and less confusing behavior for operators, and to assist operators in phasing out IPv4 from dual-stack environments, since by this update IPv6 GUAs and ULAs will be preferred over any IPv4 addresses. This is an important enabler for sites seeking to move from dual-stack to IPv6-only networking.
 

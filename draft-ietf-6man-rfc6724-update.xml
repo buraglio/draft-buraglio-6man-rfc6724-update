@@ -10,6 +10,7 @@
   <!ENTITY wj     "&#8288;">
 
 <!ENTITY RFC2119 SYSTEM "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.2119.xml">
+<!ENTITY RFC4191 SYSTEM "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.4191.xml">
 <!ENTITY RFC4193 SYSTEM "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.4193.xml">
 <!ENTITY RFC7078 SYSTEM "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.7078.xml">
 <!ENTITY RFC7526 SYSTEM "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.7526.xml">
@@ -21,7 +22,6 @@
 <!ENTITY RFC6555 SYSTEM "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.6555.xml">
 <!ENTITY RFC8305 SYSTEM "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.8305.xml">
 <!ENTITY RFC4861 SYSTEM "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.4861.xml">
-<!ENTITY RFC4191 SYSTEM "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.4191.xml">
 <!ENTITY RFC3587 SYSTEM "https://bib.ietf.org/public/rfc/bibxml/reference.RFC.3587.xml">
 ]>
 
@@ -49,7 +49,7 @@
       </address>
     </author>
 
-    <date year="2024" month="April" day="05"/>
+    <date year="2024" month="April" day="08"/>
 
     <area>Int</area>
     <workgroup>6MAN</workgroup>
@@ -82,7 +82,7 @@ candidate set by following the procedures defined in the RFC. Part of the proces
 
 <t>It was always expected that the default policy table may need to be changed based on operational experience; section 2.1 says "It is important that implementations provide a way to change the default policies as more experience is gained" and points to the examples in Section 10, which include Section 10.6 where a ULA example is presented.</t>
 
-<t>This document is written on the basis of such operational experience, in particular for scenarios where ULAs are used for their intended purpose as stated in <xref target="RFC4193"/>, i.e., they are designed to be routed inside of a local site and by default not received from or advertised externally. The document defines how preference for ULAs may be elevated for appropriate, common scenarios.</t>
+<t>This document is written on the basis of such operational experience, in particular for scenarios where ULAs are used for their intended purpose as stated in <xref target="RFC"/>, i.e., they are designed to be routed inside of a local site and by default not received from or advertised externally. The document defines how preference for ULAs may be elevated for appropriate, common scenarios.</t>
 
 <t>It also includes updated requirements on support for RFC 6724 Rule 5.5. The goal of the document is to improve behavior for common scenarios, and to assist in the phasing out of use of IPv4, while noting that some specific scenarios may still require explicit configuration.</t>
 
@@ -99,9 +99,11 @@ appear in all capitals, as shown here.</t>
 
 <?line -18?>
 
+<t>GUA: Global Unicast Addressing as defined in <xref target="RFC3587"></xref></t>
+
 <t>ULA: Unique Local Addressing as defined in <xref target="RFC4193"></xref></t>
 
-<t>GUA: Global Unicast Addressing as defined in <xref target="RFC3587"></xref></t>
+<t>Known-local ULA: A ULA prefix that is determined to be local to a given node</t>
 
 </section>
 <section anchor="operational-issues-regarding-preference-for-ipv4-addresses-over-ulas"><name>Operational Issues Regarding Preference for IPv4 addresses over ULAs</name>
@@ -117,13 +119,13 @@ the source addresses of the requesting node as well as the destination addresses
 
 <t>As a result, the use of ULAs is not a viable option for dual-stack networking transition planning, large scale network modeling, network lab environments or other modes of large scale networking that run both IPv4 and IPv6 concurrently with the expectation that IPv6 will be preferred by default.</t>
 
-<t>This document describes two methods by which a node can implement evelated or differential preference for ULAs.</t>
+<t>This document describes two methods by which a node can implement elevated or differential preference for ULAs.</t>
 
 <t>The general method is by updating the default policy table to elevate the preference for ULAs such that ULAs will be preferred over all IPv4 addresses, providing more consistent and less confusing behavior for operators, and to assist operators in phasing out IPv4 from dual-stack environments, since by this update IPv6 GUAs and ULAs will be preferred over any IPv4 addresses. This is an important enabler for sites seeking to move from dual-stack to IPv6-only networking.</t>
 
-<t>RFC 6724 defined a method by which nodes may provide more fine-grained support for elevating the preference for specific ULA prefixes that are known to be local, while leaving other general ULA prefixes at their existing precedence. This document upgrades the requirement in RFC 6724 for nodes to insert a higher precedence entry in the policy table for observed or "known-local" ULAs from a <bcp14>MAY</bcp14> to a <bcp14>SHOULD</bcp14>. Nodes implementing this behaviour would see ULA prefixes known to be local to the node's site having precedence over both IPv6 GUA and IPv4 addresses, while other general ULAs would not.</t>
+<t>RFC 6724 defined a method by which nodes may provide more fine-grained support for elevating the preference for specific ULA prefixes that are known to be local, while leaving other general ULA prefixes at their existing precedence. This document upgrades the requirement in RFC 6724 for nodes to insert a higher precedence entry in the policy table for observed ULA prefixes that are known to be local, referred to in this document as "known-local" ULAs, from a <bcp14>MAY</bcp14> to a <bcp14>SHOULD</bcp14>. Nodes implementing this behaviour would see ULA prefixes known to be local to the node's site having precedence over both IPv6 GUA and IPv4 addresses, while other general ULAs would not.</t>
 
-<t>AUTHORS' NOTE: The authors have had feedback suggesting this requirement should be a <bcp14>MUST</bcp14>, which would mean that "known-local" ULAs would take precedence on compliant implementations over all IPv6 GUAs and all IPv4 addresses, but other general ULAs would not.  We would very much like further feedback on this potential change to the document, or from those who may have implementations of such an approach.</t>
+<t>AUTHORS' NOTE: The authors have had feedback suggesting this requirement should be a <bcp14>MUST</bcp14>, which would mean that known-local ULAs would take precedence on compliant implementations over all IPv6 GUAs and all IPv4 addresses, but other general ULAs would not.  We would very much like further feedback on this potential change to the document, or from those who may have implementations of such an approach.</t>
 
 <t>This change aims to improve the default handling of address selection for common cases, and unmanaged / automatic scenarios rather than those where DHCPv6 is deployed. Sites using DHCPv6 for host configuration management can make use of implementations of <xref target="RFC7078"/> to apply changes to the <xref target="RFC6724"/> policy table.</t>
 
@@ -141,7 +143,7 @@ the source addresses of the requesting node as well as the destination addresses
 </section>
 <section anchor="adjustments-to-rfc-6724"><name>Adjustments to RFC 6724</name>
 
-<t>This update makes three specific changes to RFC 6724: first to update the default policy table, second to change Rule 5.5 on prefering addresses in a prefix advertised by the next-hop to a <bcp14>MUST</bcp14>, and third to upgrade the requirement to automatically insert "known-local" ULAs into a node's policy table from a <bcp14>MAY</bcp14> to a <bcp14>SHOULD</bcp14>.</t>
+<t>This update makes three specific changes to RFC 6724: first to update the default policy table, second to change Rule 5.5 on prefering addresses in a prefix advertised by the next-hop to a <bcp14>MUST</bcp14>, and third to upgrade the requirement to automatically insert known-local ULAs into a node's policy table from a <bcp14>MAY</bcp14> to a <bcp14>SHOULD</bcp14>.</t>
 
 <section anchor="policy-table-update"><name>Policy Table Update</name>
 
@@ -184,11 +186,13 @@ fec0::/10              1    11        fec0::/10              1     11
 
 <t>It is advantageous when preferring ULAs over IPv4 addresses to have the highest confidence that the ULA is local to the node, and reachable through ULA addressing, to avoid connection failures or time-outs. If a node can determine which ULA prefix(es) are known to be local, it can provide differential treatment for those over general ULAs, and add these to the policy table at a higher precedence while keeping all general ULA prefixes to a lower precedence.</t>
 
-<t>This document thus elevates the <bcp14>MAY</bcp14> requirement above to a <bcp14>SHOULD</bcp14> for "known-local" ULAs.</t>
+<t>This document thus elevates the <bcp14>MAY</bcp14> requirement above to a <bcp14>SHOULD</bcp14> for known-local ULAs.</t>
 
-<t>Therefore where a node learns of a ULA prefix known to be local, e.g., based on observed Router Advertisements (RAs) <xref target="RFC4861"/> and their Prefix Information Options (PIOs) or Route Information Options (RIOs) <xref target="RFC4191"/>, or via DHCPv6, it <bcp14>SHOULD</bcp14> give such "known-local" prefixes a precedence of 45, and <bcp14>SHOULD</bcp14> also reduce the precedence of other ULA addresses, i.e., the general fc00::/7 prefix, to precedence 10, such that IPv4 would be preferred to ULA prefixes that have not been explicitly added.</t>
+<t>Therefore where a node learns of a ULA prefix known to be local it <bcp14>SHOULD</bcp14> give such known-local prefixes a precedence of 45, and <bcp14>SHOULD</bcp14> also reduce the precedence of other ULA addresses, i.e., the general fc00::/7 prefix, to precedence 10, such that IPv4 would be preferred to ULA prefixes that have not been explicitly added.</t>
 
-<t>Any such inserted entries should also have a different, but common, label, rather than the default ULA label, 13. This document proposes a label of 14 for such inserted known-local ULA prefixes.</t>
+<t>Such known-local ULA prefixes include /48 prefixes containing a ULA address assigned to any interface via manual configuration, DHCPv6 NA_IA, or SLAAC or learned from a PIO received on any interface, regardless of how the PIO flags are set. Additionally, type C hosts, as defined in <xref target="RFC4191"/> section 3, include any ULA prefixes learned from RIOs as known-local ULAs.</t>
+
+<t>Any such inserted "known local" ULA entries should also have a different, but common, label, rather than the default ULA label, 13. This document defines a label of 14 for such inserted known-local ULA prefixes.</t>
 
 <t>A node <bcp14>MUST</bcp14> remove inserted entries from its policy table when announced prefixes are deprecated.</t>
 
@@ -218,14 +222,14 @@ fec0::/10              1    11        fec0::/10              1     11
 
 <t>This is the current behaviour, and remains unaltered. Both cases have matching labels, with GUAs having higher precedence.</t>
 
-<t>However, where a node inserts a "known-local" ULA into its policy table with a precedence of 45, such ULA-ULA traffic will take priority over GUA-GUA, because both pairs will have matching labels but here the inserted ULA will have higher precedence.</t>
+<t>However, where a node inserts a known-local ULA into its policy table with a precedence of 45, such ULA-ULA traffic will take priority over GUA-GUA, because both pairs will have matching labels but here the inserted ULA will have higher precedence.</t>
 
 </section>
 <section anchor="ula-ula-preferred-over-ipv4-ipv4"><name>ULA-ULA preferred over IPv4-IPv4</name>
 
 <t>This is a change introduced by this update. RFC 6724 as originally defined would lead to IPv4 being preferred over ULAs, which is contrary to the spirit of the GUA preference over IPv4, and to the goal of removing evidenced use of IPv4 in a dual-stack site before transitioning to IPv6-only.</t>
 
-<t>Where a node supports insertion of "known-local" ULAs, only those ULAs will be preferred to IPv4 addresses, since general ULAs under fc00::/7 will only carry precedence 10 where IPv4 carries precedence 20.</t>
+<t>Where a node supports insertion of known-local ULAs, only those ULAs will be preferred to IPv4 addresses, since general ULAs under fc00::/7 will only carry precedence 10 where IPv4 carries precedence 20.</t>
 
 </section>
 <section anchor="ipv4-ipv4-preferred-over-ula-gua"><name>IPv4-IPv4 preferred over ULA-GUA</name>
@@ -238,11 +242,11 @@ fec0::/10              1    11        fec0::/10              1     11
 
 <t>In this section we present a discussion on the specific cases where a ULA source may be communicating with a GUA or ULA destination.</t>
 
-<t>A potential problem exists when a ULA source attempts to communicate with GUA or remote ULA destinations. In these scenarios, the ULA source as stated earlier is by default intended for communication only with the local network, meaning an individual site, several sites that are part of the same organization, or multiple sites across cooperating organizations, as detailed in RFC 4193. As a result, most GUA and ULA destinations are not attached to the same local network as the ULA source and are, therefore, not reachable from the ULA source.</t>
+<t>A potential problem exists when a ULA source attempts to communicate with GUA or remote ULA destinations. In these scenarios, the ULA source as stated earlier is by default intended for communication only with the local network, meaning an individual site, several sites that are part of the same organization, or multiple sites across cooperating organizations, as detailed in RFC . As a result, most GUA and ULA destinations are not attached to the same local network as the ULA source and are, therefore, not reachable from the ULA source.</t>
 
 <t>When only a ULA source is available for communication with GUA destinations, this generally implies no connectivity to the IPv6 Internet is available. Otherwise, a GUA source would have been made available and selected for use with GUA destinations. As a result, the ULA source will typically fail when it attempts to communicate with most GUA destinations. However, corner cases exist where the ULA source will not fail, such as when GUA destinations are attached to the same local network as the ULA source.</t>
 
-<t>Receiving a DNS response for a ULA destination that is not attached to the local network, in other words, a remote ULA destination, is considered a misconfiguration in most cases, or at least this contradicts the operational guidelines provided in Section 4.4 of RFC 4193. Nevertheless, this can occur, and the ULA source will typically fail when it attempts to communicate with ULA destinations that are not attached to the same local network as the ULA source. This case provides a rationale for implementing support for "known-local" ULA prefix insertion in the policy table, such that differential behaviour can be applied for known-local versus general ULA prefixes.</t>
+<t>Receiving a DNS response for a ULA destination that is not attached to the local network, in other words, a remote ULA destination, is considered a misconfiguration in most cases, or at least this contradicts the operational guidelines provided in Section 4.4 of RFC . Nevertheless, this can occur, and the ULA source will typically fail when it attempts to communicate with ULA destinations that are not attached to the same local network as the ULA source. This case provides a rationale for implementing support for known-local ULA prefix insertion in the policy table, such that differential behaviour can be applied for known-local versus general ULA prefixes.</t>
 
 <t>The remainder of this section discusses several complementary mechanisms involved with these scenarios.</t>
 
@@ -280,13 +284,13 @@ Similarly, if Label(Source(DA)) <> Label(DA) and Label(Source(DB)) = Label(DB), 
 
 <t>Therefore, when an IPv4 destination is preferred over GUA or ULA destinations, IPv4 will likely succeed if IPv4 connectivity is available, and the GUA or ULA destination may only be tried if Happy Eyeballs is implemented.</t>
 
-<t>On the other hand, if the GUA or ULA destination with the ULA source is preferred, the ULA source will typically fail to communicate with GUA or ULA destinations that are not connected to the same local network as the ULA source. However, if the operational guidelines in Section 4.3 of RFC 4193 are followed, recognizing this failure can be accelerated, and transport layer timeouts (e.g., TCP) can be avoided. The guidelines will cause a Destination Unreachable ICMPv6 Error to be received by the source device, signaling the next address in the list to be tried, as discussed above.</t>
+<t>On the other hand, if the GUA or ULA destination with the ULA source is preferred, the ULA source will typically fail to communicate with GUA or ULA destinations that are not connected to the same local network as the ULA source. However, if the operational guidelines in Section 4.3 of RFC  are followed, recognizing this failure can be accelerated, and transport layer timeouts (e.g., TCP) can be avoided. The guidelines will cause a Destination Unreachable ICMPv6 Error to be received by the source device, signaling the next address in the list to be tried, as discussed above.</t>
 
 </section>
 </section>
-<section anchor="following-ula-operational-guidelines-in-rfc-4193"><name>Following ULA operational guidelines in RFC 4193</name>
+<section anchor="following-ula-operational-guidelines-in-rfc"><name>Following ULA operational guidelines in RFC</name>
 
-<t>This section re-emphasises two important operational requirements stated in <xref target="RFC4193"/> that should be followed by operators.</t>
+<t>This section re-emphasises two important operational requirements stated in <xref target="RFC"/> that should be followed by operators.</t>
 
 <section anchor="filtering-ula-source-addresses-at-site-borders"><name>Filtering ULA-source addresses at site borders</name>
 
@@ -300,9 +304,9 @@ any packets with Local IPv6 source or destination addresses outside of the site,
 </section>
 <section anchor="avoid-using-ula-addresses-in-the-global-dns"><name>Avoid using ULA addresses in the global DNS</name>
 
-<t>Section 4.3 of RFC 4193 states that "AAAA and PTR records for locally assigned local IPv6 addresses are not recommended to be installed in the global DNS."</t>
+<t>Section 4.3 of RFC  states that "AAAA and PTR records for locally assigned local IPv6 addresses are not recommended to be installed in the global DNS."</t>
 
-<t>This is particularly important given the general method presented in this document elevates the priority for ULAs above IPv4. However, where support for insertion of "known-local" prefixes is implemented, such "rogue" ULAs in the global DNS are no longer a concern for address selection as they would have the lowest precedence.</t>
+<t>This is particularly important given the general method presented in this document elevates the priority for ULAs above IPv4. However, where support for insertion of known-local prefixes is implemented, such "rogue" ULAs in the global DNS are no longer a concern for address selection as they would have the lowest precedence.</t>
 
 </section>
 </section>
@@ -335,7 +339,7 @@ any packets with Local IPv6 source or destination addresses outside of the site,
 
 <t>The mixed preference for IPv6 over IPv4 from the default policy table in RFC 6724 represents a potential security issue, given an operator may expect ULAs to be used when in practice RFC 1918 addresses are used instead.</t>
 
-<t>The requirements of RFC4193, stated earlier in this document, should be followed for optimal behavior.</t>
+<t>The requirements of RFC, stated earlier in this document, should be followed for optimal behavior.</t>
 
 <t>Operators should be mindful of cases where communicating nodes have differing behaviours for address selection, e.g., RFC3484 behavior, RFC6724, the updated RFC6724 behavior defined here, some other non-IETF-standardized behavior, or even no mechanism. There may thus be inconsistent behaviour for communications initiated in each direction. Ultimately all nodes should be made compliant to the updated specification described in this document.</t>
 
@@ -369,6 +373,7 @@ any packets with Local IPv6 source or destination addresses outside of the site,
     <references title='Normative References' anchor="sec-normative-references">
 
 &RFC2119;
+&RFC4191;
 &RFC4193;
 &RFC7078;
 &RFC7526;
@@ -386,7 +391,6 @@ any packets with Local IPv6 source or destination addresses outside of the site,
 &RFC6555;
 &RFC8305;
 &RFC4861;
-&RFC4191;
 &RFC3587;
 
 
@@ -397,203 +401,205 @@ any packets with Local IPv6 source or destination addresses outside of the site,
   </back>
 
 <!-- ##markdown-source:
-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
+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
+PZuki0Vj7i6ST9s87UxSV9JLWiTcJK+zKt3QHHmTLrtZYbrl7NkmrWbNMkOD
+Wc99Z8cvJlnaXSRtl0/afrEp2raoq263pa5vXt98PSm2zUXSNX3bnR4ff3V8
+Okkbk9J3VTe5X10kz76/fDe5vecPTFOZbvYKE05k+PZCVjOZpH23rpuLScI/
+M/03oTVTm3fz5GXfpKuyqN0Xsvp3RXa7/13d0MyvK9Osdsl1VoCAbfLOdPd1
+c+samU1alBfJQjv/jih8nzZ5Ua22ZVqZOa11fDU38+RqXd9Xg6XcFJvB57yM
+74o2G85JTefc9Hd/oW/naTbvb8fn+m6evOqrLB1O9h2xxWY3/I4nvEmz9Y6O
+/NWOmhZZO5z8Lzl3+l0n7XJtNs/qzWRS1c0m7Yo7g5MgZjk9OflKfz07+erE
+//pUf31+/PyF/fX89Jn++uKr0/OLyaSoloPxcNr6Kw1nez49e2E/fXZ+fm4H
+eXpsfz178czO/fT8xXP6lf6YTGazWZIu2q5Js24y+WFtPIMn92mbbPtFWbRr
+kydFl+RmWVT0a1pZoUlaU5qsI35O0nJVN0W33tBvdbVK7un3JEWftC+7ZFuX
+RbZLunRRmimNkCdV3WGspOo3C5LFepmYH9PNtiRGu1/T4STdOo37JZtite6S
+haloIV2ybGqaLP8LCc7GVB0LeLs1WbEssqTNTJU2Rd3OkzcdLamtdUIelXoX
+JM2bbd10qXYtMDcGSrGfNunqZNvUd0VuaJH36Q4fZOu0WmFlJt5YQYsmam1q
+Wrb5cWsalhjMsUpBsnlys6Y/RGShMO5b6JTWkBZKy2Rn0qYFBWrqytPTh8E4
+NHPDtPeHs+wbWkUzFTpv06Yrsr5MG+LR7TptCx5/G2s/LLtvDSYibRYovjFl
+iCNCB/qk4AOmXqTdaAN1s0vafgva8bAfezqa8/k5NmnsHpniudkQzVseZ7CW
+Z10dzCZdhbpMeUvdhVmnd4WcDh2GsROni6Isuh0WRVK3oeVhY1lKY01J7rOy
+hxpKSCfWkJ4seZL0FS0/XRELxLxBpGpMVq+q4m+WPdp6Y5IS/K2D52Zb1jvm
+MteZqLGjnn/tCzl0sEFHHaplserlFEmdJBmxJ/FpsDfSGgUdPA3aUtc8OnQ6
+SNJOpOfbOeQT4rkp8rw0k8nPYACaOu9Z3iaT64JZrFMhzWRGslCnxyen0+Tv
+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
 
 -->
 
