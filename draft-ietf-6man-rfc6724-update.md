@@ -60,7 +60,7 @@ candidate set by following the procedures defined in the RFC. Part of the proces
 
 It was always expected that the default policy table may need to be changed based on operational experience; section 2.1 says "It is important that implementations provide a way to change the default policies as more experience is gained" and points to the examples in Section 10, which include Section 10.6 where a ULA example is presented.
 
-This document is written on the basis of such operational experience, in particular for scenarios where ULAs are used for their intended purpose as stated in {{RFC}}, i.e., they are designed to be routed inside of a local site and by default not received from or advertised externally. The document defines how preference for ULAs may be elevated for appropriate, common scenarios. 
+This document is written on the basis of such operational experience, in particular for scenarios where ULAs are used for their intended purpose as stated in {{RFC4193}}, i.e., they are designed to be routed inside of a local site and by default not received from or advertised externally. The document defines how preference for ULAs may be elevated for appropriate, common scenarios. 
 
 It also includes updated requirements on support for RFC 6724 Rule 5.5. The goal of the document is to improve behavior for common scenarios, and to assist in the phasing out of use of IPv4, while noting that some specific scenarios may still require explicit configuration.
 
@@ -246,7 +246,7 @@ On the other hand, if the GUA or ULA destination with the ULA source is preferre
 
 # Following ULA operational guidelines in RFC 
 
-This section re-emphasises two important operational requirements stated in {{RFC}} that should be followed by operators.
+This section re-emphasises two important operational requirements stated in {{RFC4193}} that should be followed by operators.
 
 ## Filtering ULA-source addresses at site borders
 
