@@ -42,7 +42,6 @@ informative:
   RFC3484:
   RFC6555:
   RFC8305:
-  RFC4861:
   RFC3587:
  
   
