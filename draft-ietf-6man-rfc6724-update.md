@@ -159,6 +159,8 @@ Therefore where a node learns of a ULA prefix known to be local it SHOULD give s
 
 Such known-local ULA prefixes include /48 prefixes containing a ULA address assigned to any interface via manual configuration, DHCPv6 NA_IA, or SLAAC or learned from a PIO received on any interface, regardless of how the PIO flags are set. Additionally, type C hosts, as defined in {{RFC4191}} section 3, include any ULA prefixes learned from RIOs as known-local ULAs.
 
+When using setting ULA known-locals prefixes from a PIO from Router Advertisements on a host, the router MUST set the prefix options for AdvOnLinkFlag=False and AdvAutonomousFlag=False in order to intentionally instruct the host not to automatically configure a SLAAC address and/or use this prefix for on-link determinations.
+
 Any such inserted "known local" ULA entries should also have a different, but common, label, rather than the default ULA label, 13. This document defines a label of 14 for such inserted known-local ULA prefixes.
 
 A node MUST remove inserted entries from its policy table when announced prefixes are deprecated.
