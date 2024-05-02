@@ -170,7 +170,7 @@ EDITORS' NOTE: as stated above, we seek feedback on whether this SHOULD should b
 ### Opertational Considerations when inserting ULA "Known-Local" prefixes in the policy table using automatic mechanisms
 1. Route Information Options via Router Advertisements
 
-When using setting ULA known-locals prefixes from an RIO from Router Advertisements on a host:
+When setting the ULA known-locals prefixes from an RIO from Router Advertisements on a host:
 * If ULA known-local prefixes are also being advertised in PIOs, then the PIO prefix MUST be ignored in preference of an RIO
 * the router SHOULD set the prefix to a Medium Router Preference
 * the router MUST set the exact prefix length for the known-local as the local site-assigned prefix
@@ -180,7 +180,7 @@ When using setting ULA known-locals prefixes from an RIO from Router Advertiseme
 
 2. Prefix Information Options (PIO) via Router Advertisements:
 
-When using setting ULA known-locals prefixes from a PIO from Router Advertisements on a host:
+When setting the ULA known-locals prefixes from a PIO from Router Advertisements on a host:
 * The use of RIO over PIO prefix advertisement MUST be prioritized if the router is capable of sending both and the host is capable of understanding both
 * the router MUST set the prefix options for AdvOnLinkFlag=False (L=0) and AdvAutonomousFlag=False (A=0) in order to intentionally instruct the host not to automatically configure a SLAAC address and/or use this prefix for on-link determinations
 * the router MUST set the exact prefix length for the known-local as the local site-assigned prefix
