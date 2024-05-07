@@ -98,9 +98,7 @@ RFC 6724 defined a method by which nodes may provide more fine-grained support f
 
 AUTHORS' NOTE: The authors have had feedback suggesting this requirement should be a MUST, which would mean that known-local ULAs would take precedence on compliant implementations over all IPv6 GUAs and all IPv4 addresses, but other general ULAs would not.  We would very much like further feedback on this potential change to the document, or from those who may have implementations of such an approach.
 
-This change aims to improve the default handling of address selection for common cases, and unmanaged / automatic scenarios rather than those where DHCPv6 is deployed. Sites using DHCPv6 for host configuration management can make use of implementations of {{RFC7078}} to apply changes to the {{RFC6724}} policy table.
-
-The changes are discussed in more detail in the following sections, with a further section providing a summary of the proposed updates.
+This change aims to improve the default handling of address selection for common cases, and unmanaged / automatic scenarios rather than those where DHCPv6 is deployed. The changes are discussed in more detail in the following sections, with a further section providing a summary of the proposed updates.
 
 # Preference of 6to4 addresses
 
@@ -157,7 +155,7 @@ This document thus elevates the MAY requirement above to a MUST for known-local 
 
 Therefore where a node learns of a ULA prefix known to be local it MUST give such known-local prefixes a precedence of 45, and MUST also reduce the precedence of other ULA addresses, i.e., the general fc00::/7 prefix, to precedence 10, such that IPv4 would be preferred to ULA prefixes that have not been explicitly added.  
 
-Such known-local ULA prefixes include /48 prefixes containing a ULA address assigned to any interface via manual configuration, DHCPv6 NA_IA, or SLAAC or learned from a PIO received on any interface, regardless of how the PIO flags are set. Additionally, type C hosts, as defined in {{RFC4191}} section 3, include any ULA prefixes learned from RIOs as known-local ULAs.
+Such known-local ULA prefixes include /48 prefixes containing a ULA address assigned to any interface via manual configuration, Route Information Options (RIO) in RAs, or SLAAC or learned from a PIO received on any interface, regardless of how the PIO flags are set. Additionally, type C hosts, as defined in {{RFC4191}} section 3, include any ULA prefixes learned from RIOs as known-local ULAs.
 
 Any such inserted "known local" ULA entries should also have a different, but common, label, rather than the default ULA label, 13. This document defines a label of 14 for such inserted known-local ULA prefixes.
 
@@ -186,9 +184,6 @@ When setting the ULA known-locals prefixes from a PIO from Router Advertisements
 * the router MUST set the exact prefix length for the known-local as the local site-assigned prefix
 * the host must set the label of the PIO advertised prefix as 14 and the precendence as 45
 * if there are no more known-local prefixes being advertised as PIOs, the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precendence 30
-
-3. DHCPv6 NA_IA assignment
-* TBD
 
 # Configuration of the default policy table
 
