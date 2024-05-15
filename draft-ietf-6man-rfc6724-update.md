@@ -165,25 +165,26 @@ Where support is added for the insertion of known-local ULA prefixes, it MUST de
 
 EDITORS' NOTE: as stated above, we seek feedback on whether this SHOULD should be elevated to a MUST.
 
-### Opertational Considerations when inserting ULA "Known-Local" prefixes in the policy table using automatic mechanisms
+### Operational Considerations when inserting ULA "Known-Local" prefixes in the policy table using automatic mechanisms
 1. Route Information Options via Router Advertisements
 
 When setting the ULA known-locals prefixes from an RIO from Router Advertisements on a host:
 * If ULA known-local prefixes are also being advertised in PIOs, then the PIO prefix MUST be ignored in preference of an RIO
 * the router SHOULD set the prefix to a Medium Router Preference
 * the router MUST set the exact prefix length for the known-local as the local site-assigned prefix
-* the host must set the label of the RIO advertised prefix as 14 and the precendence as 45
+* the host must set the label of the RIO advertised prefix as 14 and the precedence as 45
 * the route lifetime MUST be honored by the host and router. Once a RIO is no longer available in the RA, and then the route lifetime expires, the prefix MUST be removed from the policy table
-* if there are no more known-local prefixes being advertised as RIOs, the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precendence 30
+* if there are no more known-local prefixes being advertised as RIOs, the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precedence 30
 
 2. Prefix Information Options (PIO) via Router Advertisements:
 
 When setting the ULA known-locals prefixes from a PIO from Router Advertisements on a host:
 * The use of RIO over PIO prefix advertisement MUST be prioritized if the router is capable of sending both and the host is capable of understanding both
-* the router MUST set the prefix options for AdvOnLinkFlag=False (L=0) and AdvAutonomousFlag=False (A=0) in order to intentionally instruct the host not to automatically configure a SLAAC address and/or use this prefix for on-link determinations
+* If the known-local ULA prefix is not on-link, then the router MUST set the prefix options for AdvOnLinkFlag=False (L=0) and AdvAutonomousFlag=False (A=0) in order to intentionally instruct the host not to automatically configure a SLAAC address and/or use this prefix for on-link determinations
 * the router MUST set the exact prefix length for the known-local as the local site-assigned prefix
-* the host must set the label of the PIO advertised prefix as 14 and the precendence as 45
-* if there are no more known-local prefixes being advertised as PIOs, the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precendence 30
+* the host must set the label of the PIO advertised prefix as 14 and the precedence as 45
+* the prefix lifetime MUST be honored by the host and router. Once a PIO is no longer available in the RA, and then the route lifetime expires, the prefix MUST be removed from the policy table
+* if there are no more known-local prefixes being advertised as PIOs, the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precedence 30
 
 # Configuration of the default policy table
 
