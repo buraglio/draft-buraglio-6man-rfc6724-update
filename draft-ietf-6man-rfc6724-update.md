@@ -189,8 +189,8 @@ When setting the ULA known-locals prefixes if the Host is being addressed via st
 - The use of RIO or PIO prefix advertisement MUST be prioritized if the router is capable of sending both and the host is capable of understanding both
 - If the Host is statically addressed, the Host MUST check if the /48 prefix of the address is already in the prefix policy table. If it is not, it must be added immediately with a label of 14 and the precedence as 45
 - If the Host is addressed via DHCPv6, the Host MUST check if the /48 prefix of the address is already in the prefix policy table. If it is not, it must be added immediately with a label of 14 and the precedence as 45
-- if the IPv6 ULA known-local DHCPv6 lease expires on the Host, the /48 known-local ULA MUST be removed from the prefix policy table, and the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precedence 30
-- if the statically assigned IPv6 ULA known-local address is removed from an interface on the Host, the /48 known-local ULA MUST be removed from the prefix policy table, and the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precedence 30
+- If the IPv6 ULA known-local DHCPv6 lease expires on the Host, the /48 known-local ULA MUST be removed from the prefix policy table, and the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precedence 30
+- If the statically assigned IPv6 ULA known-local address is removed from an interface on the Host and that address is not also advertised by an RIO or PIO in a current RA, the /48 known-local ULA MUST be removed from the prefix policy table, and the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precedence 30
 
 # Configuration of the default policy table
 
