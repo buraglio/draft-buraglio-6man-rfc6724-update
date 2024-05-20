@@ -167,30 +167,32 @@ EDITORS' NOTE: as stated above, we seek feedback on whether this SHOULD should b
 
 ### Operational Considerations when inserting ULA "Known-Local" prefixes in the policy table using automatic mechanisms
 When using an automated form of insertion of known-local ULAs, it is extremely important to follow the guidance below annotated for what a Host must do and what a Router must do.
-1. Route Information Options via Router Advertisements
-When setting the ULA known-locals prefixes from an RIO from Router Advertisements on a host:
+
+1. Route Information Options via Router Advertisements When setting the ULA known-locals prefixes from an RIO from Router Advertisements on a host:
+
 - If ULA known-local prefixes are also being advertised in PIOs, then the PIO prefix MUST be ignored in preference of an RIO
-- the router SHOULD set the prefix to a Medium Router Preference
-- the router MUST set the exact prefix length for the known-local as the local site-assigned prefix
-- the host must set the label of the RIO advertised prefix as 14 and the precedence as 45
-- the route lifetime MUST be honored by the host and router. Once a RIO is no longer available in the RA, and then the route lifetime expires, the prefix MUST be removed from the policy table
-- if there are no more known-local prefixes being advertised as RIOs, the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precedence 30
+- The router SHOULD set the prefix to a Medium Router Preference
+- The router MUST set the exact prefix length for the known-local as the local site-assigned prefix
+- The host must set the label of the RIO advertised prefix as 14 and the precedence as 45
+- The route lifetime MUST be honored by the host and router. Once a RIO is no longer available in the RA, and then the route lifetime expires, the prefix MUST be removed from the policy table
+- If there are no more known-local prefixes being advertised as RIOs, the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precedence 30
 
-2. Prefix Information Options (PIO) via Router Advertisements
-When setting the ULA known-locals prefixes from a PIO from Router Advertisements on a host:
+2. Prefix Information Options (PIO) via Router Advertisements When setting the ULA known-locals prefixes from a PIO from Router Advertisements on a host:
+
 - The use of RIO over PIO prefix advertisement MUST be prioritized if the router is capable of sending both and the host is capable of understanding both
-- the router MUST set the prefix options for AdvOnLinkFlag=False (L=0) and AdvAutonomousFlag=False (A=0) in order to intentionally instruct the host not to automatically configure a SLAAC address and/or use this prefix for on-link determinations
-- the router MUST set the exact prefix length for the known-local as the local site-assigned prefix
-- the host must set the label of the PIO advertised prefix as 14 and the precedence as 45
-- if there are no more known-local prefixes being advertised as PIOs, the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precedence 30
+- The router MUST set the prefix options for AdvOnLinkFlag=False (L=0) and AdvAutonomousFlag=False (A=0) in order to intentionally instruct the host not to automatically configure a SLAAC address and/or use this prefix for on-link determinations
+- The router MUST set the exact prefix length for the known-local as the local site-assigned prefix
+- The host must set the label of the PIO advertised prefix as 14 and the precedence as 45
+- If there are no more known-local prefixes being advertised as PIOs, the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precedence 30
 
-3. Other manual or automated options
-When setting the ULA known-locals prefixes if the Host is being addressed via static/manual addressing or DHCPv6 without the aid of RIO or PIOs:
+3. Other manual or automated options When setting the ULA known-locals prefixes if the Host is being addressed via static/manual addressing or DHCPv6 without the aid of RIO or PIOs:
+
 - The use of RIO or PIO prefix advertisement MUST be prioritized if the router is capable of sending both and the host is capable of understanding both
 - If the Host is statically addressed, the Host MUST check if the /48 prefix of the address is already in the prefix policy table. If it is not, it must be added immediately with a label of 14 and the precedence as 45
 - If the Host is addressed via DHCPv6, the Host MUST check if the /48 prefix of the address is already in the prefix policy table. If it is not, it must be added immediately with a label of 14 and the precedence as 45
 - If the IPv6 ULA known-local DHCPv6 lease expires on the Host, the /48 known-local ULA MUST be removed from the prefix policy table, and the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precedence 30
 - If the statically assigned IPv6 ULA known-local address is removed from an interface on the Host and that address is not also advertised by an RIO or PIO in a current RA, the /48 known-local ULA MUST be removed from the prefix policy table, and the default policy table MUST be restored for the fc00::/7 prefix of precedence 10 to precedence 30
+
 
 # Configuration of the default policy table
 
