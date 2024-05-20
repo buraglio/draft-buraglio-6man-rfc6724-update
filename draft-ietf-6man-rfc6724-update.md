@@ -1,7 +1,7 @@
 ---
 title: Preference for IPv6 ULAs over IPv4 addresses in RFC6724
 abbrev: Update on ULAs in RFC 6724
-docname: draft-ietf-6man-rfc6724-update-08
+docname: draft-ietf-6man-rfc6724-update-09
 cat: std
 submissiontype: IETF
 ipr: trust200902
@@ -32,7 +32,6 @@ normative:
   RFC2119:
   RFC4191:
   RFC4193:
-  RFC7078:
   RFC7526:
   RFC8925:
 
