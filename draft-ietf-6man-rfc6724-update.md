@@ -1,6 +1,6 @@
 ---
-title: Preference for IPv6 ULAs over IPv4 addresses in RFC6724
-abbrev: Update on ULAs in RFC 6724
+title: Prioritizing known-local IPv6 ULAs through address selection policy
+abbrev: Prioritizing known-local ULAs in RFC 6724
 docname: draft-ietf-6man-rfc6724-update-09
 cat: std
 submissiontype: IETF
