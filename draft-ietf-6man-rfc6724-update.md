@@ -77,7 +77,7 @@ GUA: Global Unicast Addressing as defined in [RFC3587]
 
 ULA: Unique Local Addressing as defined in [RFC4193]
 
-Known-local ULA: A ULA prefix that is determined to be local to a given node
+Known-local ULA: A ULA prefix that an individual organization/site has determined to be local to a given node/network
 
 
 # Operational Issues Regarding Preference for IPv4 addresses over ULAs
@@ -160,7 +160,7 @@ This document thus elevates the MAY requirement above for insertion to a MUST fo
 
 When a node learns of a ULA prefix known to be local it MUST give such known-local prefixes a precedence of 45. Any such inserted "known local" ULA entries should also have a different, but common, label, rather than the default ULA label, 13. This document defines a label of 14 for such inserted known-local ULA prefixes.
 
-Such known-local ULA prefixes include prefixes containing a ULA address assigned to any interface via manual configuration, Route Information Options (RIO) in RAs, or SLAAC or learned from a PIO received on any interface, regardless of how the PIO flags are set. Additionally, type C hosts, as defined in {{RFC4191}} section 3, include any ULA prefixes learned from RIOs as known-local ULAs.
+Such known-local ULA prefixes include prefixes containing a ULA address assigned to any interface via manual configuration, Route Information Options (RIO) in RAs, or SLAAC or learned from a PIO (regardless of how the PIO flags are set) received on any interface. Additionally, type C hosts, as defined in {{RFC4191}} section 3, include any ULA prefixes learned from RIOs as known-local ULAs.
 
 The following rules define how known-local ULA prefixes are inserted into the address selection policy table for a node, through a conceptual list of prefixes. 
 
@@ -170,15 +170,17 @@ The following rules define how known-local ULA prefixes are inserted into the ad
 
 3. RIOs within fc00::/8 of any prefix length SHOULD be added to the known-local ULA list. 
 
-4. PIOs of length /64 with A=1 or interface addresses from within fd00::/8 that are not already covered by the known-local ULA list SHOULD be added to the list with an assumed prefix length of /48.
+4. PIOs of length /64 with A=1 or interface addresses from within fd00::/8 that are not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48.
+   
+5. PIOs considered as "off link" addresses inside an organization's site with a length /48 with A=0 and L=0 MUST be added to the list.
 
-5. Addresses added by other means (static, DHCPv6, etc) that are not currently in the prefix policy table, then the /48 known-local prefix within which the address sits MUST be added. The entry MUST be removed upon the address being removed from an interface when there is no covering RIO or PIO.
+6. Addresses added by other means (static, DHCPv6, etc) that are not currently in the prefix policy table, then the /48 known-local prefix within which the address sits MUST be added. The entry MUST be removed upon the address being removed from an interface when there is no covering RIO or PIO.
 
-6. In all cases, when inserting an entry in the known-local ULA list a node MUST set the label of the prefix to 14 and precedence to 45.
+7. In all cases, when inserting an entry in the known-local ULA list a node MUST set the label of the prefix to 14 and precedence to 45.
 
-7. A node MUST remove inserted entries from its policy table when announced prefixes are deprecated, or when an interface address within fd00::/8 is removed and there is no covering RIO or PIO.
+8. A node MUST remove inserted entries from its policy table when announced prefixes are deprecated, or when an interface address within fd00::/8 is removed and there is no covering RIO or PIO.
 
-8. Regardless of prefix length or associated flags, other PIOs from within fc00::/7 that are not already covered by the known-local ULA list MAY added, but only with the advertised prefix length.
+9. Regardless of prefix length or associated flags, other PIOs from within fc00::/7 that are not already covered by the known-local ULA list MAY added, but only with the advertised prefix length.
 
 Note that the above rules differentiate between the part of the overall ULA space (fc00::/7) that is in use at the time of publication of this document (fd00::/8) and the space that is currently reserved for future use (fc00::/8).
 
