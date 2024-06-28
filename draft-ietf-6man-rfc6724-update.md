@@ -58,9 +58,9 @@ candidate set by following the procedures defined in the RFC. Part of the proces
 
 It was always expected that the default policy table may need to be changed based on operational experience; section 2.1 says "It is important that implementations provide a way to change the default policies as more experience is gained" and points to the examples in Section 10, which include Section 10.6 where a ULA example is presented.
 
-This document is written on the basis of such operational experience, in particular for scenarios where ULAs are used for their intended purpose as stated in {{RFC4193}}, i.e., they are designed to be routed inside of a local site and by default not received from or advertised externally. The document defines how preference for ULAs may be elevated for appropriate, common scenarios. 
+This document is written on the basis of such operational experience, in particular for scenarios where ULAs are used for their intended purpose as stated in {{RFC4193}}, i.e., they are designed to be routed within a local site and by default not advertised, used or received from externally to that site. The document defines how preference for ULAs may be elevated for appropriate, common scenarios. 
 
-To support the preference to use ULA address pairs over GUA address pairs for local intra-site scenarios, the concept of a "known-local" ULA address is introduced. The means for nodes to determine known-local ULA prefixes and to insert them into their policy table is described in this document. This capability allows nodes to prefer ULA-ULA communication locally, but still use GUA-GUA address pairs for external communication, and importantly avoid selecting a ULA source to talk to a non-local ULA destination.
+To support the preference to use ULA address pairs over GUA address pairs for local intra-site scenarios, the concept of a "known-local" ULA address is introduced. The means for nodes to determine ULA prefixes that are known to be local to the site they are operating in and to insert those prefix(es) into their policy table is described in this document. This capability allows nodes to prefer ULA-ULA communication locally, but still use GUA-GUA address pairs for external communication, and importantly avoid selecting a ULA source to talk to a non-local ULA destination.
 
 It also reinforces the text in RFC 6724 to require support for Rule 5.5. 
 
@@ -91,7 +91,7 @@ The current default policy table leads to preference for IPv6 GUAs over IPv4 glo
 
 However, there are two issues with preference, or rather non-preference, for ULAs as orginally defined in RFC 6724.
 
-One is that the same default policy table also puts IPv6 ULAs below all IPv4 addresses, including {{RFC1918}} addresses. For many site operators this behavior will be counter-intuitive, given the IPv6 GUA preference, and may create difficulties with respect to planning, operational, and security implications for environments where ULA addressing is used in IPv4/IPv6 dual-stack network scenarios. The expected default prioritization of IPv6 traffic over IPv4 by default, as happens with IPv6 GUA addressing, does not happen for ULAs.
+One is that the same default policy table also puts IPv6 ULAs below all IPv4 addresses, including {{RFC1918}} addresses, such that IPv4-IPv4 address pairs are favoured over ULA-ULA address pairs. For many site operators this behavior will be counter-intuitive, given the IPv6 GUA preference, and may create difficulties with respect to planning, operational, and security implications for environments where ULA addressing is used in IPv4/IPv6 dual-stack network scenarios. The expected default prioritization of IPv6 traffic over IPv4 by default, as happens with IPv6 GUA addressing, does not happen for ULAs.
 
 As a result, the use of ULAs is not a viable option for dual-stack networking transition planning, large scale network modeling, network lab environments or other modes of large scale networking that run both IPv4 and IPv6 concurrently with the expectation that IPv6 will be preferred by default.
 
@@ -101,7 +101,7 @@ This document therefore describes two methods to support a node implementing ele
 
 The first, general method is by updating the default policy table to elevate the preference for ULAs such that ULAs will be preferred over all IPv4 addresses, providing more consistent and less confusing behavior for operators, and to assist operators in phasing out IPv4 from dual-stack environments, since by this update both IPv6 GUAs and ULAs will be preferred over any IPv4 addresses. This is an important enabler for sites seeking to move from dual-stack to IPv6-only networking.
 
-The second method introduces the concept of known-local ULAs. RFC 6724 already includes a method by which nodes MAY provide more fine-grained support for elevating the preference for specific ULA prefixes, while leaving other general ULA prefixes at their existing precedence. This document elevates the requirement for specific ULA prefixes to be inserted into the policy table to be a MUST, but only for observed prefixes that are known to be local, i.e., known-local ULAs. Nodes implementing this behaviour will see ULA prefixes known to be local to the node's site having precedence over IPv6 GUA addresses, such that they can use ULA addressing independently of global prefixes within their site and GUAs to talk to destinations external to their site.
+The second method introduces the concept of known-local ULAs. RFC 6724 includes a method by which nodes MAY provide more fine-grained support for elevating the preference for specific ULA prefixes, while leaving other general ULA prefixes at their existing precedence. This document elevates the requirement for specific ULA prefixes to be inserted into the policy table to be a MUST, but only for observed prefixes that are known to be local, i.e., known-local ULAs. Nodes implementing this behaviour will see ULA prefixes known to be local to the node's site having precedence over IPv6 GUA addresses, such that they can use ULA addressing independently of global prefixes within their site and continue to use GUA-GUA address pairs to talk to destinations external to their site.
 
 These changes aim to improve the default handling of address selection for common cases, and unmanaged / automatic scenarios rather than those where DHCPv6 is deployed. The changes are discussed in more detail in the following sections, with a further section providing a summary of the proposed updates.
 
@@ -158,11 +158,9 @@ If a node can determine which ULA prefix(es) are known to be local, it can provi
 
 This document thus elevates the MAY requirement above for insertion to a MUST for the specific case of known-local ULAs. 
 
-When a node learns of a ULA prefix known to be local it MUST give such known-local prefixes a precedence of 45. Any such inserted "known local" ULA entries should also have a different, but common, label, rather than the default ULA label, 13. This document defines a label of 14 for such inserted known-local ULA prefixes.
-
 Such known-local ULA prefixes include prefixes containing a ULA address assigned to any interface via manual configuration, Route Information Options (RIO) in RAs, or SLAAC or learned from a PIO (regardless of how the PIO flags are set) received on any interface. Additionally, type C hosts, as defined in {{RFC4191}} section 3, include any ULA prefixes learned from RIOs as known-local ULAs.
 
-The following rules define how known-local ULA prefixes are inserted into the address selection policy table for a node, through a conceptual list of prefixes. 
+The following rules define how known-local ULA prefixes are inserted into the address selection policy table for a node, through a conceptual list of known-local prefixes. 
 
 1. RIOs from within fc00::/7 are considered the preferred information source for determining known-local ULAs and should override other conflicting information or assumptions from other sources, including PIOs.
 
@@ -170,13 +168,11 @@ The following rules define how known-local ULA prefixes are inserted into the ad
 
 3. RIOs within fc00::/8 of any prefix length SHOULD be added to the known-local ULA list. 
 
-4. PIOs of length /64 with A=1 or interface addresses from within fd00::/8 that are not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48.
-   
-5. PIOs considered as "off link" addresses inside an organization's site with a length /48 with A=0 and L=0 MUST be added to the list.
+4. PIOs of length /64 with A=1 or interface addresses from within fd00::/8 that are not already covered by the known-local ULA list SHOULD be added to the list with an assumed prefix length of /48.
 
 6. Addresses added by other means (static, DHCPv6, etc) that are not currently in the prefix policy table, then the /48 known-local prefix within which the address sits MUST be added. The entry MUST be removed upon the address being removed from an interface when there is no covering RIO or PIO.
 
-7. In all cases, when inserting an entry in the known-local ULA list a node MUST set the label of the prefix to 14 and precedence to 45.
+7. In all cases, when inserting an entry in the known-local ULA list a node MUST set the label of the prefix to 14 (rather than the default ULA label of 13) and its precedence to 45.
 
 8. A node MUST remove inserted entries from its policy table when announced prefixes are deprecated, or when an interface address within fd00::/8 is removed and there is no covering RIO or PIO.
 
