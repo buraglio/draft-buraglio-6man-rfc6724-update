@@ -169,6 +169,8 @@ The following rules define how known-local ULA prefixes are inserted into the ad
 3. RIOs within fc00::/8 of any prefix length SHOULD be added to the known-local ULA list. 
 
 4. PIOs of length /64 with A=1 or interface addresses from within fd00::/8 that are not already covered by the known-local ULA list SHOULD be added to the list with an assumed prefix length of /48.
+   
+5. PIOs of length /64 with A=0 and L=0 from within fd00::/8 that are not already covered by the known-local ULA list SHOULD be added to the list with an assumed prefix length of /48. 
 
 6. Addresses added by other means (static, DHCPv6, etc) that are not currently in the prefix policy table, then the /48 known-local prefix within which the address sits MUST be added. The entry MUST be removed upon the address being removed from an interface when there is no covering RIO or PIO.
 
@@ -177,6 +179,8 @@ The following rules define how known-local ULA prefixes are inserted into the ad
 8. A node MUST remove inserted entries from its policy table when announced prefixes are deprecated, or when an interface address within fd00::/8 is removed and there is no covering RIO or PIO.
 
 9. Regardless of prefix length or associated flags, other PIOs from within fc00::/7 that are not already covered by the known-local ULA list MAY added, but only with the advertised prefix length.
+    
+10. As stated in Section 4, RFC 4191, "Routers SHOULD NOT send more than 17 Route Information Options in Router Advertisements per link."
 
 Note that the above rules differentiate between the part of the overall ULA space (fc00::/7) that is in use at the time of publication of this document (fd00::/8) and the space that is currently reserved for future use (fc00::/8).
 
