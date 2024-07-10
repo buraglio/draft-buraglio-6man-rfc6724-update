@@ -158,7 +158,7 @@ If a node can determine which ULA prefix(es) are known to be local, it can provi
 
 This document thus elevates the MAY requirement above for insertion to a MUST for the specific case of known-local ULAs. 
 
-Such known-local ULA prefixes include prefixes containing a ULA address assigned to any interface via manual configuration, Route Information Options (RIO) in RAs, or SLAAC or learned from a PIO (regardless of how the PIO flags are set) received on any interface. Additionally, type C hosts, as defined in {{RFC4191}} section 3, include any ULA prefixes learned from RIOs as known-local ULAs.
+These known-local ULA prefixes are inferred from ULA addresses assigned to interfaces or are learned from Prefix Information Options (PIOs) in Router Advertisements (RAs) {{RFC4861}} received on any interface, regardless of how the PIO flags are set. Further, they are learned from Route Information Options (RIOs) in RAs received on any interface by Type C hosts that process RIOs, as defined in {{RFC4191}}.
 
 The following rules define how known-local ULA prefixes are inserted into the address selection policy table for a node, through a conceptual list of known-local prefixes. 
 
