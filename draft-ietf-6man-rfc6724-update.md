@@ -164,19 +164,17 @@ The following rules define how the learnt known-local ULA prefixes are inserted 
 
 1. RIOs from within fc00::/7 are considered the preferred information source for determining known-local ULAs and should override other conflicting information or assumptions from other sources, including PIOs.
 
-2. RIOs within fc00::/7 with a prefix length of /48 or longer MUST be added to the known-local ULA list, while RIOs within fc00::/7 that are shorter than /48 MAY be excluded from the known-local ULA list. 
+2. RIOs within fc00::/7 MUST be added to the known-local ULA list.
 
-3. RIOs within fc00::/7 of any prefix length SHOULD be added to the known-local ULA list. 
-
-4. Regardless of how the PIO flags are set, PIOs of length /64 and from within fc00::/7 that are not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48.
+3. PIOs within fc00::/7 of length /64 that are not already in the node’s known-local ULA list MUST be added to the list with an assumed prefix length of /48, regardless of how the PIO flags are set. 
    
-5. ULA interface addresses, particularly those added by other means (static, DHCPv6, etc.), from within fc00::/7 that are not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48.
+4. ULA interface addresses, particularly those added by other means (static, DHCPv6, etc.), from within fc00::/7 that are not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48.
 
-6. Regardless of their length or how the PIO flags are set, other PIOs from within fc00::/7 that are not already covered by the known-local ULA list MAY be added to the list, but only with the advertised prefix length.
+5. Regardless of their length or how the PIO flags are set, other PIOs from within fc00::/7 that are not already covered by the known-local ULA list MAY be added to the list, but only with the advertised prefix length.
 
-7. When inserting known-local ULA entries into the policy table, they MUST have a label of 14 (rather than the default ULA label of 13) and a precedence of 45.
+6. When inserting known-local ULA entries into the policy table, they MUST have a label of 14 (rather than the default ULA label of 13) and a precedence of 45.
 
-8. Entries MUST be removed from the known-local ULA list and the Policy Table when the announced RIOs or PIOs are deprecated, or an interface address is removed, and there is no covering RIO or PIO.
+7. Entries MUST be removed from the known-local ULA list and the Policy Table when the announced RIOs or PIOs are deprecated, or an interface address is removed, and there is no covering RIO or PIO.
 
 When support is added for the insertion of known-local ULA prefixes it MUST default to on, but a mechanism SHOULD be supported to administratively toggle the behaviour off and on. 
 
@@ -212,11 +210,25 @@ By only adapting this behaviour for known-local ULAs, a node will not select a U
 
 Nodes not yet implementing this RFC will continue to use GUA-GUA over ULA-ULA for all cases.
 
+As an example, consider a site that uses prefixes ULA1::/48, ULA2::/48 and GUA1::/48.
+ 
+Host A has address ULA1::1 and GUA1:1::1
+Host B has address ULA2::1 and GUA1:2::1
+ 
+Both ULA prefixes have been determined to be known-local through RIOs. 
+Perhaps ULA2 is reachable within the site, but its prefix not in direct use at host A.
+ 
+If host A sends to host B the candidate pairs are ULA1::1 – ULA2::1 and GUA1::1::1 – GUA1:2::1.
+ 
+In this case ULA1::1 – ULA2::1 wins because of matching labels (both 14) and higher precedence than GUA (45 vs 40).
+
+If host A were to send to a host C with addresses ULA3::1 and GUA2:1::1, host A would use the GUA address pair for the communication as the GUAs have matching labels (both 1) where the known-local ULA and general ULA do not (14 and 13 respectively).
+
 ## ULA-ULA preferred over IPv4-IPv4
 
 This update changes previous behavior for this case. RFC 6724 as originally defined would lead to IPv4 being preferred over ULAs, which is contrary to the spirit of the IPv6 GUA preference over IPv4, and to the goal of removing evidenced use of IPv4 in a dual-stack site before transitioning to IPv6-only.
 
-This document elevates the precedence of ULAs above IPv4, so ULA-ULA address pairs will be chosen over IPv4-IPv4 pairs (matching label, higher precedence).
+This document elevates the precedence of general ULAs above IPv4, so ULA-ULA address pairs will be chosen over IPv4-IPv4 pairs (matching label, higher precedence).
 
 ## IPv4-IPv4 preferred over ULA-GUA
 
