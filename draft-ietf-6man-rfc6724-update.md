@@ -169,7 +169,7 @@ The following rules define how the learnt known-local ULA prefixes are inserted 
 
 3. PIOs within fc00::/7 of length /64 that are not already in the node’s known-local ULA list MUST be added to the list with an assumed prefix length of /48, regardless of how the PIO flags are set. 
    
-4. ULA interface addresses, particularly those added by other means (static, DHCPv6, etc.), from within fc00::/7 that are not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48.
+4. ULA interface addresses from within fc00::/7, particularly ones not created by SLAAC, and not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48.
 
 5. Regardless of their length or how the PIO flags are set, other PIOs from within fc00::/7 that are not already covered by the known-local ULA list MAY be added to the list, but only with the advertised prefix length.
 
