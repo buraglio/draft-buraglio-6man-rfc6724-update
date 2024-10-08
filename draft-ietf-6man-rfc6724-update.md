@@ -149,7 +149,7 @@ The heuristic for address selection defined in Rule 5.5 of Section 5 of RFC 6724
 
 The text in RFC 6724 states that the Rules MUST be followed in order, but also includes a discussion note under Rule 5.5 that says that an IPv6 implementation is not required to remember which next-hops advertised which prefixes and thus that Rule 5.5 is only applicable to implementations that track this information.  
 
-This document removes that exception and elevates the requirement to prefer ULA addresses in a prefix advertised by a next-hop router to a MUST for all nodes.
+This document removes that exception and elevates the requirement to prefer addresses in a prefix advertised by a next-hop router to a MUST for all nodes.
 
 ## Automatic insertion of known-local ULA prefixes into the policy table
 
