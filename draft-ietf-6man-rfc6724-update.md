@@ -165,7 +165,7 @@ The following rules define how the learnt known-local ULA prefixes are inserted 
 
 1. RIOs from within fc00::/7 are considered the preferred information source for determining known-local ULAs and should override other conflicting information or assumptions from other sources, including PIOs.
 
-2. RIOs within fc00::/7 that are compliant with Section 3.1 of RFC 4193 MUST be added to the known-local ULA list. If received, RIOs for shorter ULA prefixes MUST NOT be used to insert known-local ULA entries in the address selection policy table.
+2. RIOs within fc00::/7 that are compliant with Section 3 of RFC 4193 MUST be added to the known-local ULA list. If received, RIOs for shorter ULA prefixes MUST NOT be used to insert known-local ULA entries in the address selection policy table.
 
 3. PIOs within fc00::/7 of length /64 that are not already in the node’s known-local ULA list MUST be added to the list with an assumed prefix length of /48, regardless of how the PIO flags are set. 
    
