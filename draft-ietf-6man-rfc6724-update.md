@@ -104,7 +104,7 @@ This document therefore introduces two changes to RFC 6724 such that a node impl
 
 The first change is an update to the default policy table to elevate the preference for ULAs such that ULAs, like GUAs, will be preferred over all IPv4 addresses, providing more consistent and less confusing behavior for operators, and to assist operators in phasing out IPv4 from dual-stack environments. This is an important enabler for sites seeking to move from dual-stack to IPv6-only networking.
 
-The second change is the introduction of the concept of known-local ULAs. RFC 6724 includes a method by which nodes MAY provide more fine-grained support for elevating the preference for specific ULA prefixes, while leaving other general ULA prefixes at their default precedence. This document elevates the requirement for specific ULA prefixes to be inserted into the policy table to be a MUST, but only for observed prefixes that are known to be local, i.e., known-local ULAs. Nodes implementing this behaviour will see ULA prefixes known to be local to the node's site having precedence over IPv6 GUA addresses, such that they can use ULA addressing independently of global prefixes within their site and continue to use GUA-GUA address pairs to talk to destinations external to their site.
+The second change is the introduction of the concept of known-local ULAs. RFC 6724 includes a method by which nodes MAY provide more fine-grained support for further elevating the preference for specific ULA prefixes, while leaving other general ULA prefixes at the precedence described in the previous paragraph. This document elevates the requirement for specific ULA prefixes to be inserted into the policy table to be a MUST, but only for observed prefixes that are known to be local, i.e., known-local ULAs. Nodes implementing this behaviour will see ULA prefixes known to be local to the node's site having precedence over IPv6 GUA addresses, such that they can use ULA addressing independently of global prefixes within their site and continue to use GUA-GUA address pairs to talk to destinations external to their site.
 
 These changes aim to improve the default handling of address selection for common cases, and unmanaged / automatic scenarios rather than those where DHCPv6 is deployed. The changes are discussed in more detail in the following sections, with a further section providing a summary of the proposed updates.
 
@@ -187,7 +187,9 @@ Tools that display a node's default policy table MUST show all currently inserte
 
 The identification and insertion of known-local prefixes under fc00::/8 is currently not defined. 
 
-Note that there is a practical limit on how many RIOs may be conveyed in a single RA. As stated in Section 4 of RFC 4191, "Routers SHOULD NOT send more than 17 Route Information Options in Router Advertisements per link." 
+Note that a practical limit exists on the number of RIOs and PIOs that can be placed into a single RA. Therefore, there is a practical limit to the number of known-local ULAs that can be expressed on a single network and the number of ULA prefixes that can automatically be preferred over GUA prefixes within the policy table. This limit is unlikely to impact most networks, especially residential and other small unmanaged networks that automatically generate ULA prefixes. 
+
+Section 4 of RFC 4191 says, "Routers SHOULD NOT send more than 17 Route Information Options in Router Advertisements per link. This arbitrary bound is meant to reinforce that relatively few and carefully selected routes should be advertised to hosts. The exact limit will depend on other Options that are used. So while this is not the practical limit discussed above, operators MUST take extra care not to overflow the RA with RA Options when exceeding this limit.
 
 # Configuration of the default policy table
 
