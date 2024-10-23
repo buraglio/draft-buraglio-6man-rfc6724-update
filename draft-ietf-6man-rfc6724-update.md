@@ -169,17 +169,19 @@ The following rules define how the learnt known-local ULA prefixes under fd00::/
 
 1. RIOs from within fd00::/8 are considered the preferred information source for determining known-local ULAs and should override other conflicting information or assumptions from other sources, including PIOs.
 
-2. RIOs within fd00::/8 that are compliant with Section 3 of RFC 4193 MUST be added to the known-local ULA list. RIOs for shorter prefixes MUST NOT be used to insert known-local ULA entries in the address selection policy table.
+2. RIOs from within fd00::/8 that are a /40 prefix or longer MUST be used to insert known-local ULA entries in the address selection policy table.
+  
+3. RIOs from within fd00::/8 that are shorter than /40 prefixes MUST NOT be used to insert known-local ULA entries in the address selection policy table.
 
-3. PIOs within fd00::/8 of length /64 that are not already in the node’s known-local ULA list MUST be added to the list with an assumed prefix length of /48, regardless of how the PIO flags are set. 
+4. PIOs within fd00::/8 of length /64 that are not already in the node’s known-local ULA list MUST be added to the list with an assumed prefix length of /48, regardless of how the PIO flags are set. 
    
-4. ULA interface addresses from within fd00::/8, particularly ones not created by SLAAC, and not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48.
+5. ULA interface addresses from within fd00::/8, particularly ones not created by SLAAC, and not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48.
 
-5. Regardless of their length or how the PIO flags are set, other PIOs from within fd00::/8 that are not already covered by the known-local ULA list MAY be added to the list, but only with the advertised prefix length.
+6. Regardless of their length or how the PIO flags are set, other PIOs from within fd00::/8 that are not already covered by the known-local ULA list MAY be added to the list, but only with the advertised prefix length.
 
-6. When inserting known-local ULA entries into the policy table, they MUST have a label of 14 (rather than the default ULA label of 13) and a precedence of 45.
+7. When inserting known-local ULA entries into the policy table, they MUST have a label of 14 (rather than the default ULA label of 13) and a precedence of 45.
 
-7. Entries MUST be removed from the known-local ULA list and the Policy Table when the announced RIOs or PIOs are deprecated, or an interface address is removed, and there is no covering RIO or PIO.
+8. Entries MUST be removed from the known-local ULA list and the Policy Table when the announced RIOs or PIOs are deprecated, or an interface address is removed, and there is no covering RIO or PIO.
 
 When support is added for the insertion of known-local ULA prefixes it MUST default to on, but a mechanism SHOULD be supported to administratively toggle the behaviour off and on. 
 
