@@ -153,6 +153,10 @@ The text in RFC 6724 states that the Rules MUST be followed in order, but also i
 
 This document removes that exception and elevates the requirement to prefer addresses in a prefix advertised by a next-hop router to a MUST for all nodes.
 
+This change means that an IPv6 implementation will need to remember which next-hops advertised which prefixes
+{{RFC8028}}, although the conceptual models of IPv6 hosts in Section 5 of {{RFC4861}} and Section 3 of {{RFC4191}}
+have no such requirement.
+
 ## Automatic insertion of known-local ULA prefixes into the policy table
 
 Section 2.1 of RFC 6724 states that "an implementation MAY automatically add additional site-specific rows to the default table based on its configured addresses, such as for Unique Local Addresses (ULAs)", but it provides no detail on how such behavior might be implemented.
@@ -190,6 +194,14 @@ The identification and insertion of known-local prefixes under fc00::/8 is curre
 Note that a practical limit exists on the number of RIOs and PIOs that can be placed into a single RA. Therefore, there is a practical limit to the number of known-local ULAs that can be expressed on a single network and the number of ULA prefixes that can automatically be preferred over GUA prefixes within the policy table. This limit is unlikely to impact most networks, especially residential and other small unmanaged networks that automatically generate ULA prefixes. 
 
 Section 4 of RFC 4191 says, "Routers SHOULD NOT send more than 17 Route Information Options in Router Advertisements per link. This arbitrary bound is meant to reinforce that relatively few and carefully selected routes should be advertised to hosts. The exact limit will depend on other Options that are used. So while this is not the practical limit discussed above, operators MUST take extra care not to overflow the RA with RA Options when exceeding this limit.
+
+Note that in the case of Rule 2 above it would be expected that ULA prefixes being included in the known-local prefix
+list be compliant with Section 3 of RFC4193 (i.e., /48 in size) but the above rule is pragmatic in that it allows
+the use of ULA prefixes of up to /40 in length. Typical small, unmanaged scenarios (such as residential networks)
+would be expected to use compliant ULAs, but it is possible that in some circumstances a larger managed enterprise
+may wish to use a shorter prefix, e.g., to have an aggregated set of /48 ULAs to simplify management, filtering rules, etc, and to overcome the issue with the number of RIOs an RA can carry as described in the above paragraph. However, such 
+non-compliant use of ULAs may be problematic in other ways, e.g., carrying an increased risk of collision with other
+ULA prefixes, where you might be using someone else's compliant prefix because shorter prefixes have a lower chance to be globally unique.
 
 # Configuration of the default policy table
 
