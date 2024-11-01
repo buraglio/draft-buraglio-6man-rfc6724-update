@@ -1,7 +1,7 @@
 ---
 title: Prioritizing known-local IPv6 ULAs through address selection policy
 abbrev: Prioritizing known-local ULAs in RFC 6724
-docname: draft-ietf-6man-rfc6724-update-13
+docname: draft-ietf-6man-rfc6724-update-14
 cat: std
 submissiontype: IETF
 ipr: trust200902
@@ -197,9 +197,12 @@ Section 4 of RFC 4191 says, "Routers SHOULD NOT send more than 17 Route Informat
 
 Note that in the case of Rule 2 above it would be expected that ULA prefixes being included in the known-local prefix
 list be compliant with Section 3 of RFC4193 (i.e., /48 in size) but the above rule is pragmatic in that it allows
-the use of ULA prefixes of up to /40 in length. Typical small, unmanaged scenarios (such as residential networks)
-would be expected to use compliant ULAs, but it is possible that in some circumstances a larger managed enterprise
-may wish to use a shorter prefix, e.g., to have an aggregated set of /48 ULAs to simplify management, filtering rules, etc, and to overcome the issue with the number of RIOs an RA can carry as described in the above paragraph. However, such 
+the use of ULA prefixes of up to /40 in length. 
+Most networks use ("are expected to use") /48 prefixes as per
+RFC4193. However, in it is possible that in some circumstances a
+larger managed enterprise may wish to use a shorter prefix (e.g., to simplify management, filtering
+rules, etc, and to overcome the issue with the number of RIOs an RA
+can carry as described in the above paragraph). However, such 
 non-compliant use of ULAs may be problematic in other ways, e.g., carrying an increased risk of collision with other
 ULA prefixes, where you might be using someone else's compliant prefix because shorter prefixes have a lower chance to be globally unique.
 
