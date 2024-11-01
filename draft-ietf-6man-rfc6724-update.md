@@ -199,7 +199,7 @@ Note that in the case of Rule 2 above it would be expected that ULA prefixes bei
 list be compliant with Section 3 of RFC4193 (i.e., /48 in size) but the above rule is pragmatic in that it allows
 the use of ULA prefixes of up to /40 in length. 
 Most networks use ("are expected to use") /48 prefixes as per
-RFC4193. However, in it is possible that in some circumstances a
+RFC4193. However, it is possible that in some circumstances a
 larger managed enterprise may wish to use a shorter prefix (e.g., to simplify management, filtering
 rules, etc, and to overcome the issue with the number of RIOs an RA
 can carry as described in the above paragraph). However, such 
