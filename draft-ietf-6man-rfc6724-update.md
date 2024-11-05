@@ -1,7 +1,7 @@
 ---
 title: Prioritizing known-local IPv6 ULAs through address selection policy
 abbrev: Prioritizing known-local ULAs in RFC 6724
-docname: draft-ietf-6man-rfc6724-update-14
+docname: draft-ietf-6man-rfc6724-update-15
 cat: std
 submissiontype: IETF
 ipr: trust200902
@@ -194,7 +194,7 @@ The identification and insertion of known-local prefixes under fc00::/8 is curre
 
 Note that a practical limit exists on the number of RIOs and PIOs that can be placed into a single RA. Therefore, there is a practical limit to the number of known-local ULAs that can be expressed on a single network and the number of ULA prefixes that can automatically be preferred over GUA prefixes within the policy table. This limit is unlikely to impact most networks, especially residential and other small unmanaged networks that automatically generate ULA prefixes.
 
-Section 4 of RFC 4191 says, "Routers SHOULD NOT send more than 17 Route Information Options in Router Advertisements per link. This arbitrary bound is meant to reinforce that relatively few and carefully selected routes should be advertised to hosts." The exact limit will depend on other Options that are used. So while this is not the practical limit discussed above, operators MUST take extra care not to overflow the RA with RA Options when exceeding this limit.
+Section 4 of RFC 4191 says "Routers SHOULD NOT send more than 17 Route Information Options in Router Advertisements per link. This arbitrary bound is meant to reinforce that relatively few and carefully selected routes should be advertised to hosts." The exact limit will depend on other Options that are used. So while this is not the practical limit discussed above, operators MUST take extra care not to overflow the RA with RA Options when exceeding this limit.
 
 Note that in the case of Rule 2 above it would be expected that ULA prefixes being included in the known-local prefix
 list be compliant with Section 3 of RFC4193 (i.e., /48 in size) but the above rule is pragmatic in that it allows
