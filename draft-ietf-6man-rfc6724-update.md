@@ -49,7 +49,7 @@ informative:
 
 --- abstract
 
-When RFC 6724 was published it defined an address selection algorithm along with a default policy table, and noted a number of examples where that policy table might benefit from adjustment for specific scenarios. It also noted that it is important for implementations to provide a way to change the default policies as more experience is gained. This update draws on several years of such operational experience to refine RFC 6724, with emphasis on preference for the use of ULA addresses over IPv4 addresses and the clarification of mandatory support for Rule 5.5. It also defines the concept of "known-local" ULA prefixes and the means by which nodes can identify them and insert them into their policy table such that ULA-to-ULA communications within fd00::/8 become preferred over GUA-to-GUA for local use. The update also demotes the preference for 6to4 addresses. These changes to default behavior improve supportability of common use cases, including automatic / unmanaged scenarios. It is recognized that some less common deployment scenarios may require explicit configuration or custom changes to achieve desired operational parameters.
+When RFC 6724 was published it defined an address selection algorithm along with a default policy table, and noted a number of examples where that policy table might benefit from adjustment for specific scenarios. It also noted that it is important for implementations to provide a way to change the default policies as more experience is gained. This update draws on several years of such operational experience to refine RFC 6724, with emphasis on preference for the use of known-local ULA addresses over IPv4 addresses and the clarification of mandatory support for Rule 5.5. It also defines the concept of "known-local" ULA prefixes and the means by which nodes can identify them and insert them into their policy table such that ULA-to-ULA communications within fd00::/8 become preferred over GUA-to-GUA for local use. The update also demotes the preference for 6to4 addresses. These changes to default behavior improve supportability of common use cases, including automatic / unmanaged scenarios. It is recognized that some less common deployment scenarios may require explicit configuration or custom changes to achieve desired operational parameters.
   
 --- middle
 
@@ -95,13 +95,13 @@ The current default policy table leads to preference for IPv6 GUAs over IPv4 glo
 
 However, there are two issues with preference, or rather non-preference, for ULAs as orginally defined in RFC 6724.
 
-One is that the same default policy table also puts IPv6 ULAs below all IPv4 addresses, including {{RFC1918}} addresses, such that IPv4-IPv4 address pairs are favoured over ULA-ULA address pairs. For many site operators this behavior will be counter-intuitive, given the IPv6 GUA preference, and may create difficulties with respect to planning, operational, and security implications for environments where ULA addressing is used in IPv4/IPv6 dual-stack network scenarios. The expected default prioritization of IPv6 traffic over IPv4 by default, as happens with IPv6 GUA addressing, does not happen for ULAs.
+One is that the same default policy table also puts IPv6 ULAs below all IPv4 addresses, including {{RFC1918}} addresses, such that IPv4-IPv4 address pairs are favoured over ULA-ULA address pairs. For many site operators this behavior will be counter-intuitive, given the IPv6 GUA preference, and may create difficulties with respect to planning, operational, and security implications for environments where ULA addressing is used in IPv4/IPv6 dual-stack network scenarios. The expected default prioritization of known-local IPv6 traffic over IPv4 by default, as happens with IPv6 GUA addressing, does not happen for ULAs.
 
 As a result, the use of ULAs is not a viable option for dual-stack networking transition planning, large scale network modeling, network lab environments or other modes of large scale networking that run both IPv4 and IPv6 concurrently with the expectation that IPv6 will be preferred by default.
 
 The other issue is that where nodes in a dual-stack site are addressed from both ULA and GUA prefixes, RFC 6724 will see GUA-GUA address pairs chosen over ULA-ULA. One goal of ULA addressing was to allow local communications to be independent of the availablility of external connectivity and addressing, such that persistent ULAs can be used even when the global prefix made available to a site is withdrawn or changes. 
 
-This document therefore introduces two changes to RFC 6724 such that a node implements elevated or differential preference for ULAs in specific conditions, one for preference over IPv4, one for preference over IPv6 GUAs.
+This document therefore introduces two changes to RFC 6724 such that a node implements elevated or differential preference for ULAs in specific conditions, one for preference of known-local ULA over IPv4, one for preference over IPv6 GUAs.
 
 The first change is an update to the default policy table to elevate the preference for ULAs such that ULAs, like GUAs, will be preferred over all IPv4 addresses, providing more consistent and less confusing behavior for operators, and to assist operators in phasing out IPv4 from dual-stack environments. This is an important enabler for sites seeking to move from dual-stack to IPv6-only networking.
 
@@ -194,7 +194,7 @@ The identification and insertion of known-local prefixes under fc00::/8 is curre
 
 Note that a practical limit exists on the number of RIOs and PIOs that can be placed into a single RA. Therefore, there is a practical limit to the number of known-local ULAs that can be expressed on a single network and the number of ULA prefixes that can automatically be preferred over GUA prefixes within the policy table. This limit is unlikely to impact most networks, especially residential and other small unmanaged networks that automatically generate ULA prefixes.
 
-Section 4 of RFC 4191 says, "Routers SHOULD NOT send more than 17 Route Information Options in Router Advertisements per link. This arbitrary bound is meant to reinforce that relatively few and carefully selected routes should be advertised to hosts. The exact limit will depend on other Options that are used. So while this is not the practical limit discussed above, operators MUST take extra care not to overflow the RA with RA Options when exceeding this limit.
+Section 4 of RFC 4191 says, "Routers SHOULD NOT send more than 17 Route Information Options in Router Advertisements per link. This arbitrary bound is meant to reinforce that relatively few and carefully selected routes should be advertised to hosts." The exact limit will depend on other Options that are used. So while this is not the practical limit discussed above, operators MUST take extra care not to overflow the RA with RA Options when exceeding this limit.
 
 Note that in the case of Rule 2 above it would be expected that ULA prefixes being included in the known-local prefix
 list be compliant with Section 3 of RFC4193 (i.e., /48 in size) but the above rule is pragmatic in that it allows
@@ -249,19 +249,19 @@ In this case ULA1::1 – ULA2::1 wins because of matching labels (both 14) and h
 
 If host A were to send to a host C with addresses ULA3::1 (where ULA3::/48 has not been learned to be a known-local prefix) and GUA2:1::1, host A would use the GUA address pair for the communication as the GUAs have matching labels (both 1) where the known-local ULA and general ULA do not (14 and 13 respectively).
 
-## ULA-ULA preferred over IPv4-IPv4
+## Known-local ULA-ULA preferred over IPv4-IPv4
 
 This update changes previous behavior for this case. RFC 6724 as originally defined would lead to IPv4 being preferred over ULAs, which is contrary to the spirit of the IPv6 GUA preference over IPv4, and to the goal of removing evidenced use of IPv4 in a dual-stack site before transitioning to IPv6-only.
 
-This document elevates the precedence of general ULAs above IPv4, so ULA-ULA address pairs will be chosen over IPv4-IPv4 pairs (matching label, higher precedence).
+This document elevates the precedence of known-local ULAs above IPv4, so known-local ULA-ULA address pairs will be chosen over IPv4-IPv4 pairs (matching label, higher precedence).
 
 ## IPv4-IPv4 preferred over ULA-GUA
 
-An IPv6 ULA address will only be preferred over an IPv4 address if both IPv6 ULA source and destination addresses are available. With Rule 5 of Section 6 of RFC 6724 and the ULA-specific label added in {{RFC6724}} (which was not present in {{RFC3484}}) an IPv4 source and destination will be preferred over an IPv6 ULA source and an IPv6 GUA destination address, even though generally IPv6 ULA addresses are preferred over IPv4 in the policy table as proposed in this update. The IPv4 matching label trumps ULA-GUA.
+An IPv6 ULA address will only be preferred over an IPv4 address if both IPv6 ULA source and destination addresses are available. With Rule 5 of Section 6 of RFC 6724 and the ULA-specific label added in {{RFC6724}} (which was not present in {{RFC3484}}) an IPv4 source and destination will be preferred over an IPv6 ULA source and an IPv6 GUA destination address, even though generally known-local IPv6 ULA addresses are preferred over IPv4 in the policy table as proposed in this update. The IPv4 matching label trumps ULA-GUA.
 
 # Discussion of ULA source with GUA or remote ULA destination
 
-In this section we present a discussion on the scenarios where a ULA source may be communicating with a GUA or ULA destination. 
+In this section we present a discussion on the scenarios where a ULA source may be communicating with a GUA or ULA destination.
 
 A potential problem exists when a ULA source attempts to communicate with GUA or remote ULA destinations. In these scenarios, the ULA source as stated earlier is by default intended for communication only with the local network, meaning an individual site, several sites that are part of the same organization, or multiple sites across cooperating organizations, as detailed in [RFC4193]. As a result, most GUA and ULA destinations are not attached to the same local network as the ULA source and are, therefore, not reachable from the ULA source.
 
