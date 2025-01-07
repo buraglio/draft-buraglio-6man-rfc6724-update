@@ -34,6 +34,10 @@ normative:
   RFC4193:
   RFC7526:
   RFC8925:
+  SNACBIT: target: https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml#icmpv6-parameters-11
+  	   title: IPv6 ND Router Advertisement Flags
+	   author:
+		org: IANA
 
 informative:
   RFC6724:
@@ -171,6 +175,8 @@ These known-local ULA prefixes are inferred from ULA addresses assigned to inter
 Section 3.1 of RFC 4193 only defines ULA prefixes where the L-bit is set to 1, i.e., prefixes under fd00::/8 where the prefix is locally assigned or generated. The use of ULAs where L=0, i.e., prefixes under fc00::/8, is currently undefined.
 
 The following rules define how the learnt known-local ULA prefixes under fd00::/8 are inserted into the address selection policy table for a node, through a conceptual list of known-local prefixes.
+
+0. Any RIO that is delivered in an RA in which the "SNAC Router" RA header flag bit {{SNACBIT}} is set MUST be ignored when considering the following rules.
 
 1. RIOs from within fd00::/8 are considered the preferred information source for determining known-local ULAs and should override other conflicting information or assumptions from other sources, including PIOs.
 
