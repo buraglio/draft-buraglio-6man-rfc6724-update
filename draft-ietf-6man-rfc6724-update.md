@@ -10,7 +10,6 @@ wg: 6MAN
 kw: Internet-Draft
 updates: 6724
 
-
 author:
       -
         ins: N. Buraglio
@@ -34,10 +33,9 @@ normative:
   RFC4193:
   RFC7526:
   RFC8925:
-  SNACBIT: target: https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml#icmpv6-parameters-11
-  	   title: IPv6 ND Router Advertisement Flags
-	   author:
-		org: IANA
+  SNACBIT:
+    target: "https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml#icmpv6-parameters-11"
+    title: IPv6 ND Router Advertisement Flags
 
 informative:
   RFC6724:
@@ -48,8 +46,6 @@ informative:
   RFC3587:
   RFC4861:
   RFC8028:
- 
-  
 
 --- abstract
 
@@ -150,7 +146,7 @@ fec0::/10              1    11        fec0::/10              1     11
 
 The update moves 2002::/16 to de-preference its status in line with {{RFC7526}} and moves the precedence of fc00::/7 above legacy IPv4, with ::ffff:0:0/96 now set to precedence 20.
 
-## Rule 5.5 
+## Rule 5.5
 
 The heuristic for address selection defined in Rule 5.5 of Section 5 of RFC 6724 to prefer addresses in a prefix advertised by a next-hop router has proven to be very useful.
 
@@ -380,5 +376,6 @@ None.
 * Added text clarifying intended behaviors.
 * Added text discussing ULA to GUA/ULA case.
 * Added text for the security section.
+* Added text to account for SNAC bit.
 
 --- back
