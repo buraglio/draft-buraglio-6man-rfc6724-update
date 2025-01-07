@@ -176,7 +176,7 @@ Section 3.1 of RFC 4193 only defines ULA prefixes where the L-bit is set to 1, i
 
 The following rules define how the learnt known-local ULA prefixes under fd00::/8 are inserted into the address selection policy table for a node, through a conceptual list of known-local prefixes.
 
-0. Any PIO that is delivered in an RA in which the "SNAC Router" RA header flag bit {{SNACBIT}} is set MUST be ignored when considering the following rules.
+0. Any RIO or PIO that is delivered in an RA in which the "SNAC Router" RA header flag bit {{SNACBIT}} is set MUST be ignored when considering the following rules.
 
 1. RIOs from within fd00::/8 are considered the preferred information source for determining known-local ULAs and should override other conflicting information or assumptions from other sources, including PIOs.
 
