@@ -26,7 +26,7 @@
 ]>
 
 
-<rfc ipr="trust200902" docName="draft-ietf-6man-rfc6724-update-15" category="std" consensus="true" submissionType="IETF" updates="6724">
+<rfc ipr="trust200902" docName="draft-ietf-6man-rfc6724-update-16" category="std" consensus="true" submissionType="IETF" updates="6724">
   <front>
     <title abbrev="Prioritizing known-local ULAs in RFC 6724">Prioritizing known-local IPv6 ULAs through address selection policy</title>
 
@@ -478,11 +478,11 @@ any packets with Local IPv6 source or destination addresses outside of the site,
   </back>
 
 <!-- ##markdown-source:
-H4sIAFWtfWcAA7V96XIbWZbefzxFmu0Ikx0AuFMquqtnKKmqSz0qSRapKU9M
+H4sIAOavfWcAA7V96XIbWZbefzxFmu0Ikx0AuFMquqtnKKmqSz0qSRapKU9M
 TDgSyAsgW4lMTC5koSZqwu/gF/Cz+FH8JD7fOedumQmWpjvMHxIJ3LzLuWff
 cjabTdq8Lcxt8rHOqzpv81/ycp18KaunclZUy7RI3n58vEk+v7trknZTV916
 k6RZVpumSRpTmGWbV2Wyq4p8uZ+ki0VtHp+Zi6fJy+TT96+TmxcXV5OsWpbp
-lpbP6nTVznLTrmY327Sc1aslBsy6XZa2ZnZ+PVmm7W3StNmk6RbbvGlo3Xa/
+lpbP6nTVznLTrmY327Sc1aslBsy6XZa2ZnZ+M1mm7W3StNmk6RbbvGlo3Xa/
 o0fffvfw/STf1bdJW3dNe3F29s3ZxSStTUrfle3kaX2b3Px4937y5Yk/MHVp
 2tkbLDiR6Ztb2c0k7dpNVd9OEv6Z6f8JbZmGvJ8nr7o6XRd55b6Qzb/Pl1+G
 31U1Lfxdaer1Prlf5qZcmiZ5b9qnqv7iBpltmhe3yUIf/vtVVT+ldUaA2xVp
@@ -725,7 +725,7 @@ u/qn2SUmDDT5XADwLeS964EXAhxZY77oUH2jroGtsgyRqodf2yilanfv7waU
 Wc6/dlIWDEHr8GRB/PFL3H7TeZLjRtn4OO6OHSwa99Ac9s70I31fSNcFTS16
 jHqjONlunnulg3doMDIFBpQ87fxFn+37N5J3354P3qmp3VH2Nl1Xmlb50AJv
 rte/0beg247HgXGKO+l9gsuXl8vvxbPYr3vsjbVSTj1kgVDkSoZ4sGsdZ/mp
-epJ7w1r/FjY8wT1oFly7jlefL0i5mPw/fgyff4OEAAA=
+epJ7w1r/FjY8wT1oFly7jlefL0i5mPw/sd20BYOEAAA=
 
 -->
 
