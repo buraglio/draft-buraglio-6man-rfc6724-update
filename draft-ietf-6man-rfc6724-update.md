@@ -297,9 +297,9 @@ In the first scenario, the ULA source label, whether known-local or not, will no
 
 If the ULA (fc00::/7) label is removed from the policy table, a GUA destination with a ULA source will be preferred over an IPv4 destination, as GUA and ULA will be part of the same label (for ::/0).
 
-In the second scenario, if the ULA source has been recognised as being within a known-local prefix that has been inserted into the address selection policy table, then the known-local ULA source and general ULA destination will have different labels, and therefore IPv4 communication will be preferred.
+In the second scenario, if the ULA source has been recognized as being within a known-local prefix that has been inserted into the address selection policy table, then the known-local ULA source and general ULA destination will have different labels, and therefore IPv4 communication will be preferred.
 
-If the ULA source has not been recognised as known-local, e.g., if the insertion of known-local prefixes into the plocy table has been administratively disabled, its general ULA label will match the general ULA destination label and therefore, whether part of the local network or not, the ULA destination will be preferred over an IPv4 destination.
+If the ULA source has not been recognized as known-local, e.g., if the insertion of known-local prefixes into the policy table has been administratively disabled, its general ULA label will match the general ULA destination label and therefore, whether part of the local network or not, the ULA destination will be preferred over an IPv4 destination.
 
 ## Happy Eyeballs
 
@@ -346,7 +346,7 @@ It is especially important to note this behavior in the long lifecycle equipment
 
 The procedures defined in RFC 6724 do not give optimal results for all scenarios. As stated in the introduction, the aim of this update is to improve the behavior for the most common scenarios.
 
-It is widely recognised in the IETF 6man WG that the whole 3484/6724/getaddrinfo() model is fundamentally inadequate for optimal address selection.  A model that considers address pairs directly, rather than sorting on destination addresses with the best source for that address, would be preferable, but beyond the scope of this document.
+It is widely recognized in the IETF 6man WG that the whole 3484/6724/getaddrinfo() model is fundamentally inadequate for optimal address selection.  A model that considers address pairs directly, rather than sorting on destination addresses with the best source for that address, would be preferable, but beyond the scope of this document.
 
 To simplify address selection, operators may instead look to deploy IPv6-only and/or may choose to only use GUA addresses and no ULA addresses. Other approaches to reduce the use of IPv4, e.g., through use of DHCPv4 Option 108 as defined in {{RFC8925}} as part of an "IPv6 Mostly" deployment model, also helps simplify address selection for nodes.
 
