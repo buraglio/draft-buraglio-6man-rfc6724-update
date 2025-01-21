@@ -401,10 +401,10 @@ Both ULA prefixes have been determined to be known-local through RIOs.
 Perhaps ULA2 is reachable within the site, but its prefix is not in
 direct use at host A.
 
-If host A sends to host B the candidate pairs are ULA1::1 – ULA2::1 and
-GUA1::1::1 – GUA1:2::1.
+If host A sends to host B the candidate pairs are ULA1::1 - ULA2::1 and
+GUA1::1::1 - GUA1:2::1.
 
-In this case ULA1::1 – ULA2::1 wins because of matching labels (both 14)
+In this case ULA1::1 - ULA2::1 wins because of matching labels (both 14)
 and higher precedence than GUA (45 vs 40).
 
 If host A were to send to a host C with addresses ULA3::1 (where
