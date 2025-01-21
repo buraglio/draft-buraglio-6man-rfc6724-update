@@ -279,9 +279,9 @@ Host B has address ULA2::1 and GUA1:2::1</t>
 <t>Both ULA prefixes have been determined to be known-local through RIOs. 
 Perhaps ULA2 is reachable within the site, but its prefix is not in direct use at host A.</t>
 
-<t>If host A sends to host B the candidate pairs are ULA1::1 – ULA2::1 and GUA1::1::1 – GUA1:2::1.</t>
+<t>If host A sends to host B the candidate pairs are ULA1::1 - ULA2::1 and GUA1::1::1 - GUA1:2::1.</t>
 
-<t>In this case ULA1::1 – ULA2::1 wins because of matching labels (both 14) and higher precedence than GUA (45 vs 40).</t>
+<t>In this case ULA1::1 - ULA2::1 wins because of matching labels (both 14) and higher precedence than GUA (45 vs 40).</t>
 
 <t>If host A were to send to a host C with addresses ULA3::1 (where ULA3::/48 has not been learned to be a known-local prefix) and GUA2:1::1, host A would use the GUA address pair for the communication as the GUAs have matching labels (both 1) where the known-local ULA and general ULA do not (14 and 13 respectively).</t>
 
