@@ -28,24 +28,29 @@ author:
         email: jduncan@tachyondynamics.com
 
 normative:
+  RFC6724:
+  RFC3484:
+  RFC8028:
+  RFC4861:
   RFC2119:
   RFC4191:
   RFC4193:
   RFC7526:
-  RFC8925:
   SNACBIT:
     target: "https://www.iana.org/assignments/icmpv6-parameters/icmpv6-parameters.xhtml#icmpv6-parameters-11"
     title: IPv6 ND Router Advertisement Flags
-
+  ANDROID:
+    target: "https://r.android.com/3046000"
+    title: Optionally prefer known-local ULAs in Android
+  RAIO-ULA-PY:
+    target: "https://github.com/jeremy-duncan/raio_ula"
+    title: Python known-local ULA implementation  
 informative:
-  RFC6724:
   RFC1918:
-  RFC3484:
   RFC6555:
   RFC8305:
   RFC3587:
-  RFC4861:
-  RFC8028:
+  RFC8925:
 
 --- abstract
 
@@ -322,7 +327,7 @@ This section re-emphasizes two important operational requirements stated in {{RF
 ## Filtering ULA-source addresses at site borders
 
 Section 4.3 states "Site border routers and firewalls should be configured to not forward
-any packets with Local IPv6 source or destination addresses outside of the site, unless they have been explicitly configured with routing information about specific /48 or longer Local IPv6 prefixes".
+any packets with Local IPv6 source or destination addresses outside the site, unless they have been explicitly configured with routing information about specific /48 or longer Local IPv6 prefixes".
 
 And further that "Site border routers should respond with the appropriate ICMPv6 Destination Unreachable message to inform the source that the packet was not forwarded".
 
@@ -330,7 +335,7 @@ As stated in the above discussion, such ICMPv6 messages can assist in fast failo
 
 ## Avoid using ULA addresses in the global DNS
 
-Section 4.3 of RFC 4193 states that "AAAA and PTR records for locally assigned local IPv6 addresses are not recommended to be installed in the global DNS."
+Section 4.3 of RFC 4193 states that "AAAA and PTR records for locally assigned local IPv6 addresses are not recommended being installed in the global DNS."
 
 This is particularly important given the general method presented in this document elevates the priority for ULAs above IPv4. However, where support for insertion of known-local prefixes is implemented, such "rogue" ULAs in the global DNS are no longer a concern for address selection as they would have the lowest precedence.
 
@@ -353,6 +358,16 @@ To simplify address selection, operators may instead look to deploy IPv6-only an
 # Acknowledgements
 
 The authors would like to acknowledge the valuable input and contributions of the 6man WG including (in alphabetic order) Erik Auerswald, Dale Carder, Brian Carpenter, Tom Coffeen, Lorenzo Colitti, Chris Cummings, David Farmer (in particular for the ULA to GUA/ULA discussion text, and discussion of using the specific fd00::/8 prefix for known-locals), Bob Hinden, Scott Hogg, Ed Horley, Ted Lemon, Jen Linkova, Michael Richardson, Kyle Rose, Nathan Sherrard, Ole Troan, Eduard Vasilenko, Eric Vyncke, Paul Wefel, Timothy Winters, and XiPeng Xiao.
+
+# Implementation Status
+
+This section should be removed before publication as an RFC.
+
+There are two known implementations of the ULA known-local preference mechanism.
+The first implementation was created by Lorenzo Colitti at Google as a prototype solution, with public code available for reference on their android platform available to the public {{ANDROID}}.It was last updated in April of 2024, and does not include the capability to listen for RIO/PIO changes, but does support adding the ULA prefix learned on the interface to the known-local preference.
+
+The second implementation was written by Jeremy Duncan at Tachyon Dynamics and made available as open source, reference prototype code available {{RAIO-ULA-PY}}. This implementation includes a full implementation written in python, including the capability to listen to RIO and PIO on the wire and adjust ULA known-local prefixes as needed. It was last updated in May of 2024.
+
 
 # Security Considerations
 
