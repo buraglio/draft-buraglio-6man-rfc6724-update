@@ -29,7 +29,6 @@ author:
 
 normative:
   RFC6724:
-  RFC3484:
   RFC8028:
   RFC4861:
   RFC2119:
@@ -51,6 +50,7 @@ informative:
   RFC8305:
   RFC3587:
   RFC8925:
+  RFC3484:
 
 --- abstract
 
@@ -158,7 +158,8 @@ The update moves 2002::/16 to de-preference its status in line with {{RFC7526}} 
 
 The heuristic for address selection defined in Rule 5.5 of Section 5 of RFC 6724 to prefer addresses in a prefix advertised by a next-hop router has proven to be very useful.
 
-The text in RFC 6724 states that the Rules MUST be followed in order, but also includes a discussion note under Rule 5.5 that says that an IPv6 implementation is not required to remember which next-hops advertised which prefixes and thus that Rule 5.5 is only applicable to implementations that track this information.  
+The text in RFC 6724 states that the Rules MUST be followed in order, but also includes a discussion note under Rule 5.5 that says that an IPv6 implementation is not required to remember which next-hops advertised which prefixes and thus that Rule 5.5 is only
+applicable to implementations that track this information.  
 
 This document removes that exception and elevates the requirement to prefer addresses in a prefix advertised by a next-hop router to a MUST for all nodes.
 
@@ -172,7 +173,7 @@ Section 2.1 of RFC 6724 states that "an implementation MAY automatically add add
 
 If a node can determine which ULA prefix(es) are known to be local, it can provide differential treatment for those over general ULAs, and insert these into the policy table at a higher precedence than GUAs while keeping all general ULA prefixes to a lower precedence.
 
-This document thus elevates the MAY requirement above for insertion to a MUST for the specific case of known-local ULAs. 
+This document thus elevates the MAY requirement above for insertion to a MUST for the specific case of known-local ULAs.
 
 These known-local ULA prefixes are inferred from ULA addresses assigned to interfaces or learned from Prefix Information Options (PIOs) in Router Advertisements (RAs) {{RFC4861}} received on any interface regardless of how the PIO flags are set. Further, they are learned from Route Information Options (RIOs) in RAs received on any interface by Type C hosts that process RIOs, as defined in {{RFC4191}}.
 
@@ -187,7 +188,7 @@ The following rules define how the learnt known-local ULA prefixes under fd00::/
 2. RIOs within fd00::/8 that are of length /40 or longer MUST be added to the known-local ULA list. RIOs for shorter prefixes MUST NOT be used to insert known-local ULA entries in the address selection policy table
   
 3. PIOs within fd00::/8 of length /64 that are not already in the nodes known-local ULA list MUST be added to the list with an assumed prefix length of /48, regardless of how the PIO flags are set.
-   
+
 4. ULA interface addresses from within fd00::/8, particularly ones not created by SLAAC, and not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48. However, as with rule 0, if the ULA interface address was generated on the basis of a PIO that has only been seen in RAs in which the SNAC router flag bit is set MUST NOT be used as described in this rule (rule 4).
 
 5. Regardless of their length or how the PIO flags are set, other PIOs from within fd00::/8 that are not already covered by the known-local ULA list MAY be added to the list, but only with the advertised prefix length.
@@ -233,7 +234,7 @@ This is the current behavior, and remains unaltered. The rationale is to promote
 
 ## GUA-GUA preferred over ULA-ULA
 
-This is the current behavior, and remains unaltered for the general case. 
+This is the current behavior, and remains unaltered for the general case.
 
 However, where a ULA prefix is determined to be local, and added as a known-local ULA prefix to a node's address selection policy table, communications to addresses in other known-local ULA prefixes will prefer ULA-ULA address pairs to GUA-GUA (matching label, higher precedence).
 
@@ -246,15 +247,15 @@ By only adapting this behavior for known-local ULAs, a node will not select a UL
 Nodes not yet implementing this RFC will continue to use GUA-GUA over ULA-ULA for all cases.
 
 As an example, consider a site that uses prefixes ULA1::/48, ULA2::/48 and GUA1::/48.
- 
+
 Host A has address ULA1::1 and GUA1:1::1
 Host B has address ULA2::1 and GUA1:2::1
- 
-Both ULA prefixes have been determined to be known-local through RIOs. 
+
+Both ULA prefixes have been determined to be known-local through RIOs.
 Perhaps ULA2 is reachable within the site, but its prefix is not in direct use at host A.
- 
+
 If host A sends to host B the candidate pairs are ULA1::1 - ULA2::1 and GUA1::1::1 - GUA1:2::1.
- 
+
 In this case ULA1::1 - ULA2::1 wins because of matching labels (both 14) and higher precedence than GUA (45 vs 40).
 
 If host A were to send to a host C with addresses ULA3::1 (where ULA3::/48 has not been learned to be a known-local prefix) and GUA2:1::1, host A would use the GUA address pair for the communication as the GUAs have matching labels (both 1) where the known-local ULA and general ULA do not (14 and 13 respectively).
@@ -309,7 +310,8 @@ If the ULA source has not been recognized as known-local, e.g., if the insertion
 
 ## Happy Eyeballs
 
-Regardless of the preference resulting from the above discussion, Happy Eyeballs version 1 {{RFC6555}} or version 2 {{RFC8305}}, if implemented, will try both the GUA or ULA destination with the ULA source and the IPv4 destination and source pairings. The ULA source will typically fail to communicate with most GUA or remote ULA destinations, and IPv4 will be preferred if IPv4 connectivity is available unless the GUA or ULA destinations are attached to the same local network as the ULA source.
+Regardless of the preference resulting from the above discussion, Happy Eyeballs version 1 {{RFC6555}} or version 2 {{RFC8305}}, if implemented, will try both the GUA or ULA destination with the ULA source and the IPv4 destination and source pairings.
+The ULA source will typically fail to communicate with most GUA or remote ULA destinations, and IPv4 will be preferred if IPv4 connectivity is available unless the GUA or ULA destinations are attached to the same local network as the ULA source.
 
 ## Try the Next Address
 
@@ -365,10 +367,9 @@ The authors would like to acknowledge the valuable input and contributions of th
 This section should be removed before publication as an RFC.
 
 There are two known implementations of the ULA known-local preference mechanism.
-The first implementation was created by Lorenzo Colitti at Google as a prototype solution, with public code available for reference on their android platform available to the public {{ANDROID}}.It was last updated in April of 2024, and does not include the capability to listen for RIO/PIO changes, but does support adding the ULA prefix learned on the interface to the known-local preference.
+The first implementation was created by Lorenzo Colitti at Google as a prototype solution, with public code available for reference on their android platform available to the public {{ANDROID}}. It was last updated in April of 2024, and does not include the capability to listen for RIO/PIO changes, but does support adding the ULA prefix learned on the interface to the known-local preference.
 
 The second implementation was written by Jeremy Duncan at Tachyon Dynamics and made available as open source, reference prototype code available {{RAIO-ULA-PY}}. This implementation includes a full implementation written in python, including the capability to listen to RIO and PIO on the wire and adjust ULA known-local prefixes as needed. It was last updated in May of 2024.
-
 
 # Security Considerations
 
