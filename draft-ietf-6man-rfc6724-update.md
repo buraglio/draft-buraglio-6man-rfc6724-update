@@ -147,7 +147,8 @@ fec0::/10              1    11        fec0::/10              1     11
 3ffe::/16              1    12        3ffe::/16              1     12
 
 (*) value(s) changed in update
-(**) $known_local = the ULA Known-Local /48 IPv6 prefix(es) (if any) with precedence and labels per the rules in Sec 5.3
+(**) $known_local = the ULA Known-Local /48 IPv6 prefix(es) (if any) 
+with precedence and labels per the rules in Sec 5.3
 
 ~~~~~~~~~~
 
@@ -384,6 +385,7 @@ Operators should be mindful of cases where communicating nodes have differing be
 None.
 
 # Summary of changes and additional text since RFC 6724
+This section should be removed before publication as an RFC.
 
 * Changed default policy table to move fc00::/7 to precedence 30, above legacy IPv4.
 * Changed default policy table to move the 6to4 address block 2002::/16 to the same precedence as the Teredo prefix.
