@@ -134,17 +134,17 @@ The table below reflects the current RFC 6724 state on the left, and the updated
 
 ~~~~~~~~~~
                     RFC 6724                              Updated                  
-Prefix        Precedence Label        Prefix        Precedence Label              
-::1/128               50     0        ::1/128               50     0
-                                      $known_local/48       45    14 (**)
-::/0                  40     1        ::/0                  40     1
-::ffff:0:0/96         35     4        ::ffff:0:0/96         20     4 (*)
-2002::/16             30     2        2002::/16              5     2 (*)
-2001::/32              5     5        2001::/32              5     5
-fc00::/7               3    13        fc00::/7              30    13 (*)
-::/96                  1     3        ::/96                  1     3
-fec0::/10              1    11        fec0::/10              1     11
-3ffe::/16              1    12        3ffe::/16              1     12
+Prefix       Precedence Label        Prefix        Precedence Label              
+::1/128              50     0        ::1/128               50     0
+                                     $known_local/48       45    14 (**)
+::/0                 40     1        ::/0                  40     1
+::ffff:0:0/96        35     4        ::ffff:0:0/96         20     4 (*)
+2002::/16            30     2        2002::/16              5     2 (*)
+2001::/32             5     5        2001::/32              5     5
+fc00::/7              3    13        fc00::/7              30    13 (*)
+::/96                 1     3        ::/96                  1     3
+fec0::/10             1    11        fec0::/10              1    11
+3ffe::/16             1    12        3ffe::/16              1    12
 
 (*) value(s) changed in update
 (**) $known_local = the ULA Known-Local /48 IPv6 prefix(es) (if any) 
