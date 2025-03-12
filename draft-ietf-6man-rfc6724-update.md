@@ -71,7 +71,7 @@ To support the preference to use ULA address pairs over both IPv4 and GUA addres
 
 This document also reinforces the text in RFC 6724 to require support for Rule 5.5.
 
-RFC 4193 defines ULAs within fc00::/7, where the L bit, as detailed in Section 3.1, is set to 1 for locally assigned (generated) prefixes, with L=0 as yet undefined. The use of known-locals as described in this document therefore applies to the currently used ULA prefixes under fd00::/8, where the prefixes conform to the definition in Section 3.1.
+RFC 4193 defines ULAs within fc00::/7, where the L bit, as detailed in Section 3.1, is set to 1 for locally assigned (generated) prefixes, with L=0 as yet undefined. The use of known-locals as described in this document therefore applies to the currently used ULA prefixes under fd00::/8, where the prefixes conform to the definition in Section 3.1 of {{RFC4193}}.
 
 The overall goal of this update is to improve behavior for common scenarios, and to assist in the phasing out of use of IPv4, while noting that some specific scenarios may still require explicit configuration.
 
@@ -164,8 +164,8 @@ applicable to implementations that track this information.
 This document removes that exception and elevates the requirement to prefer addresses in a prefix advertised by a next-hop router to a MUST for all nodes.
 
 This change means that an IPv6 implementation will need to remember which next-hops advertised which prefixes
-{{RFC8028}}, although the conceptual models of IPv6 hosts in Section 5 of {{RFC4861}} and Section 3 of {{RFC4191}}
-have no such requirement.
+{{RFC8028}}, despite the conceptual models of IPv6 hosts in Section 5 of {{RFC4861}} and Section 3 of {{RFC4191}}
+having no such requirement.
 
 ## Automatic insertion of known-local ULA prefixes into the policy table
 
@@ -189,7 +189,7 @@ The following rules define how the learnt known-local ULA prefixes under fd00::/
   
 4. PIOs within fd00::/8 of length /64 that are not already in the nodes known-local ULA list MUST be added to the list with an assumed prefix length of /48, regardless of how the PIO flags are set.
 
-5. ULA interface addresses from within fd00::/8, particularly ones not created by SLAAC, and not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48. However, as with rule 1, if the ULA interface address was generated on the basis of a PIO that has only been seen in RAs in which the SNAC router flag bit is set MUST NOT be used as described in this rule (rule 5).
+5. ULA interface addresses from within fd00::/8, particularly ones not created by SLAAC, and not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48. However, as with rule 1, if the ULA interface address was generated on the basis of a PIO that has only been seen in RAs in which the SNAC router flag bit is set, this ULA prefix MUST NOT be used as described in this rule (rule 5).
 
 6. Regardless of their length or how the PIO flags are set, other PIOs from within fd00::/8 that are not already covered by the known-local ULA list MAY be added to the list, but only with the advertised prefix length.
 
@@ -205,7 +205,7 @@ The identification and insertion of known-local prefixes under fc00::/8 is curre
 
 Note that a practical limit exists on the number of RIOs and PIOs that can be placed into a single RA. Therefore, there is a practical limit to the number of known-local ULAs that can be expressed on a single network and the number of ULA prefixes that can automatically be preferred over IPv4 and GUA prefixes within the policy table. This limit is unlikely to impact most networks, especially residential and other small unmanaged networks that automatically generate ULA prefixes.
 
-Section 4 of RFC 4191 says "Routers SHOULD NOT send more than 17 Route Information Options in Router Advertisements per link. This arbitrary bound is meant to reinforce that relatively few and carefully selected routes should be advertised to hosts." The exact limit will depend on other Options that are used. So while this is not the practical limit discussed above, operators MUST take extra care not to overflow the RA with RA Options when exceeding this limit.
+Section 4 of RFC 4191 says "Routers SHOULD NOT send more than 17 Route Information Options in Router Advertisements per link. This arbitrary bound is meant to reinforce that relatively few and carefully selected routes should be advertised to hosts." The exact limit will depend on other Options that are used. So while this is not the practical limit discussed above, operators MUST take extra care not to cause the RA size to exceed the MTU when filling the RA with RA Options when exceeding this limit.
 
 Note that in the case of Rule 2 above it would be expected that ULA prefixes being included in the known-local prefix
 list be compliant with Section 3 of RFC4193 (i.e., /48 in size) but the above rule is pragmatic in that it allows
