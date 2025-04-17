@@ -1,7 +1,7 @@
 ---
 title: Prioritizing known-local IPv6 ULAs through address selection policy
 abbrev: Prioritizing known-local ULA in RFC 6724
-docname: draft-ietf-6man-rfc6724-update-20
+docname: draft-ietf-6man-rfc6724-update-19
 cat: std
 submissiontype: IETF
 ipr: trust200902
@@ -129,15 +129,15 @@ This document therefore demotes the precedence of the 6to4 prefix in the policy 
 
 The discussion regarding the adding of 6to4 site prefixes in section 10.7 of RFC6724 remains valid.
 
-# Adjustments to RFC6724
+# Adjustments to RFC 6724
 
 This document makes three specific changes to RFC6724: first to update the default policy table, second to change Rule 5.5 on preferring addresses in a prefix advertised by the next-hop to a MUST, and third to require that nodes MUST insert observed known-local ULA prefixes into their policy table.
 
 ## Policy Table Update
 
-This update alters the default policy table listed in Rule 2.1 of RFC6724.
+This update alters the default policy table listed in Rule 2.1 of RFC 6724.
 
-It should be noted the order of rows in the policy table rows in the policy table is of no consequence and only the precedence value is relevant.
+It should be noted the order of rows in the policy table is of no consequence and only the precedence value is relevant.
 
 The table below reflects the current RFC6724 state on the left, and the updated state defined by this RFC on the right:
 
