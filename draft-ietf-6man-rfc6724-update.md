@@ -224,9 +224,9 @@ As stated in Section 2.1 of RFC 6724 "IPv6 implementations SHOULD support config
 
 Based on operational experience to date, it is important that node policy tables can be changed once deployed to support future emerging use cases. This update thus re-states the importance of such configurability.
 
-# Intended behaviors
+# Intended behavior
 
-In this section we review the intended default behaviors after this update is applied.
+In this section we review the intended default behavior after this update is applied.
 
 ## GUA-GUA preferred over IPv4-IPv4
 
@@ -282,7 +282,7 @@ When only a ULA source is available for communication with GUA destinations, thi
 
 Scenario 2: ULA source and remote ULA destination
 
-Receiving a DNS response for a ULA destination that is not attached to the local network, in other words, a remote ULA destination, is considered a misconfiguration in most cases, or at least this contradicts the operational guidelines provided in Section 4.4 of RFC 4193. Nevertheless, this can occur, and the ULA source will typically fail when it attempts to communicate with ULA destinations that are not attached to the same local network as the ULA source. This case provides a rationale for implementing support for known-local ULA prefix insertion in the policy table, such that differential behavior can be applied for known-local versus general ULA prefixes.
+Receiving a DNS response for a ULA destination that is not attached to the local network is considered a misconfiguration. This contradicts the operational guidelines provided in Section 4.4 of RFC 4193. Nevertheless, this can occur, and the ULA source will typically fail when it attempts to communicate with ULA destinations that are not attached to the same local network as the ULA source. This case provides a rationale for implementing support for known-local ULA prefix insertion in the policy table, such that differential behavior can be applied for known-local versus general ULA prefixes.
 
 The remainder of this section discusses several complementary mechanisms involved with these scenarios.
 
@@ -379,7 +379,7 @@ The mixed preference for IPv6 over IPv4 from the default policy table in RFC 672
 
 The requirements of RFC 4193, stated earlier in this document, should be followed for optimal behavior.
 
-Operators should be mindful of cases where communicating nodes have differing behaviors for address selection, e.g., RFC3484 behavior, RFC6724, the updated RFC6724 behavior defined here, some other non-IETF-standardized behavior, or even no mechanism. There may thus be inconsistent behavior for communications initiated in each direction between two nodes. Ultimately all nodes should be made compliant to the updated specification described in this document.
+Operators should be mindful of cases where communicating nodes have differing behavior for address selection, e.g., RFC3484 behavior, RFC6724, the updated RFC6724 behavior defined here, some other non-IETF-standardized behavior, or even no mechanism. There may thus be inconsistent behavior for communications initiated in each direction between two nodes. Ultimately all nodes should be made compliant to the updated specification described in this document.
 
 # IANA Considerations
 
@@ -394,7 +394,7 @@ This section should be removed before publication as an RFC.
 * Changed ::ffff:0:0/96 to precedence 20.
 * Changed Rule 5.5 to a MUST support.
 * Defined the concept of known-local ULA prefixes for currently defined RFC 4193 ULAs with L=1 under fd00::/8, how they may be learnt, and the MUST requirement to insert them into the policy table.
-* Added text clarifying intended behaviors.
+* Added text clarifying intended behavior.
 * Added text discussing ULA to GUA/ULA case.
 * Added text for the security section.
 * Added text to account for SNAC bit.
