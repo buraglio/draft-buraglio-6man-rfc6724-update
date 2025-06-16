@@ -402,7 +402,6 @@ This section should be removed before publication as an RFC.
 * Changed default policy table to move the 6to4 address block 2002::/16 to the same precedence as the Teredo prefix.
 * Changed ::ffff:0:0/96 to precedence 20.
 * Changed Rule 5.5 to a MUST support.
-* Defined the concept of known-local ULA prefixes for currently defined RFC4193 ULAs with L=1 under fd00::/8, how they may be learnt, and the MUST requirement to insert them into the policy table.
 * Added text clarifying intended behavior.
 * Added text discussing ULA to GUA/ULA case.
 * Added text for the security section.
