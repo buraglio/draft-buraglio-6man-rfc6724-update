@@ -1,7 +1,7 @@
 ---
 title: Prioritizing known-local IPv6 ULAs through address selection policy
 abbrev: Prioritizing known-local ULA in RFC 6724
-docname: draft-ietf-6man-rfc6724-update-20
+docname: draft-ietf-6man-rfc6724-update-21
 cat: std
 submissiontype: IETF
 ipr: trust200902
@@ -53,10 +53,25 @@ informative:
   RFC3484:
   RFC4862:
   RFC3493:
+  RFC4380:
 
 --- abstract
 
-This document draws on several years of operational experience to update the recommended process of Default Address Selection for Internet Protocol Version 6 (IPv6) defined in RFC6724, defining the concept of "known-local" Unique Local Address (ULA) prefixes that enable ULA-to-ULA communications within fd00::/8 to become preferred over both IPv4-IPv4 and GUA-to-GUA (Global Unicast Addresses) for local use. The document defines the means by which nodes can both identify and insert such prefixes into their address selection policy table. It also clarifies the mandatory, unconditional requirement for support for Rule 5.5 defined in Section 5 of RFC6724 and demotes the preference for 6to4 addresses. These changes to default behavior improve supportability of common use cases, including automatic / unmanaged scenarios, and makes preference for IPv6 over IPv4 consistent in local site networks for both ULA and GUA prefixes. It is recognized that some less common deployment scenarios may require explicit configuration or custom changes to achieve desired operational parameters.
+This document updates the default address selection algorithm for Internet
+Protocol Version 6 (IPv6), originally specified in RFC 6724, based on
+accumulated operational experience. It introduces the concept of "known-local"
+Unique Local Address (ULA) prefixes within the fd00::/8 block and specifies
+that ULA-to-ULA communications using such prefixes should be preferred over
+both IPv4-to-IPv4 and GUA-to-GUA (Global Unicast Address) communications in
+local use scenarios. The document defines mechanisms for nodes to identify and
+incorporate known-local prefixes into their address selection policy tables. It
+further clarifies the unconditional requirement for implementing Rule 5.5 of
+RFC 6724 and reduces the default preference for 6to4 addresses. These updates
+enhance the supportability of typical deployment environments, including
+automatic and unmanaged configurations, and promote consistent IPv6-over-IPv4
+preference behavior for both ULA and GUA within local networks. The document
+acknowledges that certain atypical deployment models may require explicit
+configuration to achieve intended operational outcomes.
   
 --- middle
 
@@ -87,7 +102,7 @@ GUA: Global Unicast Addresses as defined in {{RFC3587}}
 
 ULA: Unique Local Addresses as defined in {{RFC4193}}
 
-Known-local ULA: A ULA prefix that an individual organization/site has determined to be local to a given node/network
+Known-local ULA: A ULA prefix that an individual organization/site has determined to be local to a given node/network/administrative domain
 
 RA: IPv6 Router Advertisement as defined in {{RFC4861}}
 
@@ -125,7 +140,7 @@ These changes aim to improve the default handling of address selection for commo
 
 The anycast prefix for 6to4 relays was formally deprecated by {{RFC7526}} in 2015, and since that time the use of 6to4 addresses has further declined, with very little evidence of its use on the public internet. Note that RFC7526 does not deprecate the 6to4 IPv6 prefix 2002::/16, it only deprecates the 6to4 Relay IPv4 prefix.
 
-This document therefore demotes the precedence of the 6to4 prefix in the policy table to the same precedence as carried by the Teredo prefix. Leaving this entry in the default table will cause no problems and will help if any deployments still exist, and ensure 6to4 prefixes are differentiated from general GUAs.
+This document therefore demotes the precedence of the 6to4 prefix in the policy table to the same precedence as carried by the Teredo prefix defined in [RFC 4380]. Leaving this entry in the default table will cause no problems and will help if any deployments still exist, and ensure 6to4 prefixes are differentiated from general GUAs.
 
 The discussion regarding the adding of 6to4 site prefixes in section 10.7 of RFC6724 remains valid.
 
@@ -180,7 +195,7 @@ having no such requirement.
 
 Section 2.1 of RFC6724 states that "an implementation MAY automatically add additional site-specific rows to the default table based on its configured addresses, such as for Unique Local Addresses (ULAs)", but it provides no detail on how such behavior might be implemented.
 
-If a node can determine which ULA prefix(es) are known to be local, it can provide differential treatment for those over general ULAs, and insert these into the policy table at a higher precedence than GUAs while keeping all general ULA prefixes to a lower precedence.
+If a node can determine which ULA prefix(es) are known to be local, it can provide differential treatment for those over general, non-known-local ULAs, and insert these into the policy table at a higher precedence than GUAs while keeping all general ULA prefixes to a lower precedence.
 
 This document thus elevates the MAY requirement above for insertion to a MUST for the specific case of known-local ULAs.
 
@@ -214,7 +229,7 @@ The identification and insertion of known-local prefixes under fc00::/8 is curre
 
 Note that a practical limit exists on the number of RIOs and PIOs that can be placed into a single RA. Therefore, there is a practical limit to the number of known-local ULAs that can be expressed on a single network and the number of ULA prefixes that can automatically be preferred over IPv4 and GUA prefixes within the policy table. This limit is unlikely to impact most networks, especially residential and other small unmanaged networks that automatically generate ULA prefixes.
 
-Section 4 of RFC4191 says "Routers SHOULD NOT send more than 17 Route Information Options in Router Advertisements per link. This arbitrary bound is meant to reinforce that relatively few and carefully selected routes should be advertised to hosts." The exact limit will depend on other Options that are used. So while this is not the practical limit discussed above, operators MUST take extra care not to cause the RA size to exceed the MTU when filling the RA with RA Options when exceeding this limit.
+Section 4 of RFC4191 says "Routers SHOULD NOT send more than 17 Route Information Options in Router Advertisements per link. This arbitrary bound is meant to reinforce that relatively few and carefully selected routes should be advertised to hosts." The exact limit will depend on other options that are used. So while this is not the practical limit discussed above, operators MUST take extra care not to cause the RA size to exceed the MTU when filling the RA with RA Options when exceeding this limit.
 
 Note that in the case of Rule 2 above it would be expected that ULA prefixes being included in the known-local prefix
 list be compliant with Section 3 of RFC4193 (i.e., /48 in size) but the above rule is pragmatic in that it allows
