@@ -54,6 +54,7 @@ informative:
   RFC4862:
   RFC3493:
   RFC4380:
+  RFC5461:
 
 --- abstract
 
@@ -79,11 +80,11 @@ configuration to achieve intended operational outcomes.
 
 Since its publication in 2012, Default Address Selection for Internet Protocol Version 6 (IPv6) [RFC6724] has become an important mechanism by which nodes can perform address selection, deriving the most appropriate source and destination address pair to use from a candidate set by following the procedures defined in the RFC. Part of the process involves the use of a policy table, where the precedence and labels for address prefixes are listed, and for which a default policy table is defined.
 
-It was always expected that the default policy table may need to be changed based on operational experience; section 2.1 says "It is important that implementations provide a way to change the default policies as more experience is gained" and points to the examples in Section 10, which include Section 10.6 where a ULA example is presented.
+It was always expected that the default policy table may need to be changed based on operational experience; section 2.1 says "It is important that implementations provide a way to change the default policies as more experience is gained" and points to the examples in Section 10, which include Section 10.6 where a unique local address (ULA as defined in {{RFC4193}}) example is presented.
 
 This document is written on the basis of such operational experience, in particular for scenarios where ULAs are used for their intended purpose as stated in {{RFC4193}}, i.e., they are designed to be routed within a local site and by default not advertised, used or received from external locations to that site. The document defines how preference for ULAs may be elevated for appropriate, common scenarios.
 
-To support the preference to use ULA address pairs over both IPv4 and GUA address pairs for local intra-site scenarios, the concept of a "known-local" ULA address is introduced. This document describes the means for nodes to determine ULA prefixes that are known to be local to the site they are operating in and to insert those prefixes into their policy table with a label that differs from general ULA prefixes. This capability allows nodes to prefer ULA-ULA communication locally, but still use GUA-GUA address pairs for external communication, and importantly avoid selecting a ULA source to talk to a non-local ULA destination.
+To support the preference to use ULA address pairs over both IPv4 and GUA (Global Unicast Address as defined in {{RFC3587}}) address pairs for local intra-site scenarios, the concept of a "known-local" ULA address is introduced. This document describes the means for nodes to determine ULA prefixes that are known to be local to the site they are operating in and to insert those prefixes into their policy table with a label that differs from general ULA prefixes. This capability allows nodes to prefer ULA-ULA communication locally, but still use GUA-GUA address pairs for external communication, and importantly avoid selecting a ULA source to talk to a non-local ULA destination.
 
 This document also reinforces the text in Section 5 of RFC6724 to require support for Rule 5.5.
 
@@ -126,9 +127,9 @@ One is that the same default policy table also puts IPv6 ULAs below all IPv4 add
 
 As a result, the use of ULAs is not a viable option for dual-stack networking transition planning, large scale network modeling, network lab environments or other modes of large scale networking that run both IPv4 and IPv6 concurrently with the expectation that IPv6 will be preferred by default. Local preference of ULAs over IPv4 is thus important to assist operators in phasing out IPv4 from dual-stack environments and is an important enabler for sites seeking to move from dual-stack to IPv6-only networking.
 
-The other issue is that where nodes in a dual-stack site are addressed from both ULA and GUA prefixes, RFC6724 will see GUA-GUA address pairs chosen over ULA-ULA. One goal of ULA addresses was to allow local communications to be independent of the availability of external connectivity and addresses, such that persistent ULAs can be used even when the global prefix made available to a site is withdrawn or changes.
+Additionally, an issue exists in the scenario where nodes in a dual-stack site are addressed from both ULA and GUA prefixes, RFC6724 will see GUA-GUA address pairs chosen over ULA-ULA. One goal of ULA addresses was to allow local communications to be independent of the availability of external connectivity and addresses, such that persistent ULAs can be used even when the global prefix made available to a site is withdrawn or changes.
 
-This document therefore introduces two changes to RFC6724 to support a node implementing elevated or differential preference for  known-local ULAs, i.e., ULAs within a common local network, over both IPv4 and IPv6 GUAs. 
+This document therefore introduces two changes to RFC6724 to support a node implementing elevated or differential preference for known-local ULAs, i.e., ULAs within a common local network, over both IPv4 and IPv6 GUAs.
 
 The first change is an update to the default policy table to elevate the preference for ULAs prefixes such that ULAs, like GUAs, carry a higher precedence than all IPv4 addresses, making IPv6 precedence over IPv4 consistent for both ULAs and GUAs.
 
@@ -140,7 +141,7 @@ These changes aim to improve the default handling of address selection for commo
 
 The anycast prefix for 6to4 relays was formally deprecated by {{RFC7526}} in 2015, and since that time the use of 6to4 addresses has further declined, with very little evidence of its use on the public internet. Note that RFC7526 does not deprecate the 6to4 IPv6 prefix 2002::/16, it only deprecates the 6to4 Relay IPv4 prefix.
 
-This document therefore demotes the precedence of the 6to4 prefix in the policy table to the same precedence as carried by the Teredo prefix defined in [RFC 4380]. Leaving this entry in the default table will cause no problems and will help if any deployments still exist, and ensure 6to4 prefixes are differentiated from general GUAs.
+This document therefore demotes the precedence of the 6to4 prefix in the policy table to the same precedence as carried by the Teredo prefix defined in [RFC4380]. Leaving this entry in the default table will cause no problems and will help if any deployments still exist, and ensure 6to4 prefixes are differentiated from general GUAs.
 
 The discussion regarding the adding of 6to4 site prefixes in section 10.7 of RFC6724 remains valid.
 
@@ -213,7 +214,7 @@ The following rules define how the learnt known-local ULA prefixes under fd00::/
   
 4. PIOs received within fd00::/8 that are not already in the nodes known-local ULA list MUST be added to the list with an assumed prefix length of /48, regardless of how the PIO flags are set.
 
-5. ULA interface addresses from within fd00::/8, particularly ones not created by SLAAC, and not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48. However, as with rule 1, if the ULA interface address was generated on the basis of a PIO that has only been seen in RAs in which the SNAC router flag bit is set, this ULA prefix MUST NOT be used as described in this rule (rule 5).
+5. ULA interface addresses from within fd00::/8, particularly ones not created by SLAAC, and not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48. However, as with rule 1, if the ULA interface address was generated on the basis of a PIO that has only been seen in RAs in which the SNAC router flag bit is set, this ULA prefix MUST NOT be used as described in this rule (rule 5). This prevents potential use of a non-routable source address when communicating to a known-local ULA destination address that is not on the local link, as SNAC-generated GUAs can only work on a single link, and the only reason to ever choose them in source address selection is that the only choice for a destination address is the longest prefix match.
 
 6. Regardless of their length or how the PIO flags are set, other PIOs from within fd00::/8 that are not already covered by the known-local ULA list MAY be added to the list, but only with the advertised prefix length.
 
@@ -345,7 +346,7 @@ As stated in Section 2 of RFC6724:
 
 Therefore, when an IPv4 destination is preferred over GUA or ULA destinations, IPv4 will likely succeed if IPv4 connectivity is available, and the GUA or ULA destination may only be tried if Happy Eyeballs is implemented.
 
-On the other hand, if the GUA or ULA destination with the ULA source is preferred, the ULA source will typically fail to communicate with GUA or ULA destinations that are not connected to the same local network. However, if the operational guidelines in Section 4.3 of RFC4193  are followed, recognizing this failure can be accelerated, and transport layer timeouts (e.g., TCP) can be avoided. The guidelines will cause a Destination Unreachable ICMPv6 Error to be received by the source device, signaling the next address in the list to be tried, as discussed above.
+On the other hand, if the GUA or ULA destination with the ULA source is preferred, the ULA source will typically fail to communicate with GUA or ULA destinations that are not connected to the same local network. However, if the operational guidelines in Section 4.3 of RFC4193  are followed, recognizing this failure can be accelerated, and transport layer timeouts (e.g., TCP hard errors as described in section 2.1 [RFC5461]) can be avoided. The guidelines will cause a Destination Unreachable ICMPv6 Error to be received by the source device, signaling the next address in the list to be tried, as discussed above.
 
 # Following ULA operational guidelines in RFC4193
 
