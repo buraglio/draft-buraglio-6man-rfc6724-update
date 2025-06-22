@@ -94,25 +94,7 @@ The overall goal of this update is to improve behavior for common scenarios, and
 
 An IPv6 deployment, whether enterprise, residential or other, may use combinations of IPv6 GUAs, IPv6 ULAs, IPv4 globals, IPv4 RFC1918 addresses, and may or may not use some form of NAT. However, this document makes no comment or recommendation on how ULAs are used, or on the use of NAT in an IPv6 network.
 
-
-# Terminology
-
-{::boilerplate bcp14-tagged}
-
-GUA: Global Unicast Addresses as defined in {{RFC3587}}
-
-ULA: Unique Local Addresses as defined in {{RFC4193}}
-
-Known-local ULA: A ULA prefix that an individual organization/site has determined to be local to a given node/network/administrative domain
-
-RA: IPv6 Router Advertisement as defined in {{RFC4861}}
-
-PIO: IPv6 Prefix Information Option as defined in {{RFC4861}}
-
-SLAAC: IPv6 Stateless Address Auto-configuration {{RFC4862}}
-
-
-# Operational Issues Regarding Preference for IPv4 addresses over ULAs
+## Operational Issues Regarding Preference for IPv4 addresses over ULAs
 
 With multi-addressing being the norm for IPv6, more so where nodes are dual-stack, the ability for a node to pick an appropriate address pair for communication is very important.
 
@@ -137,13 +119,29 @@ The second change is the introduction of the concept of known-local ULAs. RFC672
 
 These changes aim to improve the default handling of address selection for common cases, and unmanaged / automatic scenarios rather than those where DHCPv6 is deployed. The changes are discussed in more detail in the following sections, with a further section providing a summary of the proposed updates.
 
-# Preference of 6to4 addresses
+## Preference of 6to4 addresses
 
 The anycast prefix for 6to4 relays was formally deprecated by {{RFC7526}} in 2015, and since that time the use of 6to4 addresses has further declined, with very little evidence of its use on the public internet. Note that RFC7526 does not deprecate the 6to4 IPv6 prefix 2002::/16, it only deprecates the 6to4 Relay IPv4 prefix.
 
 This document therefore demotes the precedence of the 6to4 prefix in the policy table to the same precedence as carried by the Teredo prefix defined in [RFC4380]. Leaving this entry in the default table will cause no problems and will help if any deployments still exist, and ensure 6to4 prefixes are differentiated from general GUAs.
 
 The discussion regarding the adding of 6to4 site prefixes in section 10.7 of RFC6724 remains valid.
+
+# Terminology
+
+{::boilerplate bcp14-tagged}
+
+GUA: Global Unicast Addresses as defined in {{RFC3587}}
+
+ULA: Unique Local Addresses as defined in {{RFC4193}}
+
+Known-local ULA: A ULA prefix that an individual organization/site has determined to be local to a given node/network/administrative domain
+
+RA: IPv6 Router Advertisement as defined in {{RFC4861}}
+
+PIO: IPv6 Prefix Information Option as defined in {{RFC4861}}
+
+SLAAC: IPv6 Stateless Address Auto-configuration {{RFC4862}}
 
 # Adjustments to RFC 6724
 
