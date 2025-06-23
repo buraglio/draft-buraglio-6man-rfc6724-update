@@ -106,9 +106,9 @@ The current default policy table leads to precedence for use of IPv6 GUAs over I
 
 However, there are two issues with precedence, or rather non-precedence, for ULAs as originally defined in RFC6724.
 
-One is that the same default policy table also puts IPv6 ULAs below all IPv4 addresses, including {{RFC1918}} addresses, such that IPv4-IPv4 address pairs are favored over ULA-ULA address pairs. For many site operators this behavior will be counter-intuitive, given the IPv6 GUA preference, and may create difficulties with respect to planning, operational, and security implications for environments where ULA addresses are used in IPv4/IPv6 dual-stack network scenarios. The expected default prioritization of known-local IPv6 traffic over IPv4 by default, as happens with IPv6 GUA addresses, does not happen for ULAs.
+First, the aforementioned default policy table places IPv6 ULAs below all IPv4 addresses, including {{RFC1918}} addresses, such that IPv4-IPv4 address pairs are favored over ULA-ULA address pairs. Given the IPv6 GUA preference, this could create difficulties with respect to planning, operational, and security implications for environments where ULA addresses are used in IPv4/IPv6 dual-stack network scenarios. The expected default prioritization of known-local IPv6 traffic over IPv4 by default, as happens with IPv6 GUA addresses, does not happen for ULAs.
 
-As a result, the use of ULAs is not a viable option for dual-stack networking transition planning, large scale network modeling, network lab environments or other modes of large scale networking that run both IPv4 and IPv6 concurrently with the expectation that IPv6 will be preferred by default. Local preference of ULAs over IPv4 is thus important to assist operators in phasing out IPv4 from dual-stack environments and is an important enabler for sites seeking to move from dual-stack to IPv6-only networking.
+As a result, the use of ULAs is not a viable option for dual-stack networking transition planning, large scale network modeling, network lab environments or other modes of large scale networking that run both IPv4 and IPv6 concurrently with the expectation that IPv6 will be preferred by default. Local preference of ULAs over IPv4 is thus important to assist administrators in phasing out IPv4 from dual-stack environments and is an important enabler for sites seeking to move from dual-stack to IPv6-only networking.
 
 Additionally, an issue exists in the scenario where nodes in a dual-stack site are addressed from both ULA and GUA prefixes, RFC6724 will see GUA-GUA address pairs chosen over ULA-ULA. One goal of ULA addresses was to allow local communications to be independent of the availability of external connectivity and addresses, such that persistent ULAs can be used even when the global prefix made available to a site is withdrawn or changes.
 
@@ -116,7 +116,8 @@ This document therefore introduces two changes to RFC6724 to support a node impl
 
 The first change is an update to the default policy table to elevate the precedence for ULAs prefixes such that ULAs, like GUAs, carry a higher precedence than all IPv4 addresses, making IPv6 precedence over IPv4 consistent for both ULAs and GUAs.
 
-The second change is the introduction of the concept of known-local ULAs. RFC6724 includes a method by which nodes MAY provide more fine-grained support for further elevating the precedence for specific ULA prefixes, while leaving other general ULA prefixes at the precedence described in the previous paragraph. This document elevates the requirement for specific ULA prefixes to be inserted into the policy table to be a MUST, but only for observed prefixes that are known to be local, i.e., known-local ULAs. Nodes implementing this behavior will see ULA prefixes known to be local to the node's site having precedence over IPv4 addresses and also over IPv6 GUA addresses, such that they can use ULA addresses independently of global prefixes within their site and continue to use GUA-GUA address pairs to talk to destinations external to their site.
+The second change is the introduction of the concept of known-local ULAs.  RFC6724 includes a method by which nodes may provide more fine-grained support for further elevating the preference for specific ULA prefixes, while leaving other general ULA prefixes at
+the precedence described in the previous paragraph.  This document elevates the requirement for specific ULA prefixes to be inserted into the policy table to be a “MUST”, but only for observed prefixes that are known to be local, i.e., known-local ULAs.
 
 These changes aim to improve the default handling of address selection for common cases, and unmanaged / automatic scenarios rather than those where DHCPv6 is deployed. The changes are discussed in more detail in the following sections, with a further section providing a summary of the proposed updates.
 
@@ -146,7 +147,7 @@ SLAAC: IPv6 Stateless Address Auto-configuration {{RFC4862}}
 
 # Adjustments to RFC 6724
 
-This document makes three specific changes to RFC6724: first to update the default policy table, second to change Rule 5.5 on preferring addresses in a prefix advertised by the next-hop to a MUST, and third to require that nodes MUST insert observed known-local ULA prefixes into their policy table.
+This document makes three specific changes to RFC6724: first to update the default policy table, second to change Rule 5.5 adjusts precedence of addresses in a prefix advertised by the next-hop to a requirement, and third to require nodes to insert observed known-local ULA prefixes into their policy table.
 
 ## Policy Table Update
 
@@ -229,7 +230,7 @@ The identification and insertion of known-local prefixes under fc00::/8 is curre
 
 Note that a practical limit exists on the number of RIOs and PIOs that can be placed into a single RA. Therefore, there is a practical limit to the number of known-local ULAs that can be expressed on a single network and the number of ULA prefixes that can automatically be preferred over IPv4 and GUA prefixes within the policy table. This limit is unlikely to impact most networks, especially residential and other small unmanaged networks that automatically generate ULA prefixes.
 
-Section 4 of RFC4191 says "Routers SHOULD NOT send more than 17 Route Information Options in Router Advertisements per link. This arbitrary bound is meant to reinforce that relatively few and carefully selected routes should be advertised to hosts." The exact limit will depend on other options that are used. So while this is not the practical limit discussed above, operators MUST take extra care not to cause the RA size to exceed the MTU when filling the RA with RA Options when exceeding this limit.
+Section 4 of RFC4191 says "Routers SHOULD NOT send more than 17 Route Information Options in Router Advertisements per link. This arbitrary bound is meant to reinforce that relatively few and carefully selected routes should be advertised to hosts." The exact limit will depend on other options that are used. So while this is not the practical limit discussed above, administrators MUST take extra care not to cause the RA size to exceed the MTU when filling the RA with RA Options when exceeding this limit.
 
 Note that in the case of Rule 2 above it would be expected that ULA prefixes being included in the known-local prefix
 list be compliant with Section 3 of RFC4193 (i.e., /48 in size) but the above rule is pragmatic in that it allows
@@ -349,7 +350,7 @@ On the other hand, if the GUA or ULA destination with the ULA source is preferre
 
 # Following ULA operational guidelines in RFC4193
 
-This section re-emphasizes two important operational requirements stated in {{RFC4193}} that should be followed by operators.
+This section re-emphasizes two important operational requirements stated in {{RFC4193}} that should be followed by administrators.
 
 ## Filtering ULA-source addresses at site borders
 
@@ -381,7 +382,7 @@ The procedures defined in RFC6724 do not give optimal results for all scenarios.
 
 Operational experienced has demonstrated that 3484/6724/getaddrinfo() model is fundamentally limited with regard to optimal address selection. A model that considers address pairs directly, rather than sorting on destination addresses with the best source for that address, would be preferable, but beyond the scope of this document.
 
-To simplify address selection, operators may instead look to deploy IPv6-only and/or may choose to only use GUA addresses and no ULA addresses. Other approaches to reduce the use of IPv4, e.g., through use of DHCPv4 Option 108 as defined in {{RFC8925}} as part of an "IPv6 Mostly" deployment model, also help simplify address selection for nodes.
+To simplify address selection, administrators may instead look to deploy IPv6-only and/or may choose to only use GUA addresses and no ULA addresses. Other approaches to reduce the use of IPv4, e.g., through use of DHCPv4 Option 108 as defined in {{RFC8925}} as part of an "IPv6 Mostly" deployment model, also help simplify address selection for nodes.
 
 # Acknowledgements
 
@@ -402,7 +403,7 @@ The mixed precedence for IPv6 over IPv4 from the default policy table in RF 6724
 
 The requirements of RFC4193, stated earlier in this document, should be followed for optimal behavior.
 
-Operators should be mindful of cases where communicating nodes have differing behavior for address selection, e.g., RFC3484 behavior, RFC6724, the updated RFC6724 behavior defined here, some other non-IETF-standardized behavior, or even no mechanism. There may thus be inconsistent behavior for communications initiated in each direction between two nodes. Ultimately all nodes should be made compliant to the updated specification described in this document.
+Administrators should be mindful of cases where communicating nodes have differing behavior for address selection, e.g., RFC3484 behavior, RFC6724, the updated RFC6724 behavior defined here, some other non-IETF-standardized behavior, or even no mechanism. There may thus be inconsistent behavior for communications initiated in each direction between two nodes. Ultimately all nodes should be made compliant to the updated specification described in this document.
 
 # IANA Considerations
 
