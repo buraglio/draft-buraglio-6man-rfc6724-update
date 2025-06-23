@@ -81,7 +81,7 @@ configuration to achieve intended operational outcomes.
 
 Since its publication in 2012, Default Address Selection for Internet Protocol Version 6 (IPv6) [RFC6724] has become an important mechanism by which nodes can perform address selection, deriving the most appropriate source and destination address pair to use from a candidate set by following the procedures defined in the RFC. Part of the process involves the use of a policy table, where the precedence and labels for address prefixes are listed, and for which a default policy table is defined.
 
-It was always expected that the default policy table may need to be changed based on operational experience; section 2.1 of {{RFC6724} states "It is important that implementations provide a way to change the default policies as more experience is gained" and points to the examples in Section 10 of the same document, which include Section 10.6 where a unique local address (ULA as defined in {{RFC4193}}) example is presented.
+It was always expected that the default policy table may need to be changed based on operational experience; section 2.1 of {{RFC6724}} states "It is important that implementations provide a way to change the default policies as more experience is gained" and points to the examples in Section 10 of the same document, which include Section 10.6 where a unique local address (ULA as defined in {{RFC4193}}) example is presented.
 
 This document is written on the basis of such operational experience, in particular for scenarios where ULAs are used for their intended purpose as stated in {{RFC4193}}, i.e., they are designed to be routed within a local site and by default not advertised, used or received from external locations to that site. The document defines how preference for ULAs may be elevated for appropriate, common scenarios.
 
@@ -344,7 +344,7 @@ As stated in Section 2 of {{RFC6724}}:
 
 Therefore, when an IPv4 destination is preferred over GUA or ULA destinations, IPv4 will likely succeed if IPv4 connectivity is available, and the GUA or ULA destination may only be tried if Happy Eyeballs is implemented.
 
-On the other hand, if the GUA or ULA destination with the ULA source is preferred, the ULA source will typically fail to communicate with GUA or ULA destinations that are not connected to the same local network. However, if the operational guidelines in Section 4.3 of {{RFC4193} are followed, recognizing this failure can be accelerated, and transport layer timeouts (e.g., TCP hard errors as described in section 2.1 {{RFC5461}}) can be avoided. The guidelines will cause a Destination Unreachable ICMPv6 Error to be received by the source device, signaling the next address in the list to be tried, as discussed above.
+On the other hand, if the GUA or ULA destination with the ULA source is preferred, the ULA source will typically fail to communicate with GUA or ULA destinations that are not connected to the same local network. However, if the operational guidelines in Section 4.3 of {{RFC4193}} are followed, recognizing this failure can be accelerated, and transport layer timeouts (e.g., TCP hard errors as described in section 2.1 {{RFC5461}}) can be avoided. The guidelines will cause a Destination Unreachable ICMPv6 Error to be received by the source device, signaling the next address in the list to be tried, as discussed above.
 
 # Following ULA operational guidelines in RFC4193
 
