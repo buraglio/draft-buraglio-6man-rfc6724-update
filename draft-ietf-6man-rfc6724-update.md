@@ -423,9 +423,9 @@ fc00::/7              3    13
 ::/96                 1     3
 fec0::/10             1    11 
 3ffe::/16             1    12
+~~~~~~~~~~
 
 # Summary of changes and additional text since RFC6724
-This section should be removed before publication as an RFC.
 
 * Introduced concept of known-locals and rules for their insertion/removal in the table.
 * Changed default policy table to move fc00::/7 to precedence 30, above legacy IPv4.
