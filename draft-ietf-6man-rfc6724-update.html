@@ -1,0 +1,1880 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Prioritizing known-local IPv6 ULAs through address selection policy</title>
+<meta content="Nick Buraglio" name="author">
+<meta content="Tim Chown" name="author">
+<meta content="Jeremy Duncan" name="author">
+<meta content='
+       This document updates the default address selection algorithm for Internet
+Protocol Version 6 (IPv6), originally specified in RFC 6724, based on
+accumulated operational experience. It introduces the concept of "known-local"
+Unique Local Address (ULA) prefixes within the fd00::/8 block and specifies
+that ULA-to-ULA communications using such prefixes should be preferred over
+both IPv4-to-IPv4 and GUA-to-GUA (Global Unicast Address) communications in
+local use scenarios. The document defines mechanisms for nodes to identify and
+incorporate known-local prefixes into their address selection policy tables. It
+further clarifies the unconditional requirement for implementing Rule 5.5 of
+RFC 6724 and reduces the default precedence for 6to4 addresses. These updates
+enhance the supportability of typical deployment environments, including
+automatic and unmanaged configurations, and promote consistent IPv6-over-IPv4
+precedence behavior for both ULA and GUA within local networks. The document
+acknowledges that certain atypical deployment models may require explicit
+configuration to achieve intended operational outcomes. 
+    ' name="description">
+<meta content="xml2rfc 3.29.0" name="generator">
+<meta content="Internet-Draft" name="keyword">
+<meta content="draft-ietf-6man-rfc6724-update-21" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.29.0
+    Python 3.12.11
+    ConfigArgParse 1.7
+    google-i18n-address 3.1.1
+    intervaltree 3.1.0
+    Jinja2 3.1.6
+    lxml 5.3.1
+    platformdirs 4.3.8
+    pycountry 24.6.1
+    PyYAML 6.0.2
+    requests 2.32.4
+    setuptools 80.9.0
+    wcwidth 0.2.13
+-->
+<link href="draft-ietf-6man-rfc6724-update.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  --font-title: "Sofia Sans Semi Condensed", sans-serif;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+section {
+  clear: both;
+}
+.section-number {
+  padding-right: 0.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  font-weight: 680;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+  & :is(ol, ul) {
+    margin-left: 1em;
+  }
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+  & li {
+    margin-top: 0.5em;
+  }
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  margin: 0 0 0 2em;
+  & li {
+    margin: 0;
+    & :first-child { margin-top: 0; }
+    & :last-child { margin-bottom: 0; }
+  }
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+  &.olPercent {
+    --indent: 5ch;
+    & > dt {
+      min-width: calc(var(--indent) - 2ch);
+    }
+  }
+  &.olPercent > dt {
+    float: none;
+  }
+
+  dl > dd > & {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+  }
+}
+dl:not(.dlNewline) > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+  & > :is(:first-child, .break:first-child + *) {
+    margin-top: 0;
+  }
+  & > :is(:last-child) {
+    margin-bottom: 0;
+  }
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+  caption-side: bottom;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    /* In the horizontal direction, sometimes people make over-sized figures.
+       Scrollbars for those is therefore necessary: auto adds them as necessary..
+       In the vertical direction, the line-height can combine with the font
+       asender/descender height to produce scrollbars: hidden avoids that. */
+    overflow: auto hidden;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  width: auto;
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+  &[href] {
+    color: var(--pilcrow-weak);
+    &:hover { text-decoration: none; }
+  }
+}
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+  & dt {
+    width: var(--identifier-width);
+    min-width: var(--identifier-width);
+    clear: left;
+    float: left;
+    text-align: right;
+    margin-right: 1ch;
+  }
+  & dd {
+    margin: 0;
+    margin-left: calc(1em + var(--identifier-width)) !important;
+    min-width: 5em;
+  }
+  & .authors {
+    & .author {
+      display: inline-block;
+      margin-right: 1.5em;
+    }
+    & .org {
+      font-style: italic;
+    }
+  }
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+
+  & nav {
+    & ul {
+      margin: 0 0.5em 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    & li {
+      line-height: 1.3em;
+      margin: 2px 0;
+      padding-left: 1.2em;
+      text-indent: -1.2em;
+    }
+  }
+  & a.xref {
+    white-space: normal;
+  }
+}
+
+.references {
+  & > dt {
+    text-align: right;
+    font-weight: bold;
+    min-width: 10ch;
+    margin-right: 1.5ch;
+    &:target::before {
+      content: "⇒";
+      margin: 0 10px 0 -25px;
+    }
+  }
+  & > dd {
+    margin-left: 12ch !important;
+    overflow: visible;
+    & .refInstance {
+      margin-bottom: 0.8em;
+    }
+    & .ascii {
+      margin-bottom: 0.25em;
+    }
+  }
+}
+
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  max-width: 20em;
+  margin: 1em auto 1em 0;
+
+  & .nameRole {
+    font-weight: 700;
+    margin-left: 0;
+  }
+  & .label {
+    margin: 0.5em 0;
+  }
+  & .type {
+    display: none;
+  }
+  & .alternative-contact {
+    margin: 0.5em 0 0.25em 0;
+  }
+  & .non-ascii {
+    margin: 0 0 0 2em;
+  }
+  & div.left {
+    text-align: left;
+  }
+  & div.right {
+    text-align: right;
+  }
+}
+
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+/* Comments */
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+
+@media screen {
+  #toc nav {
+    font-family: var(--font-title);
+    font-weight: 360;
+    & > ul { margin-bottom: 2em; }
+    & ul {
+      margin: 0 0 0 4px;
+      & :is(p, li) {
+        margin: 2px 0;
+      }
+    }
+  }
+  #toc a.toplink {
+    float: right;
+  }
+}
+@media not screen {
+  #toc a.toplink {
+    display: none;
+  }
+}
+
+
+/* TOC layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 1px 0 0 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+    &::before { /* css hamburger */
+      float: right;
+      position: relative;
+      width: 1em;
+      height: 1px;
+      left: -164px;
+      margin: 8px 0 0 0;
+      background: white none repeat scroll 0 0;
+      box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+      content: "";
+    }
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active {
+    opacity: 1;
+    & nav { display: block; }
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:is(:link, :focus, :hover),
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin: 2px 0.5em 0;
+  }
+}
+
+/* TOC layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+  #toc a.toplink {
+    margin: 8px 0.5em 0;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre, .vcard {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  :is(h2, h3, h4, h5, h6)+*, dd {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">Prioritizing known-local ULA in RFC 6724</td>
+<td class="right">July 2025</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Buraglio, et al.</td>
+<td class="center">Expires 5 January 2026</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">6MAN</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-ietf-6man-rfc6724-update-21</dd>
+<dt class="label-updates">Updates:</dt>
+<dd class="updates">
+<a href="https://www.rfc-editor.org/rfc/rfc6724" class="eref">6724</a> (if approved)</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2025-07-04" class="published">4 July 2025</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Standards Track</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2026-01-05">5 January 2026</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">N. Buraglio</div>
+<div class="org">Energy Sciences Network</div>
+</div>
+<div class="author">
+      <div class="author-name">T. Chown</div>
+<div class="org">Jisc</div>
+</div>
+<div class="author">
+      <div class="author-name">J. Duncan</div>
+<div class="org">Tachyon Dynamics</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Prioritizing known-local IPv6 ULAs through address selection policy</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document updates the default address selection algorithm for Internet
+Protocol Version 6 (IPv6), originally specified in RFC 6724, based on
+accumulated operational experience. It introduces the concept of "known-local"
+Unique Local Address (ULA) prefixes within the fd00::/8 block and specifies
+that ULA-to-ULA communications using such prefixes should be preferred over
+both IPv4-to-IPv4 and GUA-to-GUA (Global Unicast Address) communications in
+local use scenarios. The document defines mechanisms for nodes to identify and
+incorporate known-local prefixes into their address selection policy tables. It
+further clarifies the unconditional requirement for implementing Rule 5.5 of
+RFC 6724 and reduces the default precedence for 6to4 addresses. These updates
+enhance the supportability of typical deployment environments, including
+automatic and unmanaged configurations, and promote consistent IPv6-over-IPv4
+precedence behavior for both ULA and GUA within local networks. The document
+acknowledges that certain atypical deployment models may require explicit
+configuration to achieve intended operational outcomes.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 5 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2025 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-operational-issues-regardin" class="internal xref">Operational Issues Regarding Precedence for IPv4 addresses over ULAs</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
+                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-precedence-of-6to4-addresse" class="internal xref">Precedence of 6to4 addresses</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-terminology" class="internal xref">Terminology</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-adjustments-to-rfc-6724" class="internal xref">Adjustments to RFC 6724</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-policy-table-update" class="internal xref">Policy Table Update</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-rule-55" class="internal xref">Rule 5.5</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-automatic-insertion-of-know" class="internal xref">Automatic insertion of known-local ULA prefixes into the policy table</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-configuration-of-the-defaul" class="internal xref">Configuration of the default policy table</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-intended-behavior" class="internal xref">Intended behavior</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-gua-gua-preferred-over-ipv4" class="internal xref">GUA-GUA preferred over IPv4-IPv4</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-gua-gua-preferred-over-ula-" class="internal xref">GUA-GUA preferred over ULA-ULA</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-known-local-ula-known-local" class="internal xref">Known-local ULA - Known-local ULA preferred over GUA-GUA</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
+                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-known-local-ula-ula-preferr" class="internal xref">Known-local ULA-ULA preferred over IPv4-IPv4</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.5">
+                <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="auto internal xref">5.5</a>.  <a href="#name-ipv4-ipv4-preferred-over-ul" class="internal xref">IPv4-IPv4 preferred over ULA-GUA</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-discussion-of-ula-source-wi" class="internal xref">Discussion of ULA source with GUA or remote ULA destination</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-the-ula-label-and-its-prece" class="internal xref">The ULA Label and its Precedence</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-happy-eyeballs" class="internal xref">Happy Eyeballs</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.3">
+                <p id="section-toc.1-1.6.2.3.1"><a href="#section-6.3" class="auto internal xref">6.3</a>.  <a href="#name-try-the-next-address" class="internal xref">Try the Next Address</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-following-ula-operational-g" class="internal xref">Following ULA operational guidelines in RFC4193</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-filtering-ula-source-addres" class="internal xref">Filtering ULA-source addresses at site borders</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-avoid-using-ula-addresses-i" class="internal xref">Avoid using ULA addresses in the global DNS</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-the-practicalities-of-imple" class="internal xref">The practicalities of implementing address selection support</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-limitations-of-rfc6724" class="internal xref">Limitations of RFC6724</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#section-10" class="auto internal xref">10</a>. <a href="#name-acknowledgements" class="internal xref">Acknowledgements</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#section-11" class="auto internal xref">11</a>. <a href="#name-implementation-status" class="internal xref">Implementation Status</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#section-12" class="auto internal xref">12</a>. <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#section-13" class="auto internal xref">13</a>. <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#section-14" class="auto internal xref">14</a>. <a href="#name-appendix" class="internal xref">Appendix</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.15">
+            <p id="section-toc.1-1.15.1"><a href="#section-15" class="auto internal xref">15</a>. <a href="#name-summary-of-changes-and-addi" class="internal xref">Summary of changes and additional text since RFC6724</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16">
+            <p id="section-toc.1-1.16.1"><a href="#section-16" class="auto internal xref">16</a>. <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.1">
+                <p id="section-toc.1-1.16.2.1.1"><a href="#section-16.1" class="auto internal xref">16.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.16.2.2">
+                <p id="section-toc.1-1.16.2.2.1"><a href="#section-16.2" class="auto internal xref">16.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.17">
+            <p id="section-toc.1-1.17.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">Since its publication in 2012, Default Address Selection for Internet Protocol Version 6 (IPv6) <span>[<a href="#RFC6724" class="cite xref">RFC6724</a>]</span> has become an important mechanism by which nodes can perform address selection, deriving the most appropriate source and destination address pair to use from a candidate set by following the procedures defined in the RFC. Part of the process involves the use of a policy table, where the precedence and labels for address prefixes are listed, and for which a default policy table is defined.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">It was always expected that the default policy table may need to be changed based on operational experience; section 2.1 of <span>[<a href="#RFC6724" class="cite xref">RFC6724</a>]</span> states "It is important that implementations provide a way to change the default policies as more experience is gained" and points to the examples in Section 10 of the same document, which include Section 10.6 where a unique local address (ULA as defined in <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span>) example is presented.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">This document is written on the basis of such operational experience, in particular for scenarios where ULAs are used for their intended purpose as stated in <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span>, i.e., they are designed to be routed within a local site and by default not advertised, used or received from external locations to that site. The document defines how preference for ULAs may be elevated for appropriate, common scenarios.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">To support the preference to use ULA address pairs over both IPv4 and GUA (Global Unicast Address as defined in <span>[<a href="#RFC3587" class="cite xref">RFC3587</a>]</span>) address pairs for local intra-site scenarios, the concept of a "known-local" ULA address is introduced. This document describes the means for nodes to determine ULA prefixes that are known to be local to the site they are operating in and to insert those prefixes into their policy table with a label that differs from general ULA prefixes. This capability allows nodes to prefer ULA-ULA communication locally, but still use GUA-GUA address pairs for external communication, and importantly avoid selecting a ULA source to talk to a non-local ULA destination.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">This document also reinforces the text in Section 5 of <span>[<a href="#RFC6724" class="cite xref">RFC6724</a>]</span> to require support for Rule 5.5.<a href="#section-1-5" class="pilcrow">¶</a></p>
+<p id="section-1-6">Section 3.1 of <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span> defines ULAs within fc00::/7, where the L bit, as detailed in Section 3.1, is set to 1 for locally assigned (generated) prefixes, with L=0 as yet undefined. The use of known-locals as described in this document therefore applies to the currently used ULA prefixes under fd00::/8, where the prefixes conform to the definition in Section 3.1 of <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span>.<a href="#section-1-6" class="pilcrow">¶</a></p>
+<p id="section-1-7">The overall goal of this update is to improve behavior for common scenarios, and to assist in the phasing out of use of IPv4, while noting that some specific scenarios may still require explicit configuration.<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-8">An IPv6 deployment, whether enterprise, residential or other, may use combinations of IPv6 GUAs, IPv6 ULAs, IPv4 global addresses, IPv4 RFC1918 addresses, and may or may not use some form of NAT. However, this document makes no comment or recommendation on how ULAs are used, or on the use of NAT in an IPv6 network.<a href="#section-1-8" class="pilcrow">¶</a></p>
+<div id="operational-issues-regarding-precedence-for-ipv4-addresses-over-ulas">
+<section id="section-1.1">
+        <h3 id="name-operational-issues-regardin">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-operational-issues-regardin" class="section-name selfRef">Operational Issues Regarding Precedence for IPv4 addresses over ULAs</a>
+        </h3>
+<p id="section-1.1-1">With multi-addressing being the norm for IPv6, more so where nodes are dual-stack, the ability for a node to pick an appropriate address pair for communication is very important.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<p id="section-1.1-2">Where getaddrinfo() as referenced in <span>[<a href="#RFC3493" class="cite xref">RFC3493</a>]</span>, or a comparable API is used, the sorting behavior should take into account both
+the source addresses of the requesting node as well as the destination addresses returned, and sort the candidate address pairs following the procedures defined in RFC6724.<a href="#section-1.1-2" class="pilcrow">¶</a></p>
+<p id="section-1.1-3">The current default policy table leads to precedence for use of IPv6 GUAs over IPv4 global addresses, which is widely considered preferential behavior to support greater use of IPv6 in dual-stack environments. This helps in allowing sites to phase out IPv4 as its evidenced use becomes ever lower.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
+<p id="section-1.1-4">However, there are two issues with precedence, or rather non-precedence, for ULAs as originally defined in RFC6724.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+<p id="section-1.1-5">First, the aforementioned default policy table places IPv6 ULAs below all IPv4 addresses, including <span>[<a href="#RFC1918" class="cite xref">RFC1918</a>]</span> addresses, such that IPv4-IPv4 address pairs are favored over ULA-ULA address pairs. Given the IPv6 GUA preference, this could create difficulties with respect to planning, operational, and security implications for environments where ULA addresses are used in IPv4/IPv6 dual-stack network scenarios. The expected default prioritization of known-local IPv6 traffic over IPv4 by default, as happens with IPv6 GUA addresses, does not happen for ULAs.<a href="#section-1.1-5" class="pilcrow">¶</a></p>
+<p id="section-1.1-6">As a result, the use of ULAs is not a viable option for dual-stack networking transition planning, large scale network modeling, network lab environments or other modes of large scale networking that run both IPv4 and IPv6 concurrently with the expectation that IPv6 will be preferred by default. Local preference of ULAs over IPv4 is thus important to assist administrators in phasing out IPv4 from dual-stack environments and is an important enabler for sites seeking to move from dual-stack to IPv6-only networking.<a href="#section-1.1-6" class="pilcrow">¶</a></p>
+<p id="section-1.1-7">Additionally, an issue exists in the scenario where nodes in a dual-stack site are addressed from both ULA and GUA prefixes, RFC6724 will see GUA-GUA address pairs chosen over ULA-ULA. One goal of ULA addresses was to allow local communications to be independent of the availability of external connectivity and addresses, such that persistent ULAs can be used even when the global prefix made available to a site is withdrawn or changes.<a href="#section-1.1-7" class="pilcrow">¶</a></p>
+<p id="section-1.1-8">This document therefore introduces two changes to RFC6724 to support a node implementing elevated or differential precedence for known-local ULAs, i.e., ULAs within a common local network, over both IPv4 and IPv6 GUAs.<a href="#section-1.1-8" class="pilcrow">¶</a></p>
+<p id="section-1.1-9">The first change is an update to the default policy table to elevate the precedence for ULAs prefixes such that ULAs, like GUAs, carry a higher precedence than all IPv4 addresses, making IPv6 precedence over IPv4 consistent for both ULAs and GUAs.<a href="#section-1.1-9" class="pilcrow">¶</a></p>
+<p id="section-1.1-10">The second change is the introduction of the concept of known-local ULAs.  RFC6724 includes a method by which nodes may provide more fine-grained support for further elevating the preference for specific ULA prefixes, while leaving other general ULA prefixes at
+the precedence described in the previous paragraph.  This document elevates the requirement for specific ULA prefixes to be inserted into the policy table to be a requirement, but only for observed prefixes that are known to be local, i.e., known-local ULAs.<a href="#section-1.1-10" class="pilcrow">¶</a></p>
+<p id="section-1.1-11">These changes aim to improve the default handling of address selection for common cases, and unmanaged / automatic scenarios rather than those where DHCPv6 is deployed. The changes are discussed in more detail in the following sections, with a further section providing a summary of the proposed updates.<a href="#section-1.1-11" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="precedence-of-6to4-addresses">
+<section id="section-1.2">
+        <h3 id="name-precedence-of-6to4-addresse">
+<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-precedence-of-6to4-addresse" class="section-name selfRef">Precedence of 6to4 addresses</a>
+        </h3>
+<p id="section-1.2-1">The anycast prefix for 6to4 relays was formally deprecated by <span>[<a href="#RFC7526" class="cite xref">RFC7526</a>]</span> in 2015, and since that time the use of 6to4 addresses has further declined, with very little evidence of its use on the public Internet. Note that RFC7526 does not deprecate the 6to4 IPv6 prefix 2002::/16, it only deprecates the 6to4 Relay IPv4 prefix.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<p id="section-1.2-2">This document therefore demotes the precedence of the 6to4 prefix in the policy table to the same precedence as carried by the Teredo prefix defined in <span>[<a href="#RFC4380" class="cite xref">RFC4380</a>]</span>. Leaving this entry in the default table will cause no problems and will help if any deployments still exist, and ensure 6to4 prefixes are differentiated from general GUAs.<a href="#section-1.2-2" class="pilcrow">¶</a></p>
+<p id="section-1.2-3">The discussion regarding the adding of 6to4 site prefixes in section 10.7 of <span>[<a href="#RFC6724" class="cite xref">RFC6724</a>]</span> remains valid.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="terminology">
+<section id="section-2">
+      <h2 id="name-terminology">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-terminology" class="section-name selfRef">Terminology</a>
+      </h2>
+<p id="section-2-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-2">GUA: Global Unicast Addresses as defined in <span>[<a href="#RFC3587" class="cite xref">RFC3587</a>]</span><a href="#section-2-2" class="pilcrow">¶</a></p>
+<p id="section-2-3">ULA: Unique Local Addresses as defined in <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span><a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">Known-local ULA: A ULA prefix that an individual organization/site has determined to be local to a given node/network/administrative domain<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-5">RA: IPv6 Router Advertisement as defined in <span>[<a href="#RFC4861" class="cite xref">RFC4861</a>]</span><a href="#section-2-5" class="pilcrow">¶</a></p>
+<p id="section-2-6">PIO: IPv6 Prefix Information Option as defined in <span>[<a href="#RFC4861" class="cite xref">RFC4861</a>]</span><a href="#section-2-6" class="pilcrow">¶</a></p>
+<p id="section-2-7">SLAAC: IPv6 Stateless Address Auto-configuration <span>[<a href="#RFC4862" class="cite xref">RFC4862</a>]</span><a href="#section-2-7" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="adjustments-to-rfc-6724">
+<section id="section-3">
+      <h2 id="name-adjustments-to-rfc-6724">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-adjustments-to-rfc-6724" class="section-name selfRef">Adjustments to RFC 6724</a>
+      </h2>
+<p id="section-3-1">This document makes three specific changes to RFC6724: first to update the default policy table, second to change Rule 5.5 adjusts precedence of addresses in a prefix advertised by the next-hop to a requirement, and third to require nodes to insert observed known-local ULA prefixes into their policy table.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<div id="policy-table-update">
+<section id="section-3.1">
+        <h3 id="name-policy-table-update">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-policy-table-update" class="section-name selfRef">Policy Table Update</a>
+        </h3>
+<p id="section-3.1-1">This update alters the default policy table listed in Rule 2.1 of RFC 6724.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-2">It should be noted the order of rows in the policy table is of no consequence and only the precedence value is relevant.<a href="#section-3.1-2" class="pilcrow">¶</a></p>
+<p id="section-3.1-3">The table below reflects the updated precedence table:<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-3.1-4">
+<pre>
+
+Prefix        Precedence Label
+::1/128               50     0
+$known_local/48       45    14 (**)
+::/0                  40     1
+fc00::/7              30    13 (*)
+::ffff:0:0/96         20     4 (*)
+2002::/16              5     2 (*)
+2001::/32              5     5
+::/96                  1     3
+fec0::/10              1    11
+3ffe::/16              1    12
+
+(*) value(s) changed in update
+(**) $known_local = the ULA Known-Local /48 IPv6 prefix(es) (if any)
+with precedence and labels per the rules in Sec 5.3
+
+</pre><a href="#section-3.1-4" class="pilcrow">¶</a>
+</div>
+<p id="section-3.1-5">The update moves 2002::/16 to de-preference its status in line with <span>[<a href="#RFC7526" class="cite xref">RFC7526</a>]</span> and moves the precedence of fc00::/7 above legacy IPv4, with ::ffff:0:0/96 now set to precedence 20.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="rule-55">
+<section id="section-3.2">
+        <h3 id="name-rule-55">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-rule-55" class="section-name selfRef">Rule 5.5</a>
+        </h3>
+<p id="section-3.2-1">The text in RFC6724 states that the Rules <span class="bcp14">MUST</span> be followed in order, but also includes a discussion note under Rule 5.5 that says that an IPv6 implementation is not required to remember which next-hops advertised which prefixes and thus that Rule 5.5 is only
+applicable to implementations that track this information.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-2">This document removes that exception and elevates the requirement to prefer addresses in a prefix advertised by a next-hop router to a requirement for all nodes.<a href="#section-3.2-2" class="pilcrow">¶</a></p>
+<p id="section-3.2-3">This change means that an IPv6 implementation will need to remember which next-hops advertised which prefixes
+<span>[<a href="#RFC8028" class="cite xref">RFC8028</a>]</span>, despite the conceptual models of IPv6 hosts in Section 5 of <span>[<a href="#RFC4861" class="cite xref">RFC4861</a>]</span> and Section 3 of <span>[<a href="#RFC4191" class="cite xref">RFC4191</a>]</span>
+having no such requirement.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="automatic-insertion-of-known-local-ula-prefixes-into-the-policy-table">
+<section id="section-3.3">
+        <h3 id="name-automatic-insertion-of-know">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-automatic-insertion-of-know" class="section-name selfRef">Automatic insertion of known-local ULA prefixes into the policy table</a>
+        </h3>
+<p id="section-3.3-1">Section 2.1 of <span>[<a href="#RFC6724" class="cite xref">RFC6724</a>]</span> states that "an implementation <span class="bcp14">MAY</span> automatically add additional site-specific rows to the default table based on its configured addresses, such as for Unique Local Addresses (ULAs)", but it provides no detail on how such behavior might be implemented.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<p id="section-3.3-2">If a node can determine which ULA prefix(es) are known to be local, it can provide differential treatment for those over general, non-known-local ULAs, and insert these into the policy table at a higher precedence than GUAs while keeping all general ULA prefixes to a lower precedence.<a href="#section-3.3-2" class="pilcrow">¶</a></p>
+<p id="section-3.3-3">This document thus elevates the <span class="bcp14">MAY</span> requirement above for insertion to a <span class="bcp14">MUST</span> for the specific case of known-local ULAs.<a href="#section-3.3-3" class="pilcrow">¶</a></p>
+<p id="section-3.3-4">These known-local ULA prefixes are inferred from ULA addresses assigned to interfaces or learned from Prefix Information Options (PIOs) in Router Advertisements (RAs) <span>[<a href="#RFC4861" class="cite xref">RFC4861</a>]</span> received on any interface regardless of how the PIO flags are set. Further, they are learned from Route Information Options (RIOs) in RAs received on any interface by Type C hosts that process RIOs, as defined in <span>[<a href="#RFC4191" class="cite xref">RFC4191</a>]</span>.<a href="#section-3.3-4" class="pilcrow">¶</a></p>
+<p id="section-3.3-5">Section 3.1 of <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span> only defines ULA prefixes where the L-bit is set to 1, i.e., prefixes under fd00::/8 where the prefix is locally assigned or generated.<a href="#section-3.3-5" class="pilcrow">¶</a></p>
+<p id="section-3.3-6">The following rules define how the learnt known-local ULA prefixes under fd00::/8 are inserted into the address selection policy table for a node, through a conceptual list of known-local prefixes.<a href="#section-3.3-6" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-3.3-7">
+<li id="section-3.3-7.1">
+            <p id="section-3.3-7.1.1">Any RIO or PIO that is delivered in an RA in which the "SNAC Router" RA header flag bit <span>[<a href="#SNACBIT" class="cite xref">SNACBIT</a>]</span> is set <span class="bcp14">MUST</span> be ignored when considering the following rules.<a href="#section-3.3-7.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.3-7.2">
+            <p id="section-3.3-7.2.1">RIOs from within fd00::/8 are considered the preferred information source for determining known-local ULAs and should override other conflicting information or assumptions from other sources, including PIOs.<a href="#section-3.3-7.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.3-7.3">
+            <p id="section-3.3-7.3.1">RIOs within fd00::/8 that are of length /40 or longer <span class="bcp14">MUST</span> be added to the known-local ULA list. RIOs for shorter prefixes <span class="bcp14">MUST NOT</span> be used to insert known-local ULA entries in the address selection policy table<a href="#section-3.3-7.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.3-7.4">
+            <p id="section-3.3-7.4.1">PIOs received within fd00::/8 that are not already in the nodes known-local ULA list <span class="bcp14">MUST</span> be added to the list with an assumed prefix length of /48, regardless of how the PIO flags are set.<a href="#section-3.3-7.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.3-7.5">
+            <p id="section-3.3-7.5.1">ULA interface addresses from within fd00::/8, particularly ones not created by SLAAC, and not already covered by the known-local ULA list <span class="bcp14">MUST</span> be added to the list with an assumed prefix length of /48. However, as with rule 1, if the ULA interface address was generated on the basis of a PIO that has only been seen in RAs in which the SNAC router flag bit is set, this ULA prefix <span class="bcp14">MUST NOT</span> be used as described in this rule (rule 5). This prevents potential use of a non-routable source address when communicating to a known-local ULA destination address that is not on the local link, as SNAC-generated ULAs can only work on a single link, and the only reason to ever choose them in source address selection is that the only choice for a destination address is the longest prefix match.<a href="#section-3.3-7.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.3-7.6">
+            <p id="section-3.3-7.6.1">When inserting known-local ULA entries into the policy table, they <span class="bcp14">MUST</span> have a label of 14 (rather than the default ULA label of 13) and a precedence of 45.<a href="#section-3.3-7.6.1" class="pilcrow">¶</a></p>
+</li>
+          <li id="section-3.3-7.7">
+            <p id="section-3.3-7.7.1">Entries <span class="bcp14">MUST</span> be removed from the known-local ULA list and the Policy Table when the announced RIOs or PIOs are deprecated, or an interface address is removed, and there is no covering RIO or PIO.<a href="#section-3.3-7.7.1" class="pilcrow">¶</a></p>
+</li>
+        </ol>
+<p id="section-3.3-8">When support is added for the insertion of known-local ULA prefixes into the current policy table it <span class="bcp14">MUST</span> default to on, but a mechanism <span class="bcp14">SHOULD</span> be supported to administratively toggle the behavior off and on.<a href="#section-3.3-8" class="pilcrow">¶</a></p>
+<p id="section-3.3-9">Tools that display a node's current policy table <span class="bcp14">MUST</span> show all currently inserted known-local ULA prefixes.<a href="#section-3.3-9" class="pilcrow">¶</a></p>
+<p id="section-3.3-10">The identification and insertion of known-local prefixes under fc00::/8 is currently not defined.<a href="#section-3.3-10" class="pilcrow">¶</a></p>
+<p id="section-3.3-11">Note that a practical limit exists on the number of RIOs and PIOs that can be placed into a single RA. Therefore, there is a practical limit to the number of known-local ULAs that can be expressed on a single network and the number of ULA prefixes that can automatically be preferred over IPv4 and GUA prefixes within the policy table. This limit is unlikely to impact most networks, especially residential and other small unmanaged networks that automatically generate ULA prefixes.<a href="#section-3.3-11" class="pilcrow">¶</a></p>
+<p id="section-3.3-12">Section 4 of <span>[<a href="#RFC4191" class="cite xref">RFC4191</a>]</span> says "Routers <span class="bcp14">SHOULD NOT</span> send more than 17 Route Information Options in Router Advertisements per link. This arbitrary bound is meant to reinforce that relatively few and carefully selected routes should be advertised to hosts." The exact limit will depend on other options that are used. So while this is not the practical limit discussed above, administrators should take extra care not to cause the RA size to exceed the MTU when filling the RA with RA Options when exceeding this limit.<a href="#section-3.3-12" class="pilcrow">¶</a></p>
+<p id="section-3.3-13">Note that in the case of Rule 2 above it would be expected that ULA prefixes being included in the known-local prefix
+list be compliant with Section 3 of <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span> (i.e., /48 in size) but the above rule is pragmatic in that it allows
+the use of ULA prefixes from /48 to /40 in length.
+Most networks use ("are expected to use") /48 prefixes as per
+RFC4193. However, it is possible that in some circumstances a
+larger managed enterprise may wish to use a shorter prefix (e.g., to simplify management, filtering
+rules, etc, and to overcome the issue with the number of RIOs an RA
+can carry as described in the above paragraph). However, such
+non-compliant use of ULAs may be problematic in other ways, e.g., carrying an increased risk of collision with other
+ULA prefixes, because shorter prefixes have a lower chance to be globally unique.<a href="#section-3.3-13" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="configuration-of-the-default-policy-table">
+<section id="section-4">
+      <h2 id="name-configuration-of-the-defaul">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-configuration-of-the-defaul" class="section-name selfRef">Configuration of the default policy table</a>
+      </h2>
+<p id="section-4-1">As stated in Section 2.1 of <span>[<a href="#RFC6724" class="cite xref">RFC6724</a>]</span> "IPv6 implementations <span class="bcp14">SHOULD</span> support configurable address selection via a mechanism at least as powerful as the policy tables defined here".<a href="#section-4-1" class="pilcrow">¶</a></p>
+<p id="section-4-2">Based on operational experience to date, it is important that node policy tables can be changed once deployed to support future emerging use cases. This update thus re-states the importance of such configurability.<a href="#section-4-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="intended-behavior">
+<section id="section-5">
+      <h2 id="name-intended-behavior">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-intended-behavior" class="section-name selfRef">Intended behavior</a>
+      </h2>
+<p id="section-5-1">In this section we review the intended default behavior after this update is applied.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<div id="gua-gua-preferred-over-ipv4-ipv4">
+<section id="section-5.1">
+        <h3 id="name-gua-gua-preferred-over-ipv4">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-gua-gua-preferred-over-ipv4" class="section-name selfRef">GUA-GUA preferred over IPv4-IPv4</a>
+        </h3>
+<p id="section-5.1-1">This is the current behavior, and remains unaltered. The rationale is to promote use of IPv6 GUAs in dual-stack environments.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="gua-gua-preferred-over-ula-ula">
+<section id="section-5.2">
+        <h3 id="name-gua-gua-preferred-over-ula-">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-gua-gua-preferred-over-ula-" class="section-name selfRef">GUA-GUA preferred over ULA-ULA</a>
+        </h3>
+<p id="section-5.2-1">This is the current behavior, and remains unaltered for the general case.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">However, where a ULA prefix is determined to be local, and added as a known-local ULA prefix to a node's address selection policy table, communications to addresses in other known-local ULA prefixes will prefer ULA-ULA address pairs to GUA-GUA (matching label, higher precedence).<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="known-local-ula-known-local-ula-preferred-over-gua-gua">
+<section id="section-5.3">
+        <h3 id="name-known-local-ula-known-local">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-known-local-ula-known-local" class="section-name selfRef">Known-local ULA - Known-local ULA preferred over GUA-GUA</a>
+        </h3>
+<p id="section-5.3-1">As described in the previous case, this document elevates precedence for use of ULAs over GUAs in cases where the ULA prefix(es) in use can be determined to be local to a site or organization.<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<p id="section-5.3-2">By only adapting this behavior for known-local ULAs, a node will not select a ULA source to talk to a non-local ULA destination and will instead correctly use GUA-GUA.<a href="#section-5.3-2" class="pilcrow">¶</a></p>
+<p id="section-5.3-3">Nodes not yet implementing this RFC will continue to use GUA-GUA over ULA-ULA for all cases.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+<p id="section-5.3-4">As an example, consider a site that uses prefixes ULA1::/48, ULA2::/48 and GUA1::/48.<a href="#section-5.3-4" class="pilcrow">¶</a></p>
+<p id="section-5.3-5">Host A has address ULA1::1 and GUA1:1::1
+Host B has address ULA2::1 and GUA1:2::1<a href="#section-5.3-5" class="pilcrow">¶</a></p>
+<p id="section-5.3-6">Both ULA prefixes have been determined to be known-local through RIOs.
+Perhaps ULA2 is reachable within the site, but its prefix is not in direct use at host A.<a href="#section-5.3-6" class="pilcrow">¶</a></p>
+<p id="section-5.3-7">If host A sends to host B the candidate pairs are ULA1::1 - ULA2::1 and GUA1:1::1 - GUA1:2::1.<a href="#section-5.3-7" class="pilcrow">¶</a></p>
+<p id="section-5.3-8">In this case ULA1::1 - ULA2::1 wins because of matching labels (both 14) and higher precedence than GUA (45 vs 40).<a href="#section-5.3-8" class="pilcrow">¶</a></p>
+<p id="section-5.3-9">If host A were to send to a host C with addresses ULA3::1 (where ULA3::/48 has not been learned to be a known-local prefix) and GUA2:1::1, host A would use the GUA address pair for the communication as the GUAs have matching labels (both 1) where the known-local ULA and general ULA do not (14 and 13 respectively).<a href="#section-5.3-9" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="known-local-ula-ula-preferred-over-ipv4-ipv4">
+<section id="section-5.4">
+        <h3 id="name-known-local-ula-ula-preferr">
+<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-known-local-ula-ula-preferr" class="section-name selfRef">Known-local ULA-ULA preferred over IPv4-IPv4</a>
+        </h3>
+<p id="section-5.4-1">This update changes previous behavior for this case. RFC6724 as originally defined would lead to IPv4 being preferred over ULAs, which is contrary to the spirit of the IPv6 GUA precedence over IPv4, and to the goal of removing evidenced use of IPv4 in a dual-stack site before transitioning to IPv6-only.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
+<p id="section-5.4-2">This document elevates the precedence of known-local ULAs above IPv4, so known-local ULA-ULA address pairs will be chosen over IPv4-IPv4 pairs (matching label, higher precedence).<a href="#section-5.4-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="ipv4-ipv4-preferred-over-ula-gua">
+<section id="section-5.5">
+        <h3 id="name-ipv4-ipv4-preferred-over-ul">
+<a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-ipv4-ipv4-preferred-over-ul" class="section-name selfRef">IPv4-IPv4 preferred over ULA-GUA</a>
+        </h3>
+<p id="section-5.5-1">An IPv6 ULA address will only be preferred over an IPv4 address if both IPv6 ULA source and destination addresses are available. With Rule 5 of Section 6 of <span>[<a href="#RFC6724" class="cite xref">RFC6724</a>]</span> and the ULA-specific label added in <span>[<a href="#RFC6724" class="cite xref">RFC6724</a>]</span> (which was not present in <span>[<a href="#RFC3484" class="cite xref">RFC3484</a>]</span>) an IPv4 source and destination will be preferred over an IPv6 ULA source and an IPv6 GUA destination address, even though generally known-local IPv6 ULA addresses are preferred over IPv4 in the policy table as proposed in this update. The IPv4 matching label trumps ULA-GUA.<a href="#section-5.5-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="discussion-of-ula-source-with-gua-or-remote-ula-destination">
+<section id="section-6">
+      <h2 id="name-discussion-of-ula-source-wi">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-discussion-of-ula-source-wi" class="section-name selfRef">Discussion of ULA source with GUA or remote ULA destination</a>
+      </h2>
+<p id="section-6-1">In this section we present a discussion on the scenarios where a ULA source may be communicating with a GUA or ULA destination.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">A potential problem exists when a ULA source attempts to communicate with GUA or remote ULA destinations. In these scenarios, the ULA source as stated earlier is by default intended for communication only with the local network, meaning an individual site, several sites that are part of the same organization, or multiple sites across cooperating organizations, as detailed in <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span>. As a result, most GUA and ULA destinations are not attached to the same local network as the ULA source and are, therefore, not reachable from the ULA source.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-3">Scenario 1: ULA source and GUA destination<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-4">When only a ULA source is available for communication with GUA destinations, this generally implies no connectivity to the IPv6 Internet is available. Otherwise, a GUA source would have been made available and selected for use with GUA destinations. As a result, the ULA source will typically fail when it attempts to communicate with most GUA destinations. However, corner cases exist where the ULA source will not fail, such as when GUA destinations are attached to the same local network as the ULA source.<a href="#section-6-4" class="pilcrow">¶</a></p>
+<p id="section-6-5">Scenario 2: ULA source and remote ULA destination<a href="#section-6-5" class="pilcrow">¶</a></p>
+<p id="section-6-6">Receiving a DNS response for a ULA destination that is not attached to the local network is considered a misconfiguration. This contradicts the operational guidelines provided in Section 4.4 of <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span>. Nevertheless, this can occur, and the ULA source will typically fail when it attempts to communicate with ULA destinations that are not attached to the same local network as the ULA source. This case provides a rationale for implementing support for known-local ULA prefix insertion in the policy table, such that differential behavior can be applied for known-local versus general ULA prefixes.<a href="#section-6-6" class="pilcrow">¶</a></p>
+<p id="section-6-7">The remainder of this section discusses several complementary mechanisms involved with these scenarios.<a href="#section-6-7" class="pilcrow">¶</a></p>
+<div id="the-ula-label-and-its-precedence">
+<section id="section-6.1">
+        <h3 id="name-the-ula-label-and-its-prece">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-the-ula-label-and-its-prece" class="section-name selfRef">The ULA Label and its Precedence</a>
+        </h3>
+<p id="section-6.1-1"><span>[<a href="#RFC6724" class="cite xref">RFC6724</a>]</span> added (in obsoleting <span>[<a href="#RFC3484" class="cite xref">RFC3484</a>]</span>) a separate label for ULAs (the whole range, under fc00::/7), whose default precedence is raised by this update. This separate label interacts with Rule 5 of Section 6 of <span>[<a href="#RFC6724" class="cite xref">RFC6724</a>]</span>, which says:<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-6.1-2">
+<pre>
+Rule 5: Prefer matching label.
+
+If Label(Source(DA)) = Label(DA) and Label(Source(DB)) &lt;&gt; Label(DB),
+then prefer DA.
+
+Similarly, if Label(Source(DA)) &lt;&gt; Label(DA) and Label(Source(DB)) =
+Label(DB), then prefer DB.
+</pre><a href="#section-6.1-2" class="pilcrow">¶</a>
+</div>
+<p id="section-6.1-3">In the first scenario, the ULA source label, whether known-local or not, will not match the GUA destination label. Therefore, an IPv4 destination, if available, will be preferred over a GUA destination with a ULA source, even though the GUA destination has higher precedence than the IPv4 destination in the policy table. This means the IPv4 destination will be moved up in the list of destinations over the GUA destination with the ULA source.<a href="#section-6.1-3" class="pilcrow">¶</a></p>
+<p id="section-6.1-4">If the ULA (fc00::/7) label is removed from the policy table, a GUA destination with a ULA source will be preferred over an IPv4 destination, as GUA and ULA will be part of the same label (for ::/0).<a href="#section-6.1-4" class="pilcrow">¶</a></p>
+<p id="section-6.1-5">In the second scenario, if the ULA source has been recognized as being within a known-local prefix that has been inserted into the address selection policy table, then the known-local ULA source and general ULA destination will have different labels, and therefore IPv4 communication will be preferred.<a href="#section-6.1-5" class="pilcrow">¶</a></p>
+<p id="section-6.1-6">If the ULA source has not been recognized as known-local, e.g., if the insertion of known-local prefixes into the policy table has been administratively disabled, its general ULA label will match the general ULA destination label and therefore, whether part of the local network or not, the ULA destination will be preferred over an IPv4 destination.<a href="#section-6.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="happy-eyeballs">
+<section id="section-6.2">
+        <h3 id="name-happy-eyeballs">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-happy-eyeballs" class="section-name selfRef">Happy Eyeballs</a>
+        </h3>
+<p id="section-6.2-1">Regardless of the precedence resulting from the above discussion, Happy Eyeballs version 1 <span>[<a href="#RFC6555" class="cite xref">RFC6555</a>]</span> or version 2 <span>[<a href="#RFC8305" class="cite xref">RFC8305</a>]</span>, if implemented, will try both the GUA or ULA destination with the ULA source and the IPv4 destination and source pairings.
+The ULA source will typically fail to communicate with most GUA or remote ULA destinations, and IPv4 will be preferred if IPv4 connectivity is available unless the GUA or ULA destinations are attached to the same local network as the ULA source.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="try-the-next-address">
+<section id="section-6.3">
+        <h3 id="name-try-the-next-address">
+<a href="#section-6.3" class="section-number selfRef">6.3. </a><a href="#name-try-the-next-address" class="section-name selfRef">Try the Next Address</a>
+        </h3>
+<p id="section-6.3-1">As stated in Section 2 of <span>[<a href="#RFC6724" class="cite xref">RFC6724</a>]</span>:<a href="#section-6.3-1" class="pilcrow">¶</a></p>
+<p id="section-6.3-2">"Well-behaved applications <span class="bcp14">SHOULD NOT</span> simply use the first address returned from an API such as getaddrinfo() and then give up if it fails. For many applications, it is appropriate to iterate through the list of addresses returned from getaddrinfo() until a working address is found. For other applications, it might be appropriate to try multiple addresses in parallel (e.g., with some small delay in between) and use the first one to succeed."<a href="#section-6.3-2" class="pilcrow">¶</a></p>
+<p id="section-6.3-3">Therefore, when an IPv4 destination is preferred over GUA or ULA destinations, IPv4 will likely succeed if IPv4 connectivity is available, and the GUA or ULA destination may only be tried if Happy Eyeballs is implemented.<a href="#section-6.3-3" class="pilcrow">¶</a></p>
+<p id="section-6.3-4">On the other hand, if the GUA or ULA destination with the ULA source is preferred, the ULA source will typically fail to communicate with GUA or ULA destinations that are not connected to the same local network. However, if the operational guidelines in Section 4.3 of <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span> are followed, recognizing this failure can be accelerated, and transport layer timeouts (e.g., TCP hard errors as described in section 2.1 <span>[<a href="#RFC5461" class="cite xref">RFC5461</a>]</span>) can be avoided. The guidelines will cause a Destination Unreachable ICMPv6 Error to be received by the source device, signaling the next address in the list to be tried, as discussed above.<a href="#section-6.3-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="following-ula-operational-guidelines-in-rfc4193">
+<section id="section-7">
+      <h2 id="name-following-ula-operational-g">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-following-ula-operational-g" class="section-name selfRef">Following ULA operational guidelines in RFC4193</a>
+      </h2>
+<p id="section-7-1">This section re-emphasizes two important operational requirements stated in <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span> that should be followed by administrators.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<div id="filtering-ula-source-addresses-at-site-borders">
+<section id="section-7.1">
+        <h3 id="name-filtering-ula-source-addres">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-filtering-ula-source-addres" class="section-name selfRef">Filtering ULA-source addresses at site borders</a>
+        </h3>
+<p id="section-7.1-1">Section 4.3 of <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span> states "Site border routers and firewalls should be configured to not forward
+any packets with Local IPv6 source or destination addresses outside the site, unless they have been explicitly configured with routing information about specific /48 or longer Local IPv6 prefixes".<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-2">And further that "Site border routers should respond with the appropriate ICMPv6 Destination Unreachable message to inform the source that the packet was not forwarded".<a href="#section-7.1-2" class="pilcrow">¶</a></p>
+<p id="section-7.1-3">As stated in the above discussion, such ICMPv6 messages can assist in fast failover for TCP connections.<a href="#section-7.1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="avoid-using-ula-addresses-in-the-global-dns">
+<section id="section-7.2">
+        <h3 id="name-avoid-using-ula-addresses-i">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-avoid-using-ula-addresses-i" class="section-name selfRef">Avoid using ULA addresses in the global DNS</a>
+        </h3>
+<p id="section-7.2-1">Section 4.4 of <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span> states that "AAAA and PTR records for locally assigned local IPv6 addresses are not recommended being installed in the global DNS."<a href="#section-7.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-2">This is particularly important given the general method presented in this document elevates the priority for ULAs above IPv4. However, where support for insertion of known-local prefixes is implemented, such "rogue" ULAs in the global DNS are a less serious concern for address selection as they would have the lowest precedence.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="the-practicalities-of-implementing-address-selection-support">
+<section id="section-8">
+      <h2 id="name-the-practicalities-of-imple">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-the-practicalities-of-imple" class="section-name selfRef">The practicalities of implementing address selection support</a>
+      </h2>
+<p id="section-8-1">As with most adjustments to standards, and using the introduction of RFC6724 as a measuring stick, the updates defined in this document will likely take several years to become common enough for consistent behavior within most operating systems. At the time of writing, it has been over 10 years since RFC6724 has been published but we continue to see existing commercial and open source operating systems exhibiting RFC3484 (or other) behavior.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">While it should be noted that RFC6724 defines a solution to adjust the address precedence selection table that is functional theoretically, operationally the solution is operating system dependent and in practice policy table changes cannot be signaled by any currently deployed network mechanism. While <span>[<a href="#RFC7078" class="cite xref">RFC7078</a>]</span> defines such a DHCPv6 option, there are few if any implementations. This lack of an intra-protocol or network-based ability to adjust address selection precedence, along with the inability to adjust a notable number of operating systems either programmatically or manually, renders operational scalability of such a mechanism challenging.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-3">It is especially important to note this behavior in the long lifecycle equipment that exists in industrial control and operational technology environments due to their very long mean time to replacement/lifecycle.<a href="#section-8-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="limitations-of-rfc6724">
+<section id="section-9">
+      <h2 id="name-limitations-of-rfc6724">
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-limitations-of-rfc6724" class="section-name selfRef">Limitations of RFC6724</a>
+      </h2>
+<p id="section-9-1">The procedures defined in RFC6724 do not give optimal results for all scenarios. As stated in the introduction, the aim of this update is to improve the behavior for the most common scenarios.<a href="#section-9-1" class="pilcrow">¶</a></p>
+<p id="section-9-2">Operational experienced has demonstrated that 3484/6724/getaddrinfo() model is fundamentally limited with regard to optimal address selection. A model that considers address pairs directly, rather than sorting on destination addresses with the best source for that address, would be preferable, but beyond the scope of this document.<a href="#section-9-2" class="pilcrow">¶</a></p>
+<p id="section-9-3">To simplify address selection, administrators may instead look to deploy IPv6-only and/or may choose to only use GUA addresses and no ULA addresses. Other approaches to reduce the use of IPv4, e.g., through use of DHCPv4 Option 108 as defined in <span>[<a href="#RFC8925" class="cite xref">RFC8925</a>]</span> as part of an "IPv6 Mostly" deployment model, also help simplify address selection for nodes.<a href="#section-9-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="acknowledgements">
+<section id="section-10">
+      <h2 id="name-acknowledgements">
+<a href="#section-10" class="section-number selfRef">10. </a><a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
+      </h2>
+<p id="section-10-1">The authors would like to acknowledge the valuable input and contributions of the 6man WG including (in alphabetic order) Erik Auerswald, Dale Carder, Brian Carpenter, Tom Coffeen, Lorenzo Colitti, Chris Cummings, David Farmer (in particular for the ULA to GUA/ULA discussion text, and discussion of using the specific fd00::/8 prefix for known-locals), Bob Hinden, Scott Hogg, Ed Horley, Ted Lemon, Jen Linkova, Michael Richardson, Kyle Rose, Nathan Sherrard, Ole Troan, Eduard Vasilenko, Eric Vyncke, Paul Wefel, Timothy Winters, and XiPeng Xiao.<a href="#section-10-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="implementation-status">
+<section id="section-11">
+      <h2 id="name-implementation-status">
+<a href="#section-11" class="section-number selfRef">11. </a><a href="#name-implementation-status" class="section-name selfRef">Implementation Status</a>
+      </h2>
+<p id="section-11-1">This section should be removed before publication as an RFC.<a href="#section-11-1" class="pilcrow">¶</a></p>
+<p id="section-11-2">There are two known implementations of the ULA known-local precedence mechanism.
+The first implementation was created by Lorenzo Colitti at Google as a prototype solution, with public code available for reference on their android platform available to the public <span>[<a href="#ANDROID" class="cite xref">ANDROID</a>]</span>. It was last updated in April of 2024, and does not include the capability to listen for RIO/PIO changes, but does support adding the ULA prefix learned on the interface to the known-local precedence.<a href="#section-11-2" class="pilcrow">¶</a></p>
+<p id="section-11-3">The second implementation was written by Jeremy Duncan at Tachyon Dynamics and made available as open source, reference prototype code available <span>[<a href="#RAIO-ULA-PY" class="cite xref">RAIO-ULA-PY</a>]</span>. This implementation includes a full implementation written in python, including the capability to listen to RIO and PIO on the wire and adjust ULA known-local prefixes as needed. It was last updated in May of 2024.<a href="#section-11-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="security-considerations">
+<section id="section-12">
+      <h2 id="name-security-considerations">
+<a href="#section-12" class="section-number selfRef">12. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-12-1">The mixed precedence for IPv6 over IPv4 from the default policy table in RF 6724 represents a potential security issue, given an operator may expect ULAs to be used when in practice RFC1918 addresses are used instead.<a href="#section-12-1" class="pilcrow">¶</a></p>
+<p id="section-12-2">The requirements of RFC4193, stated earlier in this document, should be followed for optimal behavior.<a href="#section-12-2" class="pilcrow">¶</a></p>
+<p id="section-12-3">Administrators should be mindful of cases where communicating nodes have differing behavior for address selection, e.g., RFC3484 behavior, RFC6724, the updated RFC6724 behavior defined here, some other non-IETF-standardized behavior, or even no mechanism. There may thus be inconsistent behavior for communications initiated in each direction between two nodes. Ultimately all nodes should be made compliant to the updated specification described in this document.<a href="#section-12-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="iana-considerations">
+<section id="section-13">
+      <h2 id="name-iana-considerations">
+<a href="#section-13" class="section-number selfRef">13. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-13-1">None.<a href="#section-13-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="appendix">
+<section id="section-14">
+      <h2 id="name-appendix">
+<a href="#section-14" class="section-number selfRef">14. </a><a href="#name-appendix" class="section-name selfRef">Appendix</a>
+      </h2>
+<p id="section-14-1">The table below reflects the <span>[<a href="#RFC6724" class="cite xref">RFC6724</a>]</span> table<a href="#section-14-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-14-2">
+<pre>
+                    RFC6724
+Prefix       Precedence Label
+::1/128              50     0
+::/0                 40     1
+::ffff:0:0/96        35     4
+2002::/16            30     2
+2001::/32             5     5
+fc00::/7              3    13
+::/96                 1     3
+fec0::/10             1    11
+3ffe::/16             1    12
+</pre><a href="#section-14-2" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="summary-of-changes-and-additional-text-since-rfc6724">
+<section id="section-15">
+      <h2 id="name-summary-of-changes-and-addi">
+<a href="#section-15" class="section-number selfRef">15. </a><a href="#name-summary-of-changes-and-addi" class="section-name selfRef">Summary of changes and additional text since RFC6724</a>
+      </h2>
+<ul class="normal">
+<li class="normal" id="section-15-1.1">
+          <p id="section-15-1.1.1">Introduced concept of known-locals and rules for their insertion/removal in the table.<a href="#section-15-1.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-15-1.2">
+          <p id="section-15-1.2.1">Changed default policy table to move fc00::/7 to precedence 30, above legacy IPv4.<a href="#section-15-1.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-15-1.3">
+          <p id="section-15-1.3.1">Changed default policy table to move the 6to4 address block 2002::/16 to the same precedence as the Teredo prefix.<a href="#section-15-1.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-15-1.4">
+          <p id="section-15-1.4.1">Changed ::ffff:0:0/96 to precedence 20.<a href="#section-15-1.4.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-15-1.5">
+          <p id="section-15-1.5.1">Changed Rule 5.5 to a <span class="bcp14">MUST</span> support.<a href="#section-15-1.5.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-15-1.6">
+          <p id="section-15-1.6.1">Added text clarifying intended behavior.<a href="#section-15-1.6.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-15-1.7">
+          <p id="section-15-1.7.1">Added text discussing ULA to GUA/ULA case.<a href="#section-15-1.7.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-15-1.8">
+          <p id="section-15-1.8.1">Added text for the security section.<a href="#section-15-1.8.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-15-1.9">
+          <p id="section-15-1.9.1">Added text to account for SNAC bit.<a href="#section-15-1.9.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+</section>
+</div>
+<div id="sec-combined-references">
+<section id="section-16">
+      <h2 id="name-references">
+<a href="#section-16" class="section-number selfRef">16. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-16.1">
+        <h3 id="name-normative-references">
+<a href="#section-16.1" class="section-number selfRef">16.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="RFC6724">[RFC6724]</dt>
+        <dd>
+<span class="refAuthor">Thaler, D., Ed.</span>, <span class="refAuthor">Draves, R.</span>, <span class="refAuthor">Matsumoto, A.</span>, and <span class="refAuthor">T. Chown</span>, <span class="refTitle">"Default Address Selection for Internet Protocol Version 6 (IPv6)"</span>, <span class="seriesInfo">RFC 6724</span>, <span class="seriesInfo">DOI 10.17487/RFC6724</span>, <time datetime="2012-09" class="refDate">September 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6724">https://www.rfc-editor.org/info/rfc6724</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8028">[RFC8028]</dt>
+        <dd>
+<span class="refAuthor">Baker, F.</span> and <span class="refAuthor">B. Carpenter</span>, <span class="refTitle">"First-Hop Router Selection by Hosts in a Multi-Prefix Network"</span>, <span class="seriesInfo">RFC 8028</span>, <span class="seriesInfo">DOI 10.17487/RFC8028</span>, <time datetime="2016-11" class="refDate">November 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8028">https://www.rfc-editor.org/info/rfc8028</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4861">[RFC4861]</dt>
+        <dd>
+<span class="refAuthor">Narten, T.</span>, <span class="refAuthor">Nordmark, E.</span>, <span class="refAuthor">Simpson, W.</span>, and <span class="refAuthor">H. Soliman</span>, <span class="refTitle">"Neighbor Discovery for IP version 6 (IPv6)"</span>, <span class="seriesInfo">RFC 4861</span>, <span class="seriesInfo">DOI 10.17487/RFC4861</span>, <time datetime="2007-09" class="refDate">September 2007</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc4861">https://www.rfc-editor.org/info/rfc4861</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4191">[RFC4191]</dt>
+        <dd>
+<span class="refAuthor">Draves, R.</span> and <span class="refAuthor">D. Thaler</span>, <span class="refTitle">"Default Router Preferences and More-Specific Routes"</span>, <span class="seriesInfo">RFC 4191</span>, <span class="seriesInfo">DOI 10.17487/RFC4191</span>, <time datetime="2005-11" class="refDate">November 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc4191">https://www.rfc-editor.org/info/rfc4191</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4193">[RFC4193]</dt>
+        <dd>
+<span class="refAuthor">Hinden, R.</span> and <span class="refAuthor">B. Haberman</span>, <span class="refTitle">"Unique Local IPv6 Unicast Addresses"</span>, <span class="seriesInfo">RFC 4193</span>, <span class="seriesInfo">DOI 10.17487/RFC4193</span>, <time datetime="2005-10" class="refDate">October 2005</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc4193">https://www.rfc-editor.org/info/rfc4193</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7526">[RFC7526]</dt>
+        <dd>
+<span class="refAuthor">Troan, O.</span> and <span class="refAuthor">B. Carpenter, Ed.</span>, <span class="refTitle">"Deprecating the Anycast Prefix for 6to4 Relay Routers"</span>, <span class="seriesInfo">BCP 196</span>, <span class="seriesInfo">RFC 7526</span>, <span class="seriesInfo">DOI 10.17487/RFC7526</span>, <time datetime="2015-05" class="refDate">May 2015</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7526">https://www.rfc-editor.org/info/rfc7526</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="SNACBIT">[SNACBIT]</dt>
+        <dd>
+<span class="refTitle">"SNAC Router Flag in ICMPv6 Router Advertisement Messages"</span>, <span>n.d.</span>, <span>&lt;<a href="https://datatracker.ietf.org/doc/draft-ietf-6man-snac-router-ra-flag/">https://datatracker.ietf.org/doc/draft-ietf-6man-snac-router-ra-flag/</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="ANDROID">[ANDROID]</dt>
+        <dd>
+<span class="refTitle">"Optionally prefer known-local ULAs in Android"</span>, <span>n.d.</span>, <span>&lt;<a href="https://r.android.com/3046000">https://r.android.com/3046000</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RAIO-ULA-PY">[RAIO-ULA-PY]</dt>
+        <dd>
+<span class="refTitle">"Python known-local ULA implementation"</span>, <span>n.d.</span>, <span>&lt;<a href="https://github.com/jeremy-duncan/raio_ula">https://github.com/jeremy-duncan/raio_ula</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+      <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-16.2">
+        <h3 id="name-informative-references">
+<a href="#section-16.2" class="section-number selfRef">16.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="RFC1918">[RFC1918]</dt>
+        <dd>
+<span class="refAuthor">Rekhter, Y.</span>, <span class="refAuthor">Moskowitz, B.</span>, <span class="refAuthor">Karrenberg, D.</span>, <span class="refAuthor">de Groot, G. J.</span>, and <span class="refAuthor">E. Lear</span>, <span class="refTitle">"Address Allocation for Private Internets"</span>, <span class="seriesInfo">BCP 5</span>, <span class="seriesInfo">RFC 1918</span>, <span class="seriesInfo">DOI 10.17487/RFC1918</span>, <time datetime="1996-02" class="refDate">February 1996</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc1918">https://www.rfc-editor.org/info/rfc1918</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6555">[RFC6555]</dt>
+        <dd>
+<span class="refAuthor">Wing, D.</span> and <span class="refAuthor">A. Yourtchenko</span>, <span class="refTitle">"Happy Eyeballs: Success with Dual-Stack Hosts"</span>, <span class="seriesInfo">RFC 6555</span>, <span class="seriesInfo">DOI 10.17487/RFC6555</span>, <time datetime="2012-04" class="refDate">April 2012</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc6555">https://www.rfc-editor.org/info/rfc6555</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8305">[RFC8305]</dt>
+        <dd>
+<span class="refAuthor">Schinazi, D.</span> and <span class="refAuthor">T. Pauly</span>, <span class="refTitle">"Happy Eyeballs Version 2: Better Connectivity Using Concurrency"</span>, <span class="seriesInfo">RFC 8305</span>, <span class="seriesInfo">DOI 10.17487/RFC8305</span>, <time datetime="2017-12" class="refDate">December 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8305">https://www.rfc-editor.org/info/rfc8305</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3587">[RFC3587]</dt>
+        <dd>
+<span class="refAuthor">Hinden, R.</span>, <span class="refAuthor">Deering, S.</span>, and <span class="refAuthor">E. Nordmark</span>, <span class="refTitle">"IPv6 Global Unicast Address Format"</span>, <span class="seriesInfo">RFC 3587</span>, <span class="seriesInfo">DOI 10.17487/RFC3587</span>, <time datetime="2003-08" class="refDate">August 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3587">https://www.rfc-editor.org/info/rfc3587</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8925">[RFC8925]</dt>
+        <dd>
+<span class="refAuthor">Colitti, L.</span>, <span class="refAuthor">Linkova, J.</span>, <span class="refAuthor">Richardson, M.</span>, and <span class="refAuthor">T. Mrugalski</span>, <span class="refTitle">"IPv6-Only Preferred Option for DHCPv4"</span>, <span class="seriesInfo">RFC 8925</span>, <span class="seriesInfo">DOI 10.17487/RFC8925</span>, <time datetime="2020-10" class="refDate">October 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8925">https://www.rfc-editor.org/info/rfc8925</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3484">[RFC3484]</dt>
+        <dd>
+<span class="refAuthor">Draves, R.</span>, <span class="refTitle">"Default Address Selection for Internet Protocol version 6 (IPv6)"</span>, <span class="seriesInfo">RFC 3484</span>, <span class="seriesInfo">DOI 10.17487/RFC3484</span>, <time datetime="2003-02" class="refDate">February 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3484">https://www.rfc-editor.org/info/rfc3484</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4862">[RFC4862]</dt>
+        <dd>
+<span class="refAuthor">Thomson, S.</span>, <span class="refAuthor">Narten, T.</span>, and <span class="refAuthor">T. Jinmei</span>, <span class="refTitle">"IPv6 Stateless Address Autoconfiguration"</span>, <span class="seriesInfo">RFC 4862</span>, <span class="seriesInfo">DOI 10.17487/RFC4862</span>, <time datetime="2007-09" class="refDate">September 2007</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc4862">https://www.rfc-editor.org/info/rfc4862</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC3493">[RFC3493]</dt>
+        <dd>
+<span class="refAuthor">Gilligan, R.</span>, <span class="refAuthor">Thomson, S.</span>, <span class="refAuthor">Bound, J.</span>, <span class="refAuthor">McCann, J.</span>, and <span class="refAuthor">W. Stevens</span>, <span class="refTitle">"Basic Socket Interface Extensions for IPv6"</span>, <span class="seriesInfo">RFC 3493</span>, <span class="seriesInfo">DOI 10.17487/RFC3493</span>, <time datetime="2003-02" class="refDate">February 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3493">https://www.rfc-editor.org/info/rfc3493</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC4380">[RFC4380]</dt>
+        <dd>
+<span class="refAuthor">Huitema, C.</span>, <span class="refTitle">"Teredo: Tunneling IPv6 over UDP through Network Address Translations (NATs)"</span>, <span class="seriesInfo">RFC 4380</span>, <span class="seriesInfo">DOI 10.17487/RFC4380</span>, <time datetime="2006-02" class="refDate">February 2006</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc4380">https://www.rfc-editor.org/info/rfc4380</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC5461">[RFC5461]</dt>
+        <dd>
+<span class="refAuthor">Gont, F.</span>, <span class="refTitle">"TCP's Reaction to Soft Errors"</span>, <span class="seriesInfo">RFC 5461</span>, <span class="seriesInfo">DOI 10.17487/RFC5461</span>, <time datetime="2009-02" class="refDate">February 2009</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc5461">https://www.rfc-editor.org/info/rfc5461</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7078">[RFC7078]</dt>
+      <dd>
+<span class="refAuthor">Matsumoto, A.</span>, <span class="refAuthor">Fujisaki, T.</span>, and <span class="refAuthor">T. Chown</span>, <span class="refTitle">"Distributing Address Selection Policy Using DHCPv6"</span>, <span class="seriesInfo">RFC 7078</span>, <span class="seriesInfo">DOI 10.17487/RFC7078</span>, <time datetime="2014-01" class="refDate">January 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc7078">https://www.rfc-editor.org/info/rfc7078</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-A">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Nick Buraglio</span></div>
+<div dir="auto" class="left"><span class="org">Energy Sciences Network</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:buraglio@forwardingplane.net" class="email">buraglio@forwardingplane.net</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Tim Chown</span></div>
+<div dir="auto" class="left"><span class="org">Jisc</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:Tim.Chown@jisc.ac.uk" class="email">Tim.Chown@jisc.ac.uk</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Jeremy Duncan</span></div>
+<div dir="auto" class="left"><span class="org">Tachyon Dynamics</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:jduncan@tachyondynamics.com" class="email">jduncan@tachyondynamics.com</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
