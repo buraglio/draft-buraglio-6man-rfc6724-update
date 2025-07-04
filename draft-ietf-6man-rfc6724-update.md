@@ -5,7 +5,7 @@ docname: draft-ietf-6man-rfc6724-update-latest
 cat: std
 submissiontype: IETF
 ipr: trust200902
-area: Int
+area: "Internet"
 wg: 6MAN
 kw: Internet-Draft
 updates: 6724
@@ -43,7 +43,7 @@ normative:
     title: Optionally prefer known-local ULAs in Android
   RAIO-ULA-PY:
     target: "https://github.com/jeremy-duncan/raio_ula"
-    title: Python known-local ULA implementation  
+    title: Python known-local ULA implementation
 informative:
   RFC1918:
   RFC6555:
@@ -74,7 +74,7 @@ automatic and unmanaged configurations, and promote consistent IPv6-over-IPv4
 precedence behavior for both ULA and GUA within local networks. The document
 acknowledges that certain atypical deployment models may require explicit
 configuration to achieve intended operational outcomes.
-  
+
 --- middle
 
 # Introduction
@@ -158,8 +158,8 @@ It should be noted the order of rows in the policy table is of no consequence an
 The table below reflects the updated precedence table:
 
 ~~~~~~~~~~
-                  
-Prefix        Precedence Label              
+
+Prefix        Precedence Label
 ::1/128               50     0
 $known_local/48       45    14 (**)
 ::/0                  40     1
@@ -172,7 +172,7 @@ fec0::/10              1    11
 3ffe::/16              1    12
 
 (*) value(s) changed in update
-(**) $known_local = the ULA Known-Local /48 IPv6 prefix(es) (if any) 
+(**) $known_local = the ULA Known-Local /48 IPv6 prefix(es) (if any)
 with precedence and labels per the rules in Sec 5.3
 
 ~~~~~~~~~~
@@ -182,7 +182,7 @@ The update moves 2002::/16 to de-preference its status in line with {{RFC7526}} 
 ## Rule 5.5
 
 The text in RFC6724 states that the Rules MUST be followed in order, but also includes a discussion note under Rule 5.5 that says that an IPv6 implementation is not required to remember which next-hops advertised which prefixes and thus that Rule 5.5 is only
-applicable to implementations that track this information.  
+applicable to implementations that track this information.
 
 This document removes that exception and elevates the requirement to prefer addresses in a prefix advertised by a next-hop router to a requirement for all nodes.
 
@@ -209,7 +209,7 @@ The following rules define how the learnt known-local ULA prefixes under fd00::/
 2. RIOs from within fd00::/8 are considered the preferred information source for determining known-local ULAs and should override other conflicting information or assumptions from other sources, including PIOs.
 
 3. RIOs within fd00::/8 that are of length /40 or longer MUST be added to the known-local ULA list. RIOs for shorter prefixes MUST NOT be used to insert known-local ULA entries in the address selection policy table
-  
+
 4. PIOs received within fd00::/8 that are not already in the nodes known-local ULA list MUST be added to the list with an assumed prefix length of /48, regardless of how the PIO flags are set.
 
 5. ULA interface addresses from within fd00::/8, particularly ones not created by SLAAC, and not already covered by the known-local ULA list MUST be added to the list with an assumed prefix length of /48. However, as with rule 1, if the ULA interface address was generated on the basis of a PIO that has only been seen in RAs in which the SNAC router flag bit is set, this ULA prefix MUST NOT be used as described in this rule (rule 5). This prevents potential use of a non-routable source address when communicating to a known-local ULA destination address that is not on the local link, as SNAC-generated ULAs can only work on a single link, and the only reason to ever choose them in source address selection is that the only choice for a destination address is the longest prefix match.
@@ -314,10 +314,10 @@ The remainder of this section discusses several complementary mechanisms involve
 ~~~~~~~~~~
 Rule 5: Prefer matching label.
 
-If Label(Source(DA)) = Label(DA) and Label(Source(DB)) <> Label(DB), 
+If Label(Source(DA)) = Label(DA) and Label(Source(DB)) <> Label(DB),
 then prefer DA.
 
-Similarly, if Label(Source(DA)) <> Label(DA) and Label(Source(DB)) = 
+Similarly, if Label(Source(DA)) <> Label(DA) and Label(Source(DB)) =
 Label(DB), then prefer DB.
 ~~~~~~~~~~
 
@@ -367,7 +367,7 @@ This is particularly important given the general method presented in this docume
 
 As with most adjustments to standards, and using the introduction of RFC6724 as a measuring stick, the updates defined in this document will likely take several years to become common enough for consistent behavior within most operating systems. At the time of writing, it has been over 10 years since RFC6724 has been published but we continue to see existing commercial and open source operating systems exhibiting RFC3484 (or other) behavior.
 
-While it should be noted that RFC6724 defines a solution to adjust the address precedence selection table that is functional theoretically, operationally the solution is operating system dependent and in practice policy table changes cannot be signaled by any currently deployed network mechanism. While {{RFC7078}} defines such a DHCPv6 option, there are few if any implementations. This lack of an intra-protocol or network-based ability to adjust address selection precedence, along with the inability to adjust a notable number of operating systems either programmatically or manually, renders operational scalability of such a mechanism challenging.  
+While it should be noted that RFC6724 defines a solution to adjust the address precedence selection table that is functional theoretically, operationally the solution is operating system dependent and in practice policy table changes cannot be signaled by any currently deployed network mechanism. While {{RFC7078}} defines such a DHCPv6 option, there are few if any implementations. This lack of an intra-protocol or network-based ability to adjust address selection precedence, along with the inability to adjust a notable number of operating systems either programmatically or manually, renders operational scalability of such a mechanism challenging.
 
 It is especially important to note this behavior in the long lifecycle equipment that exists in industrial control and operational technology environments due to their very long mean time to replacement/lifecycle.
 
@@ -410,16 +410,16 @@ None.
 The table below reflects the {{RFC6724}} table
 
 ~~~~~~~~~~
-                    RFC6724                           
-Prefix       Precedence Label                  
-::1/128              50     0 
-::/0                 40     1        
-::ffff:0:0/96        35     4 
+                    RFC6724
+Prefix       Precedence Label
+::1/128              50     0
+::/0                 40     1
+::ffff:0:0/96        35     4
 2002::/16            30     2
-2001::/32             5     5 
+2001::/32             5     5
 fc00::/7              3    13
 ::/96                 1     3
-fec0::/10             1    11 
+fec0::/10             1    11
 3ffe::/16             1    12
 ~~~~~~~~~~
 
