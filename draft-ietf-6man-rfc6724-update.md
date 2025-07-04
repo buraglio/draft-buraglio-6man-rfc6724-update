@@ -1,7 +1,7 @@
 ---
 title: Prioritizing known-local IPv6 ULAs through address selection policy
 abbrev: Prioritizing known-local ULA in RFC 6724
-docname: draft-ietf-6man-rfc6724-update-21
+docname: draft-ietf-6man-rfc6724-update-latest
 cat: std
 submissiontype: IETF
 ipr: trust200902
