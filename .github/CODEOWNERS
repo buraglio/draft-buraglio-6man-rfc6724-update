@@ -1,0 +1,4 @@
+# Automatically generated CODEOWNERS
+# Regenerate with `make update-codeowners`
+draft-ietf-6man-rfc6724-update.html buraglio@forwardingplane.net Tim.Chown@jisc.ac.uk jduncan@tachyondynamics.com
+draft-todo-yourname-protocol.md buraglio@forwardingplane.net
