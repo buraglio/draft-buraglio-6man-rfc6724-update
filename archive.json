@@ -1,0 +1,2035 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2025-07-06T02:20:28.490958+00:00",
+  "repo": "buraglio/draft-buraglio-6man-rfc6724-update",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 11,
+      "id": "I_kwDOJd_ZH85t_vcL",
+      "title": "Rule 5.5 change suggested by Brian Carpenter",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/issues/11",
+      "state": "CLOSED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "We may have let this one slip...\r\n\r\nOn 28-Jul-23 10:17, Timothy Winters wrote:\r\nHi Ted,\r\nIf we make 5.5 a MUST, we should remove the note about not having to track this information.\r\n\r\nThis is a good catch, and draft-buraglio-6man-rfc6724-update should do this:\r\n\r\nOLD:\r\nDiscussion: An IPv6 implementation is not required to remember\r\nwhich next-hops advertised which prefixes.  The conceptual models\r\nof IPv6 hosts in Section 5 of [RFC4861] and Section 3 of [RFC4191]\r\nhave no such requirement.  Hence, Rule 5.5 is only applicable to\r\nimplementations that track this information.\r\n\r\nNEW:\r\nAn IPv6 implementation is therefore REQUIRED to remember which\r\nnext-hops advertised which prefixes, although the conceptual models\r\nof IPv6 hosts in Section 5 of [RFC4861] and Section 3 of [RFC4191]\r\nhave no such requirement.\r\n\r\n(TBD whether we need Updates: 4861, 4191.)\r\n\r\n  Brian",
+      "createdAt": "2023-08-10T15:28:22Z",
+      "updatedAt": "2024-11-04T16:03:37Z",
+      "closedAt": "2024-11-04T16:03:37Z",
+      "comments": [
+        {
+          "author": "fgont",
+          "authorAssociation": "NONE",
+          "body": "I'd probably somehow require RFC8028 (make it a MUST here), and maybe even simplify the text (the reader can read about the details in RFC8028).",
+          "createdAt": "2024-10-24T14:37:47Z",
+          "updatedAt": "2024-10-24T14:37:47Z"
+        },
+        {
+          "author": "becarpenter",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Hmm. I think it would be less controversial but equally effective to say something like:\r\n\r\nNEW NEW:\r\nAn IPv6 implementation will need to remember which\r\nnext-hops advertised which prefixes [RFC8028], although the conceptual models\r\nof IPv6 hosts in Section 5 of [RFC4861] and Section 3 of [RFC4191]\r\nhave no such requirement.\r\n\r\nThat avoids BCP14 keywords - leave that tricky discussion for the node requirements draft.",
+          "createdAt": "2024-10-24T19:17:09Z",
+          "updatedAt": "2024-10-24T19:17:09Z"
+        },
+        {
+          "author": "fgont",
+          "authorAssociation": "NONE",
+          "body": "HI @becarpenter ! I'm fine either way!  FWIW, I suggested to formally require RFC8028 because, at the end of the day, that's what you need to have in place, and by formally requiring it, e.g. if in the future RFC8028 gets updated or revised, it's clear that it's the updated or revised spec that needs to be implemented.\r\n\r\n(IOW, RFC8028 is a \"dependency\" -- you cannot really implement rule 5.5 without implementing RFC8028)",
+          "createdAt": "2024-10-24T20:49:18Z",
+          "updatedAt": "2024-10-24T20:49:18Z"
+        },
+        {
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "body": "OK, I've just accepted and merged Jeremy's /40 text, I'll do a PR with Brian's 'milder' text above.  It's a polite, British way to say MUST :)\r\nAnd yes, the firmer statement can hopefully go in 8504-bis.",
+          "createdAt": "2024-10-25T15:15:13Z",
+          "updatedAt": "2024-10-25T15:15:13Z"
+        },
+        {
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Hi Brian, Bob was ok with the first part but said\r\n\"Not sure if the \u201calthough\u2026.\u201d part needs to be there.\"\r\nThoughts?  Is less more?",
+          "createdAt": "2024-10-25T17:40:06Z",
+          "updatedAt": "2024-10-25T17:40:06Z"
+        },
+        {
+          "author": "becarpenter",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I agree that the \"although...\" clause is not strictly necessary in 6724-update.  If @fgont follows up on his more general comments on 8028, the issue would belong there.",
+          "createdAt": "2024-10-25T19:10:15Z",
+          "updatedAt": "2024-10-25T19:10:15Z"
+        },
+        {
+          "author": "fgont",
+          "authorAssociation": "NONE",
+          "body": "\r\n@becarpenter : do yu mean the update draft?",
+          "createdAt": "2024-10-26T04:38:19Z",
+          "updatedAt": "2024-10-26T04:38:19Z"
+        },
+        {
+          "author": "fgont",
+          "authorAssociation": "NONE",
+          "body": "@timchown : I'm with Brian's suggestion... Although, as noted, at the end of the day I'm not sure you can really have a MUST for rule 5.5 withough having RFC8028 in place. (and, if it's going to become a MUST in RFC8504... it's gonna be a MUST anyway). -- but up to you guys :-) ",
+          "createdAt": "2024-10-26T05:41:42Z",
+          "updatedAt": "2024-10-26T05:41:42Z"
+        },
+        {
+          "author": "becarpenter",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> @becarpenter : do yu mean the update draft?\r\n\r\n@fgont, yes, your potential draft",
+          "createdAt": "2024-10-26T19:54:03Z",
+          "updatedAt": "2024-10-26T19:54:03Z"
+        }
+      ]
+    },
+    {
+      "number": 38,
+      "id": "I_kwDOJd_ZH86c878V",
+      "title": "Typo in 5.3",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/issues/38",
+      "state": "CLOSED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Version 14 is still missing the close quote at the end of\u00a0the quote from RFC4191 section 4, now in the next to last paragraph of section 5.3.\r\n\u00a0\r\n\u201cRouters SHOULD NOT send...be advertised to hosts.\u201d \r\n",
+      "createdAt": "2024-11-04T16:04:42Z",
+      "updatedAt": "2024-11-06T10:39:15Z",
+      "closedAt": "2024-11-06T10:39:15Z",
+      "comments": []
+    },
+    {
+      "number": 44,
+      "id": "I_kwDOJd_ZH86l-ijM",
+      "title": "Nits in -16",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/issues/44",
+      "state": "CLOSED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Section 5.1\r\nA bad line break in the new (**) part.\r\n\r\nSection 5.2\r\nRule 5 refers to Rule 0 which doesn\u2019t exist (it\u2019s new Rule 1) and Rule 4 as \u201cthis rule\u201d (it\u2019s 5)\r\n\r\nSection 15:\r\nWe should add a bullet for \u201cIntroduced concept of known-locals and rules for their insertion/removal in the table\u201d",
+      "createdAt": "2025-01-13T16:59:41Z",
+      "updatedAt": "2025-01-23T17:50:59Z",
+      "closedAt": "2025-01-23T17:50:59Z",
+      "comments": [
+        {
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "body": "These should all now be addressed with -17",
+          "createdAt": "2025-01-23T17:50:56Z",
+          "updatedAt": "2025-01-23T17:50:56Z"
+        }
+      ]
+    },
+    {
+      "number": 49,
+      "id": "I_kwDOJd_ZH865ktEj",
+      "title": "Address dnsdir review comments",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/issues/49",
+      "state": "CLOSED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Document: draft-ietf-6man-rfc6724-update\nTitle: Prioritizing known-local IPv6 ULAs through address selection policy\nReviewer: Jim Reid\nReview result: Ready with Nits\n\nI'm the dnsdir reviewer for this I-D.\n\nThe draft has no significant DNS content: ie nothing that raises operational or\nprotocol concerns for the DNS. From that perspective, the I-D is ready.\n\nOverall, the I-D is clear and well written. There are a couple of nits though:\n\n1) \"Behaviors\" is a non-word that annoys me. There is no reason to pluralise\nbehaviour (or even behavior).\n\n2) The sentence beginning \"Receiving a DNS response for a ULA destination...\"\nin Section 8 is clumsy and should be restructured.",
+      "createdAt": "2025-06-03T10:33:46Z",
+      "updatedAt": "2025-07-04T16:49:16Z",
+      "closedAt": "2025-07-04T16:49:16Z",
+      "comments": [
+        {
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "body": "Done",
+          "createdAt": "2025-07-04T16:49:16Z",
+          "updatedAt": "2025-07-04T16:49:16Z"
+        }
+      ]
+    }
+  ],
+  "pulls": [
+    {
+      "number": 1,
+      "id": "PR_kwDOJd_ZH85RYBlm",
+      "title": "Update draft-buraglio-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/1",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-05-25T19:42:44Z",
+      "updatedAt": "2023-05-25T19:49:04Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "7a5dde1afd92a06c1d50c20e8d66e9a2c223cdbc",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-2",
+      "headRefOid": "079fb27a870c49bd89d8f4f57af9c26354a179cb",
+      "closedAt": "2023-05-25T19:49:03Z",
+      "mergedAt": "2023-05-25T19:49:03Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "9ed88a98969a0ffa545653c58c5c04c632392c0e"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 2,
+      "id": "PR_kwDOJd_ZH85RbNdH",
+      "title": "Update draft-buraglio-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/2",
+      "state": "MERGED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Enjoy!  More edits than I expected but I think the structure is now clearer.",
+      "createdAt": "2023-05-26T10:19:24Z",
+      "updatedAt": "2023-08-03T15:44:00Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "72d7c15a175d6ffd3bd1e38ea6bed7965d58ef2d",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "tims-suggestions",
+      "headRefOid": "fd49dd31f38eac6d06ce97ece091168fad80bffd",
+      "closedAt": "2023-05-27T14:24:28Z",
+      "mergedAt": "2023-05-27T14:24:28Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "4be4a992bdeaccc65d69aea63c3f4be4db4464e3"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3,
+      "id": "PR_kwDOJd_ZH85Te_m_",
+      "title": "Nit fixes mainly",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/3",
+      "state": "MERGED",
+      "author": "becarpenter",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Note, I did not update the derived (txt and xml) files but the md converts correctly at author-tools.ietf.org\r\nMainly I fixed references and boilerplate, but I added a note about ULA scope and a few more words about DHCPv6.",
+      "createdAt": "2023-06-20T22:59:52Z",
+      "updatedAt": "2023-06-21T16:34:03Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "4a6eac9674da63aa9daf806f4dfb50c605a2f377",
+      "headRepository": "becarpenter/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-1",
+      "headRefOid": "32c9ac3201311959dc0d2df36a14de1a0007b5c1",
+      "closedAt": "2023-06-21T15:35:04Z",
+      "mergedAt": "2023-06-21T15:35:04Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "91c2dd699f54cb1847c50baa73ec60e2755827a0"
+      },
+      "comments": [
+        {
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "body": "Committed. I also made some additional adjustments and generated new XML.\r\n\r\nOn Wed, Jun 21, 2023 at 6:12\u202fAM Tim Chown ***@***.***> wrote:\r\n\r\n> ***@***.**** commented on this pull request.\r\n>\r\n> Looks good to me, thanks Brian.\r\n>\r\n> \u2014\r\n> Reply to this email directly, view it on GitHub\r\n> <https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/3#pullrequestreview-1490453805>,\r\n> or unsubscribe\r\n> <https://github.com/notifications/unsubscribe-auth/AAHZT6QHAOGQGNBIJUQ4GBLXMLJLTANCNFSM6AAAAAAZN5UOX4>\r\n> .\r\n> You are receiving this because you are subscribed to this thread.Message\r\n> ID: <buraglio/draft-buraglio-6man-rfc6724-update/pull/3/review/1490453805@\r\n> github.com>\r\n>\r\n",
+          "createdAt": "2023-06-21T16:34:03Z",
+          "updatedAt": "2023-06-21T16:34:03Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH85Y1oUt",
+          "commit": {
+            "abbreviatedOid": "32c9ac3"
+          },
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "Looks good to me, thanks Brian.",
+          "createdAt": "2023-06-21T11:12:47Z",
+          "updatedAt": "2023-06-21T11:12:47Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOJd_ZH85UCmEr",
+      "title": "Update draft-buraglio-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/4",
+      "state": "MERGED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Some final suggestions for the -00 to be posted.\r\nI still don't see the boilerplate!",
+      "createdAt": "2023-06-27T13:57:02Z",
+      "updatedAt": "2023-08-03T15:43:57Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "79640ac33e81aa25ce5e0a010c70d28ad3dbdcd0",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "tim-pre-00",
+      "headRefOid": "4d4d729885293cd2f93ae9e2a9dcedf0d4b97ba3",
+      "closedAt": "2023-06-27T16:55:38Z",
+      "mergedAt": "2023-06-27T16:55:38Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "bfe022c691ed8ea548731f7f21342ce255a2daa2"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOJd_ZH85UE_qj",
+      "title": "Update draft-buraglio-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/5",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "* added more details on the 1st WG comment\r\n* a few more typo updates",
+      "createdAt": "2023-06-27T21:01:56Z",
+      "updatedAt": "2023-06-28T14:22:39Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "ceb6a9ca758611edcede0747693c8e4ea7b79c08",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-3",
+      "headRefOid": "f45c11ca6db253d7926c0bd58ef06cbf37684213",
+      "closedAt": "2023-06-28T14:22:38Z",
+      "mergedAt": "2023-06-28T14:22:38Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "87ac8c0f765ac0f99ed0f2e9d046859db090c435"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDOJd_ZH85UL7p2",
+      "title": "Submission nits",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/6",
+      "state": "MERGED",
+      "author": "becarpenter",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-06-28T21:02:28Z",
+      "updatedAt": "2023-06-28T21:29:22Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "8792a0e26e4269286eee82fffdb269e9794a2438",
+      "headRepository": "becarpenter/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-3",
+      "headRefOid": "a293743620755483d91724db6fbbbfbd47c7cc65",
+      "closedAt": "2023-06-28T21:29:21Z",
+      "mergedAt": "2023-06-28T21:29:21Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "79e115c06db15dbaea00dafeb73024ac7cbb1718"
+      },
+      "comments": [
+        {
+          "author": "becarpenter",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "IMHO this is ready to submit",
+          "createdAt": "2023-06-28T21:03:23Z",
+          "updatedAt": "2023-06-28T21:03:23Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 7,
+      "id": "PR_kwDOJd_ZH85VFcUK",
+      "title": "Update draft-buraglio-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/7",
+      "state": "MERGED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Made the +10 change, and edited the paragraph below the new proposed table.",
+      "createdAt": "2023-07-10T13:04:51Z",
+      "updatedAt": "2023-07-10T13:40:32Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "ac5d915f8531ae00d9443b87905064e256543b63",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "plus-10-tweak",
+      "headRefOid": "df5b1f1e3014a786d5aa12af616c7d593b2630fd",
+      "closedAt": "2023-07-10T13:40:32Z",
+      "mergedAt": "2023-07-10T13:40:32Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "93cb45da8e91a2999e80b579a10b278eb6ad70e6"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 8,
+      "id": "PR_kwDOJd_ZH85W3CFz",
+      "title": "New branch with 117 inspired update",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/8",
+      "state": "MERGED",
+      "author": "buraglio",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "timchown"
+      ],
+      "labels": [],
+      "body": "Started a post 117 MD edit. ",
+      "createdAt": "2023-08-01T01:52:42Z",
+      "updatedAt": "2023-08-01T21:47:59Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "9f3a69878dd08c8cb0454b5694a14249a01772fe",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "buraglio-post117",
+      "headRefOid": "41994537a94f2d2018fa80888a1c5a64de3ef56c",
+      "closedAt": "2023-08-01T21:47:59Z",
+      "mergedAt": "2023-08-01T21:47:59Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "faadf2834d383dc486ea1a9c8905b653b503a475"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 9,
+      "id": "PR_kwDOJd_ZH85XBPur",
+      "title": "Update draft-buraglio-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/9",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "renamed the title",
+      "createdAt": "2023-08-02T14:59:49Z",
+      "updatedAt": "2023-08-02T15:07:52Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "bfac9b362254fa5b0715f3fddcca38e0a39df9af",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-4",
+      "headRefOid": "3f873b1600417922a498d9faf7d8e0e6a4a50636",
+      "closedAt": "2023-08-02T15:07:51Z",
+      "mergedAt": "2023-08-02T15:07:51Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "28911e0773cf4a6f7c2c45813954519b3db1eb22"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 10,
+      "id": "PR_kwDOJd_ZH85XH_TP",
+      "title": "Update draft-buraglio-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/10",
+      "state": "MERGED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "A pass by Tim, removed some configurability and next-hop text that shouldn't be here any more.",
+      "createdAt": "2023-08-03T16:01:28Z",
+      "updatedAt": "2023-08-03T18:38:33Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "158202612aa00b0f871d05094e73016c0f3d0ee1",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "tim-review-post-ietf-117",
+      "headRefOid": "8d4a4fa451d60ec5fa70a42f32210bfa2499a827",
+      "closedAt": "2023-08-03T18:38:32Z",
+      "mergedAt": "2023-08-03T18:38:32Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "18df381a374bb414cd5dbe726785edbc199a9c9a"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 12,
+      "id": "PR_kwDOJd_ZH85YJ-vh",
+      "title": "Update draft-buraglio-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/12",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "changes 2002::/16 to prec 5 from1 in sec 5",
+      "createdAt": "2023-08-17T13:03:17Z",
+      "updatedAt": "2023-08-17T13:30:52Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "a9975ffe7c6bc802413030adf1cd4d12e8e0cf78",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "main-1",
+      "headRefOid": "6b847b02867e0628b31bf7ad55213d9e640b7873",
+      "closedAt": "2023-08-17T13:30:52Z",
+      "mergedAt": "2023-08-17T13:30:52Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "9de26665956d4ce36df2c9daffd3c00f628c8410"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 13,
+      "id": "PR_kwDOJd_ZH85bX1WE",
+      "title": "Update with changes requested from list",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/13",
+      "state": "MERGED",
+      "author": "buraglio",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-09-27T19:18:46Z",
+      "updatedAt": "2023-09-27T19:18:54Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "f694118642bb28f92bc1906f06debe3de747ebe0",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "buraglio-pre-wg-doc",
+      "headRefOid": "6c3d96acd7e19abf97cea46a3657208b8a0a5f97",
+      "closedAt": "2023-09-27T19:18:53Z",
+      "mergedAt": "2023-09-27T19:18:53Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "516f4207c5e2bfd58283f569fc0a71c60fb89595"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 14,
+      "id": "PR_kwDOJd_ZH85bYFHX",
+      "title": "lots of grammar stuff and getting it ready for pub",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/14",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Still need someone to look at \"Notes on the 6Man Working Group list discussion\"",
+      "createdAt": "2023-09-27T20:14:39Z",
+      "updatedAt": "2023-09-27T23:57:19Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "4a6d63fc6dac3408fb1925f418674d9793f1d152",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-5",
+      "headRefOid": "55331fcbda748e2a9c3e6c2fb463763c4c124948",
+      "closedAt": "2023-09-27T23:57:19Z",
+      "mergedAt": "2023-09-27T23:57:19Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "ac13e03a39766d9ff3159026c5bb900e994f888b"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 15,
+      "id": "PR_kwDOJd_ZH85cwRdz",
+      "title": "removed gai.conf and updated tables",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/15",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-10-13T16:10:16Z",
+      "updatedAt": "2023-10-14T14:24:52Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "08573e70507df2e03bdca79feff418bdbe0f72a6",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-6",
+      "headRefOid": "1229dd2843717988235c840c6f2f3007e86e487c",
+      "closedAt": "2023-10-14T14:24:52Z",
+      "mergedAt": "2023-10-14T14:24:52Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "7e944c25c2e8ca1235087b3040ab22ce718f3525"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 16,
+      "id": "PR_kwDOJd_ZH85dB8PZ",
+      "title": "Update draft-ietf-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/16",
+      "state": "MERGED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Adding suggestions from David Farmer and Mark Smith towards a -01 release.",
+      "createdAt": "2023-10-17T15:10:22Z",
+      "updatedAt": "2023-10-18T12:14:01Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "db50e5501a02683ce128a1cab7d17dc36bcff2fc",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "01-draft-edits",
+      "headRefOid": "6f8ef92e645b04b4f31801eacf7d629dbb252c92",
+      "closedAt": "2023-10-18T12:14:00Z",
+      "mergedAt": "2023-10-18T12:14:00Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "9f042c63ff1e692106fcdafcf8b75c866de6ff41"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 17,
+      "id": "PR_kwDOJd_ZH85e7_pS",
+      "title": "added the MUST for rule 5.5 back in",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/17",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-08T14:53:34Z",
+      "updatedAt": "2023-11-09T13:33:50Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "8326a1432f7d6dfe4a06331205a2b98f592c801b",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-7",
+      "headRefOid": "b0e9d75fff7ef5f380548087c44df43cf130f3d6",
+      "closedAt": "2023-11-09T13:33:50Z",
+      "mergedAt": "2023-11-09T13:33:50Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "73419a5c54ea769f1fc84ba4d3030b8538097a4d"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 18,
+      "id": "PR_kwDOJd_ZH85fb0bL",
+      "title": "format update",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/18",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2023-11-14T17:16:58Z",
+      "updatedAt": "2023-11-14T21:47:08Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "73419a5c54ea769f1fc84ba4d3030b8538097a4d",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-8",
+      "headRefOid": "756eb9c068a83faefd27c9febd7da322df35cc79",
+      "closedAt": "2023-11-14T21:47:08Z",
+      "mergedAt": "2023-11-14T21:47:08Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "9cbb259527e23dca0e2e61fe8948590c69940a33"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 19,
+      "id": "PR_kwDOJd_ZH85h1XXY",
+      "title": "05 candidate",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/19",
+      "state": "MERGED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Some quite large edits, and we still have the decision to make on including automatic insertion of observed ULAs, but I think this version would be a good step forward.  If you agree, let's make this the candidate 05 draft and edit it further.",
+      "createdAt": "2023-12-12T20:39:27Z",
+      "updatedAt": "2023-12-12T21:21:42Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "01377ba8750205df49a31820ccf176fd480e16be",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "05-candidate",
+      "headRefOid": "bd09af6c20211f3f3c374f58635fca4306d08316",
+      "closedAt": "2023-12-12T21:21:42Z",
+      "mergedAt": "2023-12-12T21:21:42Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "1e57a43a59ba39bfeebac5406ebd7b87177655f1"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 20,
+      "id": "PR_kwDOJd_ZH85iQTef",
+      "title": "Update draft-ietf-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/20",
+      "state": "MERGED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Back to the simple(r) text.\r\nStill need the implementation section.",
+      "createdAt": "2023-12-18T11:52:16Z",
+      "updatedAt": "2023-12-18T21:22:22Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "89104aa3c9e957cd297b2190e32f9b3bf0683685",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "new-05-candidate",
+      "headRefOid": "0869862f14abcd89c4d44cb7f938d1f3ad3a2111",
+      "closedAt": "2023-12-18T21:22:21Z",
+      "mergedAt": "2023-12-18T21:22:21Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "685d4c65cf1b6244d5d4a42dfae55b527ae2fe4f"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 21,
+      "id": "PR_kwDOJd_ZH85ppeEC",
+      "title": "Update draft-ietf-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/21",
+      "state": "MERGED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "-07 candidate\r\nmake david farmer's suggested changes.\r\nmark smith was already removed from the acknowledgments.",
+      "createdAt": "2024-03-14T15:34:18Z",
+      "updatedAt": "2024-03-15T14:14:49Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "eb5738679194b30c3595499ec085ab7ea185a170",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "07-candidate",
+      "headRefOid": "ee11af833786298136cf585066e71282ef6d4397",
+      "closedAt": "2024-03-15T14:14:49Z",
+      "mergedAt": "2024-03-15T14:14:49Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "131682cc658976c4401e2b4833462f2282604fe3"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 22,
+      "id": "PR_kwDOJd_ZH85rul3s",
+      "title": "Update draft-ietf-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/22",
+      "state": "MERGED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Added more on SHOULD insert known-locals, please check and post the -07 if you're happy.",
+      "createdAt": "2024-04-04T15:48:10Z",
+      "updatedAt": "2024-04-04T17:22:59Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "1163b7899b422b98a6fb912fa53b8289b0e01136",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "new-07-candidate",
+      "headRefOid": "a323d3099b11bd7f8ee292b98132053d1815ac26",
+      "closedAt": "2024-04-04T17:22:58Z",
+      "mergedAt": "2024-04-04T17:22:58Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "8fbcd42e810ae8e492f187f356f4c03a71b078ae"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 23,
+      "id": "PR_kwDOJd_ZH85txREX",
+      "title": "updated sec 5.3 with RA PIO language",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/23",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-04-25T20:11:10Z",
+      "updatedAt": "2024-04-25T21:00:21Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "e88de32c3c74bc5f1d8165d6b97af1e5adb11d39",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-9",
+      "headRefOid": "4107f60ca3d0d7bd9f14cc260a228c5a4883ce1a",
+      "closedAt": "2024-04-25T21:00:21Z",
+      "mergedAt": "2024-04-25T21:00:21Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "ff6faac48f96a60913cd03b27d7552569da8421d"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 24,
+      "id": "PR_kwDOJd_ZH85uZUS_",
+      "title": "new operational insertion section",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/24",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-05-02T18:26:41Z",
+      "updatedAt": "2024-05-03T17:49:00Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "70b4ad4e4d1e516087de247cdf656ad5be441338",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-10",
+      "headRefOid": "5947f6db421f4f88b07f3fedcbdbcb3e3f3a7c9c",
+      "closedAt": "2024-05-03T17:48:59Z",
+      "mergedAt": "2024-05-03T17:48:59Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "f5bfc4f31a7c1ffdfb71b80492b1bad060545bf0"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH855hHXq",
+          "commit": {
+            "abbreviatedOid": "5947f6d"
+          },
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-05-03T17:48:49Z",
+          "updatedAt": "2024-05-03T17:48:49Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 25,
+      "id": "PR_kwDOJd_ZH85uxv9U",
+      "title": "updated removing DHCPv6 from known-local automation",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/25",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-05-07T15:16:20Z",
+      "updatedAt": "2024-05-07T19:06:15Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "f5bfc4f31a7c1ffdfb71b80492b1bad060545bf0",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-11",
+      "headRefOid": "e53b39de2d445411b526d5417237bff86bfe59bf",
+      "closedAt": "2024-05-07T19:06:15Z",
+      "mergedAt": "2024-05-07T19:06:15Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "c973d386b999a44b0a476b70e8b0e70406c0e3b6"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 26,
+      "id": "PR_kwDOJd_ZH85vk0B9",
+      "title": "typo stuff",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/26",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-05-15T19:35:51Z",
+      "updatedAt": "2024-05-20T15:44:35Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "d2fe424e03d5f2346dc8886a005bbe5cce2f09db",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-12",
+      "headRefOid": "9c9dad00aacf8a81aab04a6308a4522e16d8fc2d",
+      "closedAt": "2024-05-20T15:44:35Z",
+      "mergedAt": "2024-05-20T15:44:35Z",
+      "mergedBy": "timchown",
+      "mergeCommit": {
+        "oid": "e648d15aa33ce61f7d33e61e9e34ad6d5f466578"
+      },
+      "comments": [
+        {
+          "author": "jeremy-duncan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "conflicts fixed",
+          "createdAt": "2024-05-20T13:40:32Z",
+          "updatedAt": "2024-05-20T13:40:32Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH857JuJb",
+          "commit": {
+            "abbreviatedOid": "02b2d65"
+          },
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-05-20T12:46:38Z",
+          "updatedAt": "2024-05-20T12:46:38Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 27,
+      "id": "PR_kwDOJd_ZH85vq6t7",
+      "title": "updated to add #3",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/27",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-05-16T13:49:46Z",
+      "updatedAt": "2024-05-16T15:06:27Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "a7d460a62a4ff1b99a19e44f2616f062d8af8f44",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-13",
+      "headRefOid": "56fae19959d5f68f7849b01f92f29ba74a4c1dc6",
+      "closedAt": "2024-05-16T15:06:27Z",
+      "mergedAt": "2024-05-16T15:06:27Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "6f2638e0671b2969fe923df17f4f64e6320e770e"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 28,
+      "id": "PR_kwDOJd_ZH85v2JsQ",
+      "title": "Brian's feedback added",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/28",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-05-18T01:34:43Z",
+      "updatedAt": "2024-05-20T12:45:56Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "6f2638e0671b2969fe923df17f4f64e6320e770e",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-14",
+      "headRefOid": "03ed15a51f708a3eba2141fef73ccd7982a9adf1",
+      "closedAt": "2024-05-20T12:45:56Z",
+      "mergedAt": "2024-05-20T12:45:55Z",
+      "mergedBy": "timchown",
+      "mergeCommit": {
+        "oid": "d2fe424e03d5f2346dc8886a005bbe5cce2f09db"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH857Jtvy",
+          "commit": {
+            "abbreviatedOid": "03ed15a"
+          },
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-05-20T12:45:45Z",
+          "updatedAt": "2024-05-20T12:45:45Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 29,
+      "id": "PR_kwDOJd_ZH85xsGAq",
+      "title": "Update draft-ietf-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/29",
+      "state": "MERGED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Made changes to reflect list discussion.",
+      "createdAt": "2024-06-06T14:23:02Z",
+      "updatedAt": "2024-06-06T14:53:16Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "28b027230d97884fa3d93659b187ed6de2e582bc",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "09-candidate",
+      "headRefOid": "81099366143158b5dabf6f9a0945849bd2c7579a",
+      "closedAt": "2024-06-06T14:53:16Z",
+      "mergedAt": "2024-06-06T14:53:16Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "04a74f4c5fdd4487d78ec9131cdd86101619340e"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH859TSUP",
+          "commit": {
+            "abbreviatedOid": "8109936"
+          },
+          "author": "jeremy-duncan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-06-06T14:46:48Z",
+          "updatedAt": "2024-06-06T14:46:48Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 30,
+      "id": "PR_kwDOJd_ZH85x3wt0",
+      "title": "updated based on emails",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/30",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-06-08T21:33:08Z",
+      "updatedAt": "2024-06-28T11:11:41Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "6ea49acff17f923fd5c3516af5598e3a11d85256",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-15",
+      "headRefOid": "fe4fd369aa1ad71d79f64428f15144ca1a98425b",
+      "closedAt": "2024-06-28T11:11:41Z",
+      "mergedAt": "2024-06-28T11:11:41Z",
+      "mergedBy": "timchown",
+      "mergeCommit": {
+        "oid": "cc1b2fe0437000326448ba51daabcd7ed2815aea"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH86AAp50",
+          "commit": {
+            "abbreviatedOid": "fe4fd36"
+          },
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-06-28T11:11:33Z",
+          "updatedAt": "2024-06-28T11:11:33Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 31,
+      "id": "PR_kwDOJd_ZH85z4X8s",
+      "title": "Update draft-ietf-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/31",
+      "state": "MERGED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Final proposed changes for the -09 to be posted.",
+      "createdAt": "2024-06-28T11:32:02Z",
+      "updatedAt": "2024-06-28T13:51:23Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "cc1b2fe0437000326448ba51daabcd7ed2815aea",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "09-final-candidate",
+      "headRefOid": "a7532a21182e9ebdbd897e6fc4896a7522b209ec",
+      "closedAt": "2024-06-28T13:51:23Z",
+      "mergedAt": "2024-06-28T13:51:23Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "351b8d65ec83460de36febedbaa1bcd4636cb365"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH86ACT9j",
+          "commit": {
+            "abbreviatedOid": "a7532a2"
+          },
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "Looks great!",
+          "createdAt": "2024-06-28T13:51:17Z",
+          "updatedAt": "2024-06-28T13:51:17Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 32,
+      "id": "PR_kwDOJd_ZH8503WMg",
+      "title": "Update based on David's feedback",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/32",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-07-09T17:37:15Z",
+      "updatedAt": "2024-07-10T14:19:03Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "0a7ff4fed709f450730365f9b13769485527e9b0",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-16",
+      "headRefOid": "83bc847f82318db05091eb3565cffacf1d26992b",
+      "closedAt": "2024-07-10T14:19:03Z",
+      "mergedAt": "2024-07-10T14:19:03Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "38a94a40b73ebe472ae25d30297a602d0162b6e2"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 33,
+      "id": "PR_kwDOJd_ZH850_GxM",
+      "title": "rewording change from David",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/33",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-07-10T15:37:50Z",
+      "updatedAt": "2024-07-10T17:49:24Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "38a94a40b73ebe472ae25d30297a602d0162b6e2",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-17",
+      "headRefOid": "47bf325d6bec758eed0b2179b995c2be0a257e45",
+      "closedAt": "2024-07-10T17:49:24Z",
+      "mergedAt": "2024-07-10T17:49:24Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "608730106cbefd1b0cc0e694662cf31712abf450"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH86BVXsq",
+          "commit": {
+            "abbreviatedOid": "47bf325"
+          },
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "+1",
+          "createdAt": "2024-07-10T17:49:19Z",
+          "updatedAt": "2024-07-10T17:49:19Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 34,
+      "id": "PR_kwDOJd_ZH852Q_zi",
+      "title": "IETF 120 updates",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/34",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "1. fixes rules per David\r\n2. collapsed to fc00::/7 instead of the separate /8s per discussion",
+      "createdAt": "2024-07-23T21:08:35Z",
+      "updatedAt": "2024-07-23T23:47:01Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "608730106cbefd1b0cc0e694662cf31712abf450",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-18",
+      "headRefOid": "f37b75f35e01ed0a81aa8f37024c43d6233eaad7",
+      "closedAt": "2024-07-23T23:47:01Z",
+      "mergedAt": "2024-07-23T23:47:01Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "f450368df575fe222799f5468ef4fe1e33aa71b6"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 35,
+      "id": "PR_kwDOJd_ZH857xIqa",
+      "title": "Update draft-ietf-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/35",
+      "state": "MERGED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Mainly cosmetic edits for the hopefully final -10 version. Will email about rules 2, 3 and 4 which we could simplify.  Rule 4 seems superfluous now, and 2 and 3 could almost be merged.",
+      "createdAt": "2024-09-17T13:54:29Z",
+      "updatedAt": "2024-09-18T16:12:11Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "f450368df575fe222799f5468ef4fe1e33aa71b6",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "10-candidate",
+      "headRefOid": "eea0460411847c38d575f1f134d81be6c173d4c5",
+      "closedAt": "2024-09-18T16:12:11Z",
+      "mergedAt": "2024-09-18T16:12:11Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "f4ce63300035ae9270264b1cda3d618713bdf5d7"
+      },
+      "comments": [
+        {
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Ah yeah that\u2019s the US English, sorry \u201clearnt\u201d is UK English \ud83d\ude0a\r\n\r\nThe RFC Editor would pick these up but best to get it right.\r\n\r\nFrom: Jeremy Duncan ***@***.***>\r\nDate: Tuesday, 17 September 2024 at 17:51\r\nTo: buraglio/draft-buraglio-6man-rfc6724-update ***@***.***>\r\nCc: Tim Chown ***@***.***>, Author ***@***.***>\r\nSubject: Re: [buraglio/draft-buraglio-6man-rfc6724-update] Update draft-ietf-6man-rfc6724-update.md (PR #35)\r\n\r\n@jeremy-duncan requested changes on this pull request.\r\n\r\ncan you change to this instead?\r\n\r\n\"The following rules define how the learned known-local\"\r\n\r\n\u2014\r\nReply to this email directly, view it on GitHub<https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/35#pullrequestreview-2310298715>, or unsubscribe<https://github.com/notifications/unsubscribe-auth/ABMV24CHLFEVKSISSMLRLQLZXBMZVAVCNFSM6AAAAABOLRG5TWVHI2DSMVQWIX3LMV43YUDVNRWFEZLROVSXG5CSMV3GSZLXHMZDGMJQGI4TQNZRGU>.\r\nYou are receiving this because you authored the thread.Message ID: ***@***.***>\r\n",
+          "createdAt": "2024-09-18T08:41:08Z",
+          "updatedAt": "2024-09-18T08:41:08Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH86JtFxb",
+          "commit": {
+            "abbreviatedOid": "eea0460"
+          },
+          "author": "jeremy-duncan",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "can you change to this instead?\r\n\r\n\"The following rules define how the learned known-local\"",
+          "createdAt": "2024-09-17T16:51:17Z",
+          "updatedAt": "2024-09-17T16:51:17Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 36,
+      "id": "PR_kwDOJd_ZH85_rmsz",
+      "title": "/40 rules added... LET'S GOOOOO",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/36",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-10-23T21:14:50Z",
+      "updatedAt": "2024-10-25T15:11:24Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "f38a98d5954866dd6eb901b5dc1029a6fd83d71a",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-19",
+      "headRefOid": "99bb4ab5741bdf19e74b863521c889665327bb9c",
+      "closedAt": "2024-10-25T15:11:24Z",
+      "mergedAt": "2024-10-25T15:11:24Z",
+      "mergedBy": "timchown",
+      "mergeCommit": {
+        "oid": "9bbc21c1a7be353ca54dce06534a39a9afc258da"
+      },
+      "comments": [
+        {
+          "author": "jeremy-duncan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@timchown updated in the latest commit. that work?",
+          "createdAt": "2024-10-25T12:09:11Z",
+          "updatedAt": "2024-10-25T12:09:11Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH86OkYoZ",
+          "commit": {
+            "abbreviatedOid": "0715a7b"
+          },
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "state": "CHANGES_REQUESTED",
+          "body": "See email - I suggest \"2. RIOs within fd00::/8 that are of length /40 or longer MUST be added to the known-local ULA list. RIOs for shorter prefixes MUST NOT be used to insert known-local ULA entries in the address selection policy table.\u201d\"",
+          "createdAt": "2024-10-24T09:36:04Z",
+          "updatedAt": "2024-10-24T09:36:04Z",
+          "comments": []
+        },
+        {
+          "id": "PRR_kwDOJd_ZH86Oyiwq",
+          "commit": {
+            "abbreviatedOid": "99bb4ab"
+          },
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "Looks good.",
+          "createdAt": "2024-10-25T15:11:15Z",
+          "updatedAt": "2024-10-25T15:11:15Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 37,
+      "id": "PR_kwDOJd_ZH85_67cx",
+      "title": "Update draft-ietf-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/37",
+      "state": "MERGED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Brian's text plus some waffle about /40.",
+      "createdAt": "2024-10-25T15:31:08Z",
+      "updatedAt": "2024-10-25T16:25:41Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "9bbc21c1a7be353ca54dce06534a39a9afc258da",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "Brian's-text",
+      "headRefOid": "ad496ba17d4d769d32429ec85914d1866b6954f2",
+      "closedAt": "2024-10-25T16:25:41Z",
+      "mergedAt": "2024-10-25T16:25:41Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "f8a7455e30c2157f644898afd2b7d1af8b67e4eb"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH86OzQ7-",
+          "commit": {
+            "abbreviatedOid": "ad496ba"
+          },
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-10-25T16:25:33Z",
+          "updatedAt": "2024-10-25T16:25:33Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 39,
+      "id": "PR_kwDOJd_ZH86A1iMd",
+      "title": "fix the known-local ULA definitions to clarify known-local and not general ULA",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/39",
+      "state": "MERGED",
+      "author": "buraglio",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "Lorenzo pointed out that the ULA over IPv4 was vague, and dod not clarify known-local. ",
+      "createdAt": "2024-11-04T18:20:52Z",
+      "updatedAt": "2024-11-06T08:22:20Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "5d39fa858675b7df517668bbcca1d1e0d26c3917",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "buraglio-post-wglc",
+      "headRefOid": "fc45786966c1653e022d536cfc509211a22a3ab6",
+      "closedAt": "2024-11-05T18:34:09Z",
+      "mergedAt": "2024-11-05T18:34:09Z",
+      "mergedBy": "timchown",
+      "mergeCommit": {
+        "oid": "88ecd7ff7e80bfe4f8a30329c54e8248c156c99b"
+      },
+      "comments": [
+        {
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "body": "Also add end quote at the end of the 4149 reference.",
+          "createdAt": "2024-11-04T18:25:43Z",
+          "updatedAt": "2024-11-04T18:25:43Z"
+        },
+        {
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Actually general ULAs *are* now preferred over IPv4.  So that was correct as it was.  I did query this twice to check it's what was wanted, as I was surprised that the WG had changed its mind - originally the WG didn't want general ULA to be preferred over IPv4 because of the possibility of general ULAs in public DNS. ",
+          "createdAt": "2024-11-05T09:33:35Z",
+          "updatedAt": "2024-11-05T09:33:35Z"
+        },
+        {
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "body": "So until that is clarified I'm not accepting the PR.",
+          "createdAt": "2024-11-05T09:34:11Z",
+          "updatedAt": "2024-11-05T09:34:11Z"
+        },
+        {
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "body": "OK, so NOW I understand, the PR is good, but probably we need to say more...  and up the rev to -15",
+          "createdAt": "2024-11-05T18:34:06Z",
+          "updatedAt": "2024-11-05T18:34:06Z"
+        },
+        {
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "body": "Done\r\n\r\nOn Tue, Nov 5, 2024 at 6:35\u202fPM Tim Chown ***@***.***> wrote:\r\n\r\n> ***@***.**** commented on this pull request.\r\n>\r\n> thumbs up. will check again once merged.\r\n>\r\n> \u2014\r\n> Reply to this email directly, view it on GitHub\r\n> <https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/39#pullrequestreview-2416416357>,\r\n> or unsubscribe\r\n> <https://github.com/notifications/unsubscribe-auth/AAHZT6VVCDS7CYI2PQEKXGTZ7EFWHAVCNFSM6AAAAABRE275T2VHI2DSMVQWIX3LMV43YUDVNRWFEZLROVSXG5CSMV3GSZLXHMZDIMJWGQYTMMZVG4>\r\n> .\r\n> You are receiving this because you authored the thread.Message ID:\r\n> <buraglio/draft-buraglio-6man-rfc6724-update/pull/39/review/2416416357@\r\n> github.com>\r\n>\r\n",
+          "createdAt": "2024-11-06T08:22:19Z",
+          "updatedAt": "2024-11-06T08:22:19Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH86QB5Zl",
+          "commit": {
+            "abbreviatedOid": "fc45786"
+          },
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "thumbs up.  will check again once merged.",
+          "createdAt": "2024-11-05T18:34:54Z",
+          "updatedAt": "2024-11-05T18:34:54Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 40,
+      "id": "PR_kwDOJd_ZH86BB_3P",
+      "title": "15 candidate",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/40",
+      "state": "MERGED",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This PR includes clarification edits that make it clearer that ULA-ULA is only preferred over IPv4-IPv4 when then ULA is known-local, or the insertion of known-local ULAs has been administratively toggled off.\r\nThe abstract is rewritten to be clearer, but is semantically the same.",
+      "createdAt": "2024-11-06T09:58:45Z",
+      "updatedAt": "2024-11-06T10:39:02Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "24866b810e43fb8cd298f98eaf394e1c5c127362",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "15-candidate",
+      "headRefOid": "761cb6acb6bbd9e956f481715048deea0fbcf2d4",
+      "closedAt": "2024-11-06T10:34:18Z",
+      "mergedAt": "2024-11-06T10:34:18Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "37c21425a80bc4be75c084f509ac408e101bbf7a"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH86QHcqo",
+          "commit": {
+            "abbreviatedOid": "761cb6a"
+          },
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-11-06T10:34:00Z",
+          "updatedAt": "2024-11-06T10:34:10Z",
+          "comments": [
+            {
+              "originalPosition": 87,
+              "body": "I had to read this a few times for it to make sense. I can't think of a better way to say it - and perhaps it's because I've read this too many times. ",
+              "createdAt": "2024-11-06T10:34:00Z",
+              "updatedAt": "2024-11-06T10:34:10Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOJd_ZH86QHj6p",
+          "commit": {
+            "abbreviatedOid": "761cb6a"
+          },
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-11-06T10:39:02Z",
+          "updatedAt": "2024-11-06T10:39:02Z",
+          "comments": [
+            {
+              "originalPosition": 87,
+              "body": "haha!  i think it's right, but can't think of a better way to say it :)",
+              "createdAt": "2024-11-06T10:39:02Z",
+              "updatedAt": "2024-11-06T10:39:03Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 41,
+      "id": "PR_kwDOJd_ZH86G8t5V",
+      "title": "Edits to clarify known-ULA behavior in relation to the SNAC router RA header flag bit.",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/41",
+      "state": "MERGED",
+      "author": "Abhayakara",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "This adds a prerequisite to the list of rules for learning known-local prefixes that if a PIO comes from an RA with the SNAC Router Flag bit set, this PIO MUST be ignored. This avoids the possibility of preferring a ULA source address based on a locally-generated non-routed SNAC \"usable prefix\" when communicating to a ULA destination.\r\n\r\nThis also modifies rule 4 to say that if the address being considered was generated as a result of a SNAC PIO, that address should not be considered part of a known-local prefix. This is required because otherwise the first prerequisite usually won't have any effect, since the known-local prefix will just be derived from the SLAAC address from the PIO prefix rather than from the PIO itself.\r\n\r\nFrom an implementation perspective, this means that an implementation needs to remember which prefixes came from PIOs in RAs with the SNAC router bit set, and either needs to remember which addresses were generated with SLAAC based on those prefixes, or else needs to check each interface address to see if it's in a prefix that came from an RA with the SNAC bit set.\r\n\r\nI did not document this in the edit, since implementations can achieve the requirements stated in the text however they want, and so I think describing a specific implementation might be confusing. However, we could add such text if the WG thinks it would be helpful.",
+      "createdAt": "2025-01-07T14:49:50Z",
+      "updatedAt": "2025-01-07T15:41:17Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "7c2d63c54595d31126d60fd0ccc2fbb5ddab7752",
+      "headRepository": "Abhayakara/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "ted-snac-edits",
+      "headRefOid": "8abf2ebaf54b964a16212557651b65b3893c01ba",
+      "closedAt": "2025-01-07T15:24:02Z",
+      "mergedAt": "2025-01-07T15:24:02Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "ed8021b535a3ce7e062373a399ecb2b1033bdabf"
+      },
+      "comments": [
+        {
+          "author": "jeremy-duncan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "@Abhayakara You make an important point about PIO tracking. Implementations have to be adding logic to adds items to the table based on where they came from. We should say something about this because there are prototype implementations from folks like Lorenzo that are just adding to the table if it's on the interface - which will break the SNAC implementation.",
+          "createdAt": "2025-01-07T15:38:30Z",
+          "updatedAt": "2025-01-07T15:41:17Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH86XE0iM",
+          "commit": {
+            "abbreviatedOid": "8abf2eb"
+          },
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "Thanks, Ted. This helps immensely. ",
+          "createdAt": "2025-01-07T15:23:41Z",
+          "updatedAt": "2025-01-07T15:23:41Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 42,
+      "id": "PR_kwDOJd_ZH86G9eVE",
+      "title": "Update draft-ietf-6man-rfc6724-update.md",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/42",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "updated table with known-local",
+      "createdAt": "2025-01-07T16:23:53Z",
+      "updatedAt": "2025-01-07T20:40:33Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "72c95cb51451ec24be3bb1027c15660d99665aee",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-20",
+      "headRefOid": "b8a7e11653cd12b719c1868cb3c4242026958a6e",
+      "closedAt": "2025-01-07T20:40:33Z",
+      "mergedAt": "2025-01-07T20:40:33Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "786d4687e6b1a6bf6fbd6c44263fb3826aab1cdc"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH86XHfxQ",
+          "commit": {
+            "abbreviatedOid": "b8a7e11"
+          },
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "Looks great!",
+          "createdAt": "2025-01-07T20:40:28Z",
+          "updatedAt": "2025-01-07T20:40:28Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 43,
+      "id": "PR_kwDOJd_ZH86G_AaY",
+      "title": "typo fixes",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/43",
+      "state": "MERGED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-01-07T20:46:33Z",
+      "updatedAt": "2025-01-07T20:53:55Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "786d4687e6b1a6bf6fbd6c44263fb3826aab1cdc",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-21",
+      "headRefOid": "4a555529d165f28e75e36ba75b89f41894db2d65",
+      "closedAt": "2025-01-07T20:53:55Z",
+      "mergedAt": "2025-01-07T20:53:55Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "d9a9c100aea9804c63fef731299f12f4566c109d"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH86XHk5D",
+          "commit": {
+            "abbreviatedOid": "4a55552"
+          },
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "Thanks!",
+          "createdAt": "2025-01-07T20:53:47Z",
+          "updatedAt": "2025-01-07T20:53:47Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 45,
+      "id": "PR_kwDOJd_ZH86IbZ3c",
+      "title": "Fixing non-ASCII characters",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/45",
+      "state": "MERGED",
+      "author": "furry13",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "..to make idnits happy.",
+      "createdAt": "2025-01-21T03:35:14Z",
+      "updatedAt": "2025-01-21T15:29:10Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "4a7d4ba99b26e616f12ee03bc05d5c3dc9252fa1",
+      "headRepository": "furry13/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "idnits",
+      "headRefOid": "df3f7f50de7ddf3e4429f62d6a9c52d415255f21",
+      "closedAt": "2025-01-21T15:22:28Z",
+      "mergedAt": "2025-01-21T15:22:28Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "75245b1ea7d5cc2cb2e49fff5547339222b24d50"
+      },
+      "comments": [
+        {
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "body": "If we're doing this, let's do the other nits in the open issue.",
+          "createdAt": "2025-01-21T09:03:04Z",
+          "updatedAt": "2025-01-21T09:03:04Z"
+        },
+        {
+          "author": "furry13",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": ">If we're doing this, let's do the other nits in the open issue.\r\n\r\nI guess we don't need to fix everything in one commit, so why not merge this change?\r\nDo you want to modify this PR? Or would you prefer me to rollback this one and you fix all nits in a dedicated PR?\r\n",
+          "createdAt": "2025-01-21T11:38:49Z",
+          "updatedAt": "2025-01-21T11:38:49Z"
+        },
+        {
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Nick? I don't mind. We need to fix both at some point.",
+          "createdAt": "2025-01-21T11:55:18Z",
+          "updatedAt": "2025-01-21T11:55:18Z"
+        },
+        {
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "body": "I approved these. We have a few other changes to make so let's work on those PRs.",
+          "createdAt": "2025-01-21T15:29:08Z",
+          "updatedAt": "2025-01-21T15:29:08Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH86Y4jcN",
+          "commit": {
+            "abbreviatedOid": "df3f7f5"
+          },
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2025-01-21T15:22:16Z",
+          "updatedAt": "2025-01-21T15:22:16Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 46,
+      "id": "PR_kwDOJd_ZH86IjYmr",
+      "title": "ADjust references, add implementation status section.",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/46",
+      "state": "MERGED",
+      "author": "buraglio",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-01-21T22:35:16Z",
+      "updatedAt": "2025-01-22T20:04:22Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "75245b1ea7d5cc2cb2e49fff5547339222b24d50",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "reference-and-implementation",
+      "headRefOid": "feade11cde7e561d81e4b0b5ef589ebe90560f9d",
+      "closedAt": "2025-01-22T20:03:23Z",
+      "mergedAt": "2025-01-22T20:03:23Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "7ff2675f814ad8b9998152ffacaf71ad885427d9"
+      },
+      "comments": [
+        {
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "body": "This looks fine to me.  We can then do a PR for the nits in the other open issue.",
+          "createdAt": "2025-01-22T12:18:46Z",
+          "updatedAt": "2025-01-22T12:18:46Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 47,
+      "id": "PR_kwDOJd_ZH86RFC19",
+      "title": "per TSVART review added expanded ULA in abstract",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/47",
+      "state": "CLOSED",
+      "author": "jeremy-duncan",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-04-02T12:11:26Z",
+      "updatedAt": "2025-04-02T17:53:38Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "75a98a252d28edb031fea757c9d64093b7e73dfb",
+      "headRepository": "jeremy-duncan/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "patch-22",
+      "headRefOid": "d943edbea8c2dcf064448e6943e5d3637961dc99",
+      "closedAt": "2025-04-02T17:53:38Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "jeremy-duncan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "looks good to me",
+          "createdAt": "2025-04-02T15:55:12Z",
+          "updatedAt": "2025-04-02T15:55:12Z"
+        },
+        {
+          "author": "timchown",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Yup.\r\n\r\nOn 02/04/2025, 16:55, \"Jeremy Duncan\" ***@***.***> wrote:\r\n\r\n\r\n\r\nlooks good to me\r\n\r\n\u2014\r\nReply to this email directly, view it on GitHub<https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/47#issuecomment-2773040080>, or unsubscribe<https://github.com/notifications/unsubscribe-auth/ABMV24FSXWBF6XVZBLSPWPD2XQB7LAVCNFSM6AAAAAB2JMRX56VHI2DSMVQWIX3LMV43OSLTON2WKQ3PNVWWK3TUHMZDONZTGA2DAMBYGA>.\r\nYou are receiving this because you are subscribed to this thread.Message ID: ***@***.***>\r\n[Image removed by sender. jeremy-duncan]jeremy-duncan left a comment (buraglio/draft-buraglio-6man-rfc6724-update#47)<https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/47#issuecomment-2773040080>\r\n\r\nlooks good to me\r\n\r\n\u2014\r\nReply to this email directly, view it on GitHub<https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/47#issuecomment-2773040080>, or unsubscribe<https://github.com/notifications/unsubscribe-auth/ABMV24FSXWBF6XVZBLSPWPD2XQB7LAVCNFSM6AAAAAB2JMRX56VHI2DSMVQWIX3LMV43OSLTON2WKQ3PNVWWK3TUHMZDONZTGA2DAMBYGA>.\r\nYou are receiving this because you are subscribed to this thread.Message ID: ***@***.***>\r\n",
+          "createdAt": "2025-04-02T16:10:23Z",
+          "updatedAt": "2025-04-02T16:10:23Z"
+        },
+        {
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "body": "Added in new edit",
+          "createdAt": "2025-04-02T17:53:38Z",
+          "updatedAt": "2025-04-02T17:53:38Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH86jH2Uw",
+          "commit": {
+            "abbreviatedOid": "d943edb"
+          },
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "state": "CHANGES_REQUESTED",
+          "body": "This document draws on several years of operational experience to update RFC 6724, defining the concept of \"known-local\" Unique Local Address (ULA) prefixes that enable ULA-to-ULA communications within fd00::/8 to become preferred over both IPv4-IPv4 and GUA-to-GUA (Global Unicast Addresses) for local use. The document defines the means by which nodes can both identify and insert such prefixes into their address selection policy table. It also clarifies the mandatory, unconditional requirement for support for Rule 5.5 and demotes the preference for 6to4 addresses. These changes to default behavior improve supportability of common use cases, including automatic / unmanaged scenarios, and makes preference for IPv6 over IPv4 consistent in local site networks for both ULA and GUA prefixes. It is recognized that some less common deployment scenarios may require explicit configuration or custom changes to achieve desired operational parameters.",
+          "createdAt": "2025-04-02T15:36:42Z",
+          "updatedAt": "2025-04-02T15:36:42Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 48,
+      "id": "PR_kwDOJd_ZH86R15sp",
+      "title": "Address GENART NITs",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/48",
+      "state": "MERGED",
+      "author": "buraglio",
+      "authorAssociation": "OWNER",
+      "assignees": [
+        "timchown"
+      ],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-04-08T19:55:20Z",
+      "updatedAt": "2025-06-16T21:21:13Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "80d2b5444b9d683ac18ad8eafc26c6b854fc40a2",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "GENART-NIT-suggestions",
+      "headRefOid": "0af78f0cf128a595a31e1d32c86581d7b48486b8",
+      "closedAt": "2025-06-16T21:21:13Z",
+      "mergedAt": "2025-06-16T21:21:13Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "6f799ab56273ec9dfba81f97f7b013d8fa0139fc"
+      },
+      "comments": [
+        {
+          "author": "jeremy-duncan",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "i agree! and all changes look good!",
+          "createdAt": "2025-04-08T20:22:41Z",
+          "updatedAt": "2025-04-08T20:22:41Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 50,
+      "id": "PR_kwDOJd_ZH86bfyWz",
+      "title": "Fix ULA typo (double colons)",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/50",
+      "state": "CLOSED",
+      "author": "m2martin",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix a typo in ULA address.\r\nRelated to https://mailarchive.ietf.org/arch/msg/ipv6/eG5hj5eQWH_0JvG_yX11kxtArRM/",
+      "createdAt": "2025-06-21T06:23:35Z",
+      "updatedAt": "2025-06-23T22:19:35Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "78a9e02054ee1c8d901ba02915771f091e634f61",
+      "headRepository": null,
+      "headRefName": "ula-typo",
+      "headRefOid": "e50b54f7d6edb477fa11d94b81d770c75484d05a",
+      "closedAt": "2025-06-23T22:19:34Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "buraglio",
+          "authorAssociation": "OWNER",
+          "body": "Thanks. I fixed this along with a handful of other changes from the IESG review.",
+          "createdAt": "2025-06-23T22:19:34Z",
+          "updatedAt": "2025-06-23T22:19:34Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 51,
+      "id": "PR_kwDOJd_ZH86bvhZ2",
+      "title": "Pre telechat",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/51",
+      "state": "MERGED",
+      "author": "buraglio",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-06-23T22:18:53Z",
+      "updatedAt": "2025-06-23T22:19:00Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "78a9e02054ee1c8d901ba02915771f091e634f61",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "pre-telechat",
+      "headRefOid": "c5b920a398989aae06183fce709060bf95cb1d90",
+      "closedAt": "2025-06-23T22:19:00Z",
+      "mergedAt": "2025-06-23T22:19:00Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "705c5f573b0c28cab102adb4b527dbc9eed16e27"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 52,
+      "id": "PR_kwDOJd_ZH86deCPB",
+      "title": "remove rule 6, fix SNAC GUA/ULA reference in rule 5",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/52",
+      "state": "MERGED",
+      "author": "buraglio",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-07-04T16:02:17Z",
+      "updatedAt": "2025-07-04T21:38:02Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "96cffb4320efd72fa79636d71f077d2fc00fb412",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "pre-rfc-editor",
+      "headRefOid": "149868c15bd4bebefa17058bf5e8830f10da3409",
+      "closedAt": "2025-07-04T16:23:17Z",
+      "mergedAt": "2025-07-04T16:23:17Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "dd4605badf08a0f3dd04c140fcf318dbade21b3d"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOJd_ZH86yHvZx",
+          "commit": {
+            "abbreviatedOid": "149868c"
+          },
+          "author": "mcr",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "looks good to me.",
+          "createdAt": "2025-07-04T21:38:02Z",
+          "updatedAt": "2025-07-04T21:38:02Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 53,
+      "id": "PR_kwDOJd_ZH86deOhu",
+      "title": "Add ietf actions template",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/53",
+      "state": "CLOSED",
+      "author": "buraglio",
+      "authorAssociation": "OWNER",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-07-04T16:31:59Z",
+      "updatedAt": "2025-07-04T16:55:11Z",
+      "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "baseRefName": "main",
+      "baseRefOid": "dd4605badf08a0f3dd04c140fcf318dbade21b3d",
+      "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
+      "headRefName": "pre-rfc-editor",
+      "headRefOid": "faaf697987741a2c697a8425011b36712d4ff546",
+      "closedAt": "2025-07-04T16:55:11Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
+    }
+  ]
+}
