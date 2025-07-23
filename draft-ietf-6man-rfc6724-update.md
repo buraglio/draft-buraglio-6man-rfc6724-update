@@ -216,7 +216,7 @@ The following rules define how the learnt known-local ULA prefixes under fd00::/
 
 6. When inserting known-local ULA entries into the policy table, they MUST have a label of 14 (rather than the default ULA label of 13) and a precedence of 45.
 
-7. Entries MUST be removed from the known-local ULA list and the Policy Table when the announced RIOs or PIOs are deprecated, or an interface address is removed, and there is no covering RIO or PIO.
+7. Entries MUST be removed from the known-local ULA list and the Policy Table when the announced RIOs or PIOs are invalidated, or an interface address is removed, and there is no covering RIO or PIO.
 
 When support is added for the insertion of known-local ULA prefixes into the current policy table it MUST default to on, but a mechanism SHOULD be supported to administratively toggle the behavior off and on.
 
