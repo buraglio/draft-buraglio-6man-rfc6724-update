@@ -161,7 +161,7 @@ The table below reflects the updated precedence table:
 
 Prefix        Precedence Label
 ::1/128               50     0
-$known_local/48       45    14 (**)
+$known_local/40-48    45    14 (**)
 ::/0                  40     1
 fc00::/7              30    13 (*)
 ::ffff:0:0/96         20     4 (*)
