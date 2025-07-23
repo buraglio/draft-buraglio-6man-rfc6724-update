@@ -67,12 +67,11 @@ that ULA-to-ULA communications using such prefixes should be preferred over
 both IPv4-to-IPv4 and GUA-to-GUA (Global Unicast Address) communications in
 local use scenarios. The document defines mechanisms for nodes to identify and
 incorporate known-local prefixes into their address selection policy tables. It
-further clarifies the unconditional requirement for implementing Rule 5.5 of
-RFC 6724 and reduces the default precedence for 6to4 addresses. These updates
-enhance the supportability of typical deployment environments, including
-automatic and unmanaged configurations, and promote consistent IPv6-over-IPv4
-precedence behavior for both ULA and GUA within local networks. The document
-acknowledges that certain atypical deployment models may require explicit
+introduces a requirement to implement Rule 5.5 of RFC 6724 and reduces the default
+precedence for 6to4 addresses. These updates enhance the supportability of typical
+deployment environments, including automatic and unmanaged configurations,
+and promote consistent IPv6-over-IPv4 precedence behavior for both ULA and GUA within
+local networks. The document acknowledges that certain atypical deployment models may require explicit
 configuration to achieve intended operational outcomes.
 
 --- middle
@@ -112,7 +111,7 @@ As a result, the use of ULAs is not a viable option for dual-stack networking tr
 
 Additionally, an issue exists in the scenario where nodes in a dual-stack site are addressed from both ULA and GUA prefixes, RFC6724 will see GUA-GUA address pairs chosen over ULA-ULA. One goal of ULA addresses was to allow local communications to be independent of the availability of external connectivity and addresses, such that persistent ULAs can be used even when the global prefix made available to a site is withdrawn or changes.
 
-This document therefore introduces two changes to RFC6724 to support a node implementing elevated or differential precedence for known-local ULAs, i.e., ULAs within a common local network, over both IPv4 and IPv6 GUAs.
+This document therefore introduces two changes to RFC6724 to require that nodes implement elevated or differential precedence for known-local ULAs, i.e., ULAs within a common local network, over both IPv4 and IPv6 GUAs.
 
 The first change is an update to the default policy table to elevate the precedence for ULAs prefixes such that ULAs, like GUAs, carry a higher precedence than all IPv4 addresses, making IPv6 precedence over IPv4 consistent for both ULAs and GUAs.
 
@@ -137,7 +136,7 @@ GUA: Global Unicast Addresses as defined in {{RFC3587}}
 
 ULA: Unique Local Addresses as defined in {{RFC4193}}
 
-Known-local ULA: A ULA prefix that an individual organization/site has determined to be local to a given node/network/administrative domain
+Known-local ULA: A ULA prefix that a node has determined to be local to a given node/network/administrative domain
 
 RA: IPv6 Router Advertisement as defined in {{RFC4861}}
 
@@ -147,7 +146,7 @@ SLAAC: IPv6 Stateless Address Auto-configuration {{RFC4862}}
 
 # Adjustments to RFC 6724
 
-This document makes three specific changes to RFC6724: first to update the default policy table, second to change Rule 5.5 adjusts precedence of addresses in a prefix advertised by the next-hop to a requirement, and third to require nodes to insert observed known-local ULA prefixes into their policy table.
+This document makes three specific changes to RFC6724: first to update the default policy table, second to change Rule 5.5, which adjusts precedence of addresses in a prefix advertised by the next-hop, to a requirement, and third to require nodes to insert observed known-local ULA prefixes into their policy table.
 
 ## Policy Table Update
 
@@ -161,7 +160,7 @@ The table below reflects the updated precedence table:
 
 Prefix        Precedence Label
 ::1/128               50     0
-$known_local/40-48    45    14 (**)
+$known_local/4x       45    14 (**)
 ::/0                  40     1
 fc00::/7              30    13 (*)
 ::ffff:0:0/96         20     4 (*)
@@ -172,7 +171,7 @@ fec0::/10              1    11
 3ffe::/16              1    12
 
 (*) value(s) changed in update
-(**) $known_local = the ULA Known-Local /48 IPv6 prefix(es) (if any)
+(**) $known_local = the ULA Known-Local IPv6 prefix(es), with lengths between /40 and /48 (if any)
 with precedence and labels per the rules in Sec 5.3
 
 ~~~~~~~~~~
@@ -198,7 +197,7 @@ If a node can determine which ULA prefix(es) are known to be local, it can provi
 
 This document thus elevates the MAY requirement above for insertion to a MUST for the specific case of known-local ULAs.
 
-These known-local ULA prefixes are inferred from ULA addresses assigned to interfaces or learned from Prefix Information Options (PIOs) in Router Advertisements (RAs) {{RFC4861}} received on any interface regardless of how the PIO flags are set. Further, they are learned from Route Information Options (RIOs) in RAs received on any interface by Type C hosts that process RIOs, as defined in {{RFC4191}}.
+These known-local ULA prefixes are inferred from ULA addresses assigned to interfaces or learned from Prefix Information Options (PIOs) in Router Advertisements (RAs) {{RFC4861}} received, regardless of how the PIO flags are set. Further, they are learned from Route Information Options (RIOs) in RAs received by Type C hosts that process RIOs, as defined in {{RFC4191}}.
 
 Section 3.1 of {{RFC4193}} only defines ULA prefixes where the L-bit is set to 1, i.e., prefixes under fd00::/8 where the prefix is locally assigned or generated.
 
@@ -216,7 +215,7 @@ The following rules define how the learnt known-local ULA prefixes under fd00::/
 
 6. When inserting known-local ULA entries into the policy table, they MUST have a label of 14 (rather than the default ULA label of 13) and a precedence of 45.
 
-7. Entries MUST be removed from the known-local ULA list and the Policy Table when the announced RIOs or PIOs are invalidated, or an interface address is removed, and there is no covering RIO or PIO.
+7. Entries MUST be removed from the known-local ULA list and the Policy Table when the announced RIOs or PIOs become invalid, or an interface address is removed, and there is no covering RIO or PIO.
 
 When support is added for the insertion of known-local ULA prefixes into the current policy table it MUST default to on, but a mechanism SHOULD be supported to administratively toggle the behavior off and on.
 
@@ -281,7 +280,7 @@ In this case ULA1::1 - ULA2::1 wins because of matching labels (both 14) and hig
 
 If host A were to send to a host C with addresses ULA3::1 (where ULA3::/48 has not been learned to be a known-local prefix) and GUA2:1::1, host A would use the GUA address pair for the communication as the GUAs have matching labels (both 1) where the known-local ULA and general ULA do not (14 and 13 respectively).
 
-## Known-local ULA-ULA preferred over IPv4-IPv4
+## Known-local ULA-known-local ULA preferred over IPv4-IPv4
 
 This update changes previous behavior for this case. RFC6724 as originally defined would lead to IPv4 being preferred over ULAs, which is contrary to the spirit of the IPv6 GUA precedence over IPv4, and to the goal of removing evidenced use of IPv4 in a dual-stack site before transitioning to IPv6-only.
 
@@ -289,7 +288,7 @@ This document elevates the precedence of known-local ULAs above IPv4, so known-l
 
 ## IPv4-IPv4 preferred over ULA-GUA
 
-An IPv6 ULA address will only be preferred over an IPv4 address if both IPv6 ULA source and destination addresses are available. With Rule 5 of Section 6 of {{RFC6724}} and the ULA-specific label added in {{RFC6724}} (which was not present in {{RFC3484}}) an IPv4 source and destination will be preferred over an IPv6 ULA source and an IPv6 GUA destination address, even though generally known-local IPv6 ULA addresses are preferred over IPv4 in the policy table as proposed in this update. The IPv4 matching label trumps ULA-GUA.
+An IPv6 ULA source address will only be preferred over an IPv4 address if both IPv6 ULA source and destination addresses are available. With Rule 5 of Section 6 of {{RFC6724}} and the ULA-specific label added in {{RFC6724}} (which was not present in {{RFC3484}}) an IPv4 source and destination will be preferred over an IPv6 ULA source and an IPv6 GUA destination address, even though generally known-local IPv6 ULA addresses are preferred over IPv4 in the policy table as proposed in this update. The IPv4 matching label trumps ULA-GUA.
 
 # Discussion of ULA source with GUA or remote ULA destination
 
@@ -359,7 +358,7 @@ As stated in the above discussion, such ICMPv6 messages can assist in fast failo
 
 ## Avoid using ULA addresses in the global DNS
 
-Section 4.4 of {{RFC4193}} states that "AAAA and PTR records for locally assigned local IPv6 addresses are not recommended being installed in the global DNS."
+Section 4.4 of {{RFC4193}} states that "AAAA and PTR records for locally assigned local IPv6 addresses not recommended to be installed in the global DNS."
 
 This is particularly important given the general method presented in this document elevates the priority for ULAs above IPv4. However, where support for insertion of known-local prefixes is implemented, such "rogue" ULAs in the global DNS are a less serious concern for address selection as they would have the lowest precedence.
 
