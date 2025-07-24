@@ -136,7 +136,7 @@ GUA: Global Unicast Addresses as defined in {{RFC3587}}
 
 ULA: Unique Local Addresses as defined in {{RFC4193}}
 
-Known-local ULA: A ULA prefix that a node has determined to be local to a given node/network/administrative domain
+Known-local ULA: A ULA prefix that a node has determined to be local to a given node, network, or administrative domain
 
 RA: IPv6 Router Advertisement as defined in {{RFC4861}}
 
@@ -219,7 +219,7 @@ The following rules define how the learnt known-local ULA prefixes under fd00::/
 
 When support is added for the insertion of known-local ULA prefixes into the current policy table it MUST default to on, but a mechanism SHOULD be supported to administratively toggle the behavior off and on.
 
-Tools that display a node's current policy table MUST show all currently inserted known-local ULA prefixes.
+Mechanisms and techniques used to display a node's current policy table MUST show all currently inserted known-local ULA prefixes.
 
 The identification and insertion of known-local prefixes under fc00::/8 is currently not defined.
 
