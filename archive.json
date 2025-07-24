@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-06T02:20:28.490958+00:00",
+  "timestamp": "2025-07-24T02:18:16.981145+00:00",
   "repo": "buraglio/draft-buraglio-6man-rfc6724-update",
   "labels": [
     {
@@ -193,6 +193,22 @@
           "updatedAt": "2025-07-04T16:49:16Z"
         }
       ]
+    },
+    {
+      "number": 54,
+      "id": "I_kwDOJd_ZH87CEHN5",
+      "title": "INT-DIR review",
+      "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/issues/54",
+      "state": "OPEN",
+      "author": "timchown",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Document: draft-ietf-6man-rfc6724-update\nTitle: Prioritizing known-local IPv6 ULAs through address selection policy\nReviewer: Timothy Winters\nReview result: Ready with Issues\n\nI am the assigned int-dir reviewer for this draft. These comments were written\nwith the intent of improving the Internet area aspects of the IETF drafts.\nPlease wait for direction from your document shepherd or AD before posting a\nnew version of the draft. For background on int-dir, please see the\n[FAQ](https://wiki.ietf.org/en/group/intdir).\n\nI think this document is ready, there are three minor technical issues that\nneed to be addressed before publication.\n\nTechnical:\n\nSection 3.1\n\n$known_local/48 - Later in the document, in Section 3.3 the range is documented\nas /40 to /48.  I would recommend putting the range in this table /48 to /40?\n---\nSection 3.3\nThese known-local ULA prefixes are inferred from ULA addresses assigned to\ninterfaces or learned from Prefix Information Options (PIOs) in Router\nAdvertisements (RAs) [RFC4861] received on any interface regardless of how the\nPIO flags are set.\n\nThis reads to me that an implementation will need to merge all the ULA prefixes\nthey receive on any interface.  I don't think that is the intention, I would\nsuggest clarifying.\n---\nSection 3.3\n7. Entries MUST be removed from the known-local ULA list and the Policy Table\nwhen the announced RIOs or PIOs are deprecated, or an interface address is\nremoved, and there is no covering RIO or PIO.\n\nRIO can't be deprecated, they only have a valid lifetime this should be\ninvalidated?\n---\n\nNits:\n---\nOLD:\nIt further clarifies the unconditional requirement for implementing Rule 5.5 of\nRFC 6724\n\nNEW:\nIt introduces a requirement to implement Rule 5.5 of RFC 6724\n---\nOLD:\nThis document therefore introduces two changes to RFC6724 to support a node\nimplementing\n\nNEW:\nThis document therefore introduces two requirements to RFC6724 to support a\nnode implementing\n---\nOLD:\nKnown-local ULA: A ULA prefix that an individual organization/site has\ndetermined to be local to a given node/network/administrative domain\n\nNEW:\nKnown-local ULA: A ULA prefix that an node has determined to be local to a\ngiven network domain.\n---\nSection 3.3\nTools that display a node's current policy table MUST show all currently\ninserted known-local ULA prefixes.\n\nWhat defines a tool?\n---",
+      "createdAt": "2025-07-23T10:44:00Z",
+      "updatedAt": "2025-07-23T10:44:00Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
