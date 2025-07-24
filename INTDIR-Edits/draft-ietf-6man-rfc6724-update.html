@@ -1063,7 +1063,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Buraglio, et al.</td>
-<td class="center">Expires 24 January 2026</td>
+<td class="center">Expires 25 January 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1079,12 +1079,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <a href="https://www.rfc-editor.org/rfc/rfc6724" class="eref">6724</a> (if approved)</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-23" class="published">23 July 2025</time>
+<time datetime="2025-07-24" class="published">24 July 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-24">24 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-01-25">25 January 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1150,7 +1150,7 @@ configuration to achieve intended operational outcomes.<a href="#section-abstrac
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 24 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 25 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1353,7 +1353,7 @@ described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</s
 appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 <p id="section-2-2">GUA: Global Unicast Addresses as defined in <span>[<a href="#RFC3587" class="cite xref">RFC3587</a>]</span><a href="#section-2-2" class="pilcrow">¶</a></p>
 <p id="section-2-3">ULA: Unique Local Addresses as defined in <span>[<a href="#RFC4193" class="cite xref">RFC4193</a>]</span><a href="#section-2-3" class="pilcrow">¶</a></p>
-<p id="section-2-4">Known-local ULA: A ULA prefix that a node has determined to be local to a given node/network/administrative domain<a href="#section-2-4" class="pilcrow">¶</a></p>
+<p id="section-2-4">Known-local ULA: A ULA prefix that a node has determined to be local to a given node, network, or administrative domain<a href="#section-2-4" class="pilcrow">¶</a></p>
 <p id="section-2-5">RA: IPv6 Router Advertisement as defined in <span>[<a href="#RFC4861" class="cite xref">RFC4861</a>]</span><a href="#section-2-5" class="pilcrow">¶</a></p>
 <p id="section-2-6">PIO: IPv6 Prefix Information Option as defined in <span>[<a href="#RFC4861" class="cite xref">RFC4861</a>]</span><a href="#section-2-6" class="pilcrow">¶</a></p>
 <p id="section-2-7">SLAAC: IPv6 Stateless Address Auto-configuration <span>[<a href="#RFC4862" class="cite xref">RFC4862</a>]</span><a href="#section-2-7" class="pilcrow">¶</a></p>
@@ -1444,7 +1444,7 @@ having no such requirement.<a href="#section-3.2-3" class="pilcrow">¶</a></p>
 </li>
         </ol>
 <p id="section-3.3-8">When support is added for the insertion of known-local ULA prefixes into the current policy table it <span class="bcp14">MUST</span> default to on, but a mechanism <span class="bcp14">SHOULD</span> be supported to administratively toggle the behavior off and on.<a href="#section-3.3-8" class="pilcrow">¶</a></p>
-<p id="section-3.3-9">Tools that display a node's current policy table <span class="bcp14">MUST</span> show all currently inserted known-local ULA prefixes.<a href="#section-3.3-9" class="pilcrow">¶</a></p>
+<p id="section-3.3-9">Mechanisms and techniques used to display a node's current policy table <span class="bcp14">MUST</span> show all currently inserted known-local ULA prefixes.<a href="#section-3.3-9" class="pilcrow">¶</a></p>
 <p id="section-3.3-10">The identification and insertion of known-local prefixes under fc00::/8 is currently not defined.<a href="#section-3.3-10" class="pilcrow">¶</a></p>
 <p id="section-3.3-11">Note that a practical limit exists on the number of RIOs and PIOs that can be placed into a single RA. Therefore, there is a practical limit to the number of known-local ULAs that can be expressed on a single network and the number of ULA prefixes that can automatically be preferred over IPv4 and GUA prefixes within the policy table. This limit is unlikely to impact most networks, especially residential and other small unmanaged networks that automatically generate ULA prefixes.<a href="#section-3.3-11" class="pilcrow">¶</a></p>
 <p id="section-3.3-12">Section 4 of <span>[<a href="#RFC4191" class="cite xref">RFC4191</a>]</span> says "Routers <span class="bcp14">SHOULD NOT</span> send more than 17 Route Information Options in Router Advertisements per link. This arbitrary bound is meant to reinforce that relatively few and carefully selected routes should be advertised to hosts." The exact limit will depend on other options that are used. So while this is not the practical limit discussed above, administrators should take extra care not to cause the RA size to exceed the MTU when filling the RA with RA Options when exceeding this limit.<a href="#section-3.3-12" class="pilcrow">¶</a></p>
