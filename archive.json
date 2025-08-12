@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-27T02:28:21.373654+00:00",
+  "timestamp": "2025-08-12T02:04:04.032358+00:00",
   "repo": "buraglio/draft-buraglio-6man-rfc6724-update",
   "labels": [
     {
@@ -2060,7 +2060,7 @@
       "id": "PR_kwDOJd_ZH86gbs6x",
       "title": "Address Intdir and Lorenzo edits",
       "url": "https://github.com/buraglio/draft-buraglio-6man-rfc6724-update/pull/55",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "buraglio",
       "authorAssociation": "OWNER",
       "assignees": [
@@ -2069,18 +2069,28 @@
       "labels": [],
       "body": "",
       "createdAt": "2025-07-24T10:56:01Z",
-      "updatedAt": "2025-07-24T10:56:14Z",
+      "updatedAt": "2025-08-11T13:13:15Z",
       "baseRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
       "baseRefName": "main",
       "baseRefOid": "3affee78bf34722b89992c4b1ef598dd5cc55d74",
       "headRepository": "buraglio/draft-buraglio-6man-rfc6724-update",
       "headRefName": "INTDIR-Edits",
       "headRefOid": "161c4767dd553baf1d5e40bac0648684abe830ba",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
-      "comments": [],
+      "closedAt": "2025-08-11T13:13:14Z",
+      "mergedAt": "2025-08-11T13:13:14Z",
+      "mergedBy": "buraglio",
+      "mergeCommit": {
+        "oid": "e84c0b02c39ee961ff231215a173e315e456e8a2"
+      },
+      "comments": [
+        {
+          "author": "ekline",
+          "authorAssociation": "NONE",
+          "body": "LGTM",
+          "createdAt": "2025-08-11T00:37:57Z",
+          "updatedAt": "2025-08-11T00:37:57Z"
+        }
+      ],
       "reviews": []
     }
   ]
